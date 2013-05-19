@@ -1,29 +1,33 @@
 function Controller (options){
-    this.snakes = {};
-    this.bonnus = [];
-    this.killed_snake_callback = options.killed_snake;
-    this.eaten_bonnus_callback = options.eaten_bonnus;
+    var snakes = {};
+    var bonnus = [];
+    var killed_snake_callback = options.killed_snake;
+    var eaten_bonnus_callback = options.eaten_bonnus;
+    var add_points_callback = options.add_points;
+    var points_bonnus = options.points_bonnus;
     
     this.addSnake = function (id, coords, direction) {
-        this.snakes[id].coords = coords;
-        this.snakes[id].direction = direction;
+        snakes[id].coords = coords;
+        snakes[id].direction = direction;
     };
     
     this.killSnake = function (id) {
-        delete this.snakes[id];
+        delete snakes[id];
     };
     
     this.changeDirection = function (id, direction) {
-        this.snakes[id].direction = direction;
+        snakes[id].direction = direction;
     };
     
     this.getSnake = function (id) {
-        return this.snakes[id];
+        return snakes[id];
     };
     
     this.addBonnus = function (coords) {
-        this.bonnus.push(coords);
+        bonnus.push(coords);
     };
+    
+    
     
     this.update = function () {     // This is where the magic happens
         
