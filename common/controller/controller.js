@@ -1,6 +1,6 @@
 function Controller (options){
     var snakes = {};
-    var bonnus = [];
+    var bonnus = {};
     var killed_snake_callback = options.killed_snake;
     var eaten_bonnus_callback = options.eaten_bonnus;
     var add_points_callback = options.add_points;
@@ -23,11 +23,13 @@ function Controller (options){
         return snakes[id];
     };
     
-    this.addBonnus = function (coords) {
-        bonnus.push(coords);
+    this.addBonnus = function (id, coords) {
+        bonnus [id] = coords;
     };
     
-    
+    function eatBonnus(id) {
+        delete bonnus[id];
+    }
     
     this.update = function () {     // This is where the magic happens
         
