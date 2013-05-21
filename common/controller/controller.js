@@ -1,12 +1,10 @@
-var uuid = require("node-uuid");
-
 function Controller (options){
     var snakes = {};
-    var bonnus = {};
+    var bonus = {};
     var killed_snake_callback = options.killed_snake;
-    var eaten_bonnus_callback = options.eaten_bonnus;
+    var eaten_bonus_callback = options.eaten_bonnus;
     var add_points_callback = options.add_points;
-    var add_bonnus_callback = options.add_bonnus;
+    var add_bonus_callback = options.add_bonnus;
     
     var points_bonnus = options.points_bonnus;
     
@@ -29,18 +27,14 @@ function Controller (options){
         snakes[id].direction = direction;
     };
     
-    this.addBonnus = function (id, coords) {
-        bonnus[id] = coords;
-        add_bonnus_callback(id, coords);
+    this.addBonus = function (id, coords) {
+        bonus[id] = coords;
+        add_bonus_callback(id, coords);
     };
     
-    function eatBonnus(id) {
-        delete bonnus[id];
-        eaten_bonnus_callback(id);
-    }
-    
-    function genBonnusCoords(){
-        
+    function eatBonus(id) {
+        delete bonus[id];
+        eaten_bonus_callback(id);
     }
     
     function addPoints(id) {
@@ -49,10 +43,7 @@ function Controller (options){
     }
     
     this.update = function () {     // This is where the magic happens
-        if (Math.random() < ((-Math.abs(1/num_snakes)) + 1) ){
-            var id = uuid.v4();
-            this.addBonnus(id, genBonnusCoords());
-        }
+        
     };
 
     setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
