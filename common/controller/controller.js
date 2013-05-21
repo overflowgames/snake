@@ -7,8 +7,9 @@ function Controller (options){
     var add_bonus_callback = options.add_bonnus;
     
     var points_bonnus = options.points_bonnus;
-    
     var num_snakes = 0;
+    
+    var to_kill = [];
     
     this.addSnake = function (id, coords, direction, score, size) {
         snakes[id].coords = coords;
@@ -43,13 +44,9 @@ function Controller (options){
         add_points_callback(id, snakes[id].score);
     }
     
-    function checkCollision(snake){
-        
-    }
-    
-    this.update = function () {     // This is where the magic happens
+    function updatePosition (){
         for (var i in snakes){
-            if (snakes[i].size <= snakes[i].coords.length){
+            if (snakes[i].size <= snakes[i].coords.length()){
                 snakes[i].coords.pop();
             }
             
@@ -71,8 +68,40 @@ function Controller (options){
             }
             snakes[i].coords.unshift(newcoords);
             
-            checkCollision(snakes[i]);
         }
+    }
+    
+    function checkCollision(){
+        for (var tested in snakes){
+            for (var reciever in snakes){
+                for (var i in snakes[reciever].coords){
+                    if (snakes[tested].coords[0] == snakes[reciever].coords[i]){
+                        to_kill.push(tested);
+                    }
+                }
+            }
+        }
+    }
+
+    function checkBonus() {
+        for (var i in snakes){
+            for (var j in bonus){
+                if (snakes[i].coords[0] == bonus[j]){
+                    eatBonus(j);
+                }
+            }
+        }
+    }
+    
+    this.update = function () {     // This is where the magic happens
+        updatePosition();
+        checkCollision();
+        
+        while (to_kill.length() > 0){
+            this.killSnake(to_kill.pop());
+        }
+        
+        checkBonus();
     };
 
     setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
