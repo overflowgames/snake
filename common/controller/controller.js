@@ -10,10 +10,11 @@ function Controller (options){
     
     var num_snakes = 0;
     
-    this.addSnake = function (id, coords, direction, score) {
+    this.addSnake = function (id, coords, direction, score, size) {
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
+        snakes[id].size = size;
         num_snakes++;
     };
     
@@ -42,8 +43,36 @@ function Controller (options){
         add_points_callback(id, snakes[id].score);
     }
     
-    this.update = function () {     // This is where the magic happens
+    function checkCollision(snake){
         
+    }
+    
+    this.update = function () {     // This is where the magic happens
+        for (var i in snakes){
+            if (snakes[i].size <= snakes[i].coords.length){
+                snakes[i].coords.pop();
+            }
+            
+            var newcoords = [];
+            switch (snakes[i].direction) {
+                case "u" :
+                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] + 1];
+                break;
+                case "d" :
+                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] - 1];
+                break;
+                case "l" :
+                    newcoords = [snakes[i].coords[0][0] - 1, snakes[i].coords[0][1]];
+                break;
+                case "r" :
+                    newcoords = [snakes[i].coords[0][0] + 1, snakes[i].coords[0][1]];
+                break;
+                default:
+            }
+            snakes[i].coords.unshift(newcoords);
+            
+            checkCollision(snakes[i]);
+        }
     };
 
     setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
