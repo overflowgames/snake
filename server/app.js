@@ -1,9 +1,16 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10));
 
 io.sockets.on('connection', function (socket) {
-    socket.broadcast.emit("+");
-    socket.on("disconnect", function () {
-        socket.broadcast.emit("-");
+    socket.on("login", function(data, ack) {
+        socket.broadcast.emit("+", data.id);
+        
+        socket.set("login", [data.id, data.secret], function () {
+            ack("k");
+        });
+        
+        socket.on("disconnect", function () {
+            socket.broadcast.emit("-", data.id);
+        }); 
     });
 });
 
