@@ -1,11 +1,23 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10));
 
+var controller = new Controller();
+
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
         socket.broadcast.emit("+", data.id);
         
         socket.set("login", [data.id, data.secret], function () {
             ack("k");
+        });
+        
+        socket.on("chdir", function(data, ack) {
+            socket.get("login", function (err, login) {
+                if (data.secret == login.secret){
+                    controller.changeDirection(login.id, data.direction);
+                } else {
+                    ack("kol");
+                }
+            });
         });
         
         socket.on("disconnect", function () {
