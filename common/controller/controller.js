@@ -1,10 +1,12 @@
 function Controller (options){
     var snakes = {};
     var bonus = {};
-    var killed_snake_callback = options.killed_snake;
-    var eaten_bonus_callback = options.eaten_bonnus;
-    var add_points_callback = options.add_points;
-    var add_bonus_callback = options.add_bonnus;
+    
+    var killed_snake_callback = options.callbacks.killed_snake;
+    var eaten_bonus_callback = options.callbacks.eaten_bonnus;
+    var add_points_callback = options.callbacks.add_points;
+    var add_bonus_callback = options.callbacks.add_bonnus;
+    var update_callback = options.callbacks.update;
     
     var points_bonnus = options.points_bonnus;
     var num_snakes = 0;
@@ -106,6 +108,7 @@ function Controller (options){
         }
         
         checkBonus();
+        update_callback(snakes, bonus);
     };
 
     setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
