@@ -34,6 +34,10 @@ function Controller (options){
         add_bonus_callback(id, coords);
     };
     
+    this.getNumSnakes = function () {
+        return num_snakes;
+    };
+    
     function eatBonus(id) {
         delete bonus[id];
         eaten_bonus_callback(id);
