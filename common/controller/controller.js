@@ -52,7 +52,7 @@ function Controller (options){
     
     function updatePosition (){
         for (var i in snakes){
-            if (snakes[i].size <= snakes[i].coords.length()){
+            if (snakes[i].size <= snakes[i].coords.length){
                 snakes[i].coords.pop();
             }
             
@@ -103,7 +103,7 @@ function Controller (options){
         updatePosition();
         checkCollision();
         
-        while (to_kill.length() > 0){
+        while (to_kill.length > 0){
             this.killSnake(to_kill.pop());
         }
         
