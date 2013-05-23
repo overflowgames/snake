@@ -14,6 +14,7 @@ io.sockets.on('connection', function (socket) {
             socket.get("login", function (err, login) {
                 if (data.secret == login.secret){
                     controller.changeDirection(login.id, data.direction);
+                    socket.broadcast.emit("chdir", [login.id, data.direction]);
                     ack("ok");
                 } else {
                     ack("kol");
