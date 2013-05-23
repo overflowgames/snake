@@ -1,7 +1,28 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
-    Controller = require('../common/controller/controller.js').Controller;
+    Controller = require('../common/controller/controller.js').Controller,
+    dbcontroller = require("./db.js");
 
-controller = new Controller();
+var game = {};
+
+var controller = new Controller({
+    callbacks: {
+        update: function (snakes, bonus) {
+            game.snakes = snakes;
+            game.bonus = bonus;
+        },
+        eaten_bonnus: function (id) {
+            
+        },
+        add_points: function (id, score) {
+            dbcontroller.set_score(id, score);
+        },
+        add_bonus: function (id, coords) {
+            
+        }        
+    },
+    points_bonnus: 10,
+    update_rate: 5
+});
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
