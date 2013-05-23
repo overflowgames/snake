@@ -1,6 +1,6 @@
-var io = require('socket.io').listen(parseInt(process.env.PORT, 10));
+var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
+    controller = resuire('../common/controller/controller.js');
 
-var controller = new Controller();
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
