@@ -13,11 +13,11 @@ function Controller (options){
     
     var to_kill = [];
     
-    this.addSnake = function (id, coords, direction, score, size) {
+    this.addSnake = function (id, coords, direction, score) {
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
-        snakes[id].size = size;
+        snakes[id].size = coords.length;
         num_snakes++;
     };
     
