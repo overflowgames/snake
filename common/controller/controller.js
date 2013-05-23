@@ -115,4 +115,4 @@ function Controller (options){
 
 }
 
-exports.controller = Controller;
+exports.Controller = Controller;
