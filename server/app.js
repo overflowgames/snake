@@ -10,13 +10,13 @@ var controller = new Controller({
             game.bonus = bonus;
         },
         eaten_bonnus: function (id) {
-            
+            io.sockets.emit("-b", [id]);
         },
         add_points: function (id, score) {
             dbcontroller.set_score(id, score);
         },
         add_bonus: function (id, coords) {
-            
+            io.sockets.emit("+b", [id, coords]);
         }        
     },
     points_bonnus: 10,
