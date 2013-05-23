@@ -1,5 +1,5 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
-    controller = require('../common/controller/controller.js').controller;
+    Controller = require('../common/controller/controller.js').Controller;
 
 
 io.sockets.on('connection', function (socket) {
