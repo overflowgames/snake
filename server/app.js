@@ -56,6 +56,7 @@ io.sockets.on('connection', function (socket) {
             
             socket.on("disconnect", function () {
                 socket.broadcast.emit("-", data.id);
+                dbcontroller.push_score(data.id, data.secret, game.snakes[data.id].score);
             });
             
         } else {
