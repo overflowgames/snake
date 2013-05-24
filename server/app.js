@@ -6,7 +6,7 @@ var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
 var game = {};
 var controller = new Controller({
     callbacks: {
-        update: function (controller, snakes, bonus) {
+        update: function (snakes, bonus) {
             if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                 var id = uuid.v4();
                 controller.addBonus(id, genBonusCoords());
