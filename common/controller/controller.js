@@ -6,6 +6,7 @@ function Controller (options){
     var eaten_bonus_callback = options.callbacks.eaten_bonnus;
     var add_points_callback = options.callbacks.add_points;
     var add_bonus_callback = options.callbacks.add_bonnus;
+    var add_snake_callback = options.callbacks.add_snake;
     var update_callback = options.callbacks.update;
     
     var points_bonnus = options.points_bonnus;
@@ -13,12 +14,13 @@ function Controller (options){
     
     var to_kill = [];
     
-    this.addSnake = function (id, coords, direction, score) {
+    this.addSnake = function (id, coords, direction, score, size) {
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
-        snakes[id].size = coords.length;
+        snakes[id].size = size;
         num_snakes++;
+        add_snake_callback(id, coords, direction, score, size);
     };
     
     this.killSnake = function (id) {

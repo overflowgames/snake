@@ -17,7 +17,10 @@ var controller = new Controller({
         },
         add_bonus: function (id, coords) {
             io.sockets.emit("+b", [id, coords]);
-        }        
+        },
+        add_snake: function (id, coords, direction, score, size) {
+            
+        }
     },
     points_bonnus: 10,
     update_rate: 5
@@ -30,10 +33,11 @@ io.sockets.on('connection', function (socket) {
             var snake_coords = [[0,0], [0, 1], [0, 2]];
             var snake_direction = "u";
             var snake_score = 0;
+            var snake_size = snake_coords.length;
             
-            socket.broadcast.emit("+", [data.id, snake_coords, snake_direction, snake_score]);
-            controller.addSnake(data.id, snake_coords, snake_direction, snake_score);
-                        
+            socket.broadcast.emit("+", [data.id, snake_coords, snake_direction, snake_score, snake_size]);
+            controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size);
+            
             socket.set("login", [data.id, data.secret], function () {
                 ack("k");
             });
