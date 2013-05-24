@@ -11,13 +11,14 @@ function Controller (options){
     
     var points_bonnus = options.points_bonnus;
     
-    var to_kill = [];
+    var to_kill = [], num_snakes = 0;
     
     this.addSnake = function (id, coords, direction, score, size) {
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
         snakes[id].size = size;
+        num_snakes++;
         add_snake_callback(id, coords, direction, score, size);
     };
     
@@ -108,7 +109,7 @@ function Controller (options){
         }
         
         checkBonus();
-        update_callback(snakes, bonus);
+        update_callback(this, snakes, bonus);
     };
 
     setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly

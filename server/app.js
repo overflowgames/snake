@@ -6,13 +6,10 @@ var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
 var game = {};
 var controller = new Controller({
     callbacks: {
-        update: function (snakes, bonus) {
-            var num_snakes = 0;
-            for (var i in snakes){num_snakes++;}
-            
-            if (Math.random() < ((-Math.abs(1 / num_snakes)) + 1)) {
+        update: function (controller, snakes, bonus) {
+            if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                 var id = uuid.v4();
-                this.addBonus(id, genBonusCoords());
+                controller.addBonus(id, genBonusCoords());
             }
             game.snakes = snakes;
             game.bonus = bonus;
@@ -27,6 +24,9 @@ var controller = new Controller({
             io.sockets.emit("+b", [id, coords]);
         },
         add_snake: function (id, coords, direction, score, size) {
+            
+        },
+        killed_snake: function (id) {
             
         }
     },
