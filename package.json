@@ -1,0 +1,17 @@
+{
+    "name": "Snake",
+    "version": "0.1.0",
+	"description": "A boundless snake",
+	"Dependencies": {
+        "socket.io": "0.9.14",
+        "uuid":"1.4.1"
+	},
+	"scripts": {
+		"start": "server/app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/overflowgames/snake.git"
+	},
+	"keywords": ["snake", "boundless", "game", "multiplayer"]
+}
