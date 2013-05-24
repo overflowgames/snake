@@ -27,7 +27,8 @@ var controller = new Controller({
             
         },
         killed_snake: function (id) {
-            
+            socket.broadcast.emit("-", data.id);
+            dbcontroller.push_score(data.id, data.secret, game.snakes[data.id].score);
         }
     },
     points_bonnus: 10,
