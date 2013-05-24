@@ -1,4 +1,5 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
+    uuid = require('uuid'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js");
 
@@ -6,6 +7,13 @@ var game = {};
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
+            var num_snakes = 0;
+            for (var i in snakes){num_snakes++;}
+            
+            if (Math.random() < ((-Math.abs(1 / num_snakes)) + 1)) {
+                var id = uuid.v4();
+                this.addBonus(id, genBonusCoords());
+            }
             game.snakes = snakes;
             game.bonus = bonus;
         },
@@ -68,7 +76,3 @@ io.sockets.on('connection', function (socket) {
 setInterval(function(){
     io.sockets.emit("up", game);
 }, 100000);
-/*        if (Math.random() < ((-Math.abs(1/num_snakes)) + 1) ){
-            var id = uuid.v4();
-            this.addBonnus(id, genBonnusCoords());
-        }*/
