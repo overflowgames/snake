@@ -2,7 +2,7 @@
     "name": "Snake",
     "version": "0.1.0",
 	"description": "A boundless snake",
-	"Dependencies": {
+	"dependencies": {
         "socket.io": "0.9.14",
         "uuid":"1.4.1"
 	},

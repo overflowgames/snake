@@ -27,14 +27,17 @@ io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
         if (typeof game.snakes[data.id] === "undefined"){
             
-            socket.broadcast.emit("+", data.id);
+            var snake_coords = [[0,0], [0, 1], [0, 2]];
+            var snake_direction = "u";
+            var snake_score = 0;
             
+            socket.broadcast.emit("+", [data.id, snake_coords, snake_direction, snake_score]);
+            controller.addSnake(data.id, snake_coords, snake_direction, snake_score);
+                        
             socket.set("login", [data.id, data.secret], function () {
                 ack("k");
             });
-            
-            controller.addSnake(data.id, [[0,0], [0, 1], [0, 2]], "u", 0);
-            
+                        
             socket.on("chdir", function(data, ack) {
                 socket.get("login", function (err, login) {
                     if (data.secret == login.secret){
