@@ -8,15 +8,19 @@ var log = logentries.logger({
 
 
 client.on("error", function(err) {
-    log.error("Redis Error: " + err);
+    log.crit("Redis Error: " + err);
 });
 
 function push_score(id, score) {
     client.get(id, function (err, reply) {
         if (reply !== null){
-            client.set((parseInt(score, 10) + parseInt(reply, 10)));
+            client.set(id, (parseInt(score, 10) + parseInt(reply, 10)));
         } else {
-            log.error("Redis Error: Impossible to update snake score, id "+id+" does not exist in database");
+            log.warning("Redis Error: Impossible to update snake score, id "+id+" does not exist in database");
         }
     });
+}
+
+function add_player(id){
+    client.set(id, 0);
 }
