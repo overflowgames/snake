@@ -8,7 +8,16 @@ var log = logentries.logger({
   token:process.env.LOGENTRIES_TOKEN
 });
 
+log.info("Starting App");
+
 var game = {}, directions = ["u", "d", "l", "r"];
+
+function genBonusCoords (){
+    
+}
+
+
+/* ---------------------------- Creating controller ---------------------------- */
 
 var controller = new Controller({
     callbacks: {
@@ -43,6 +52,9 @@ var controller = new Controller({
     points_bonnus: 10,
     update_rate: 5
 });
+
+
+/* ---------------------------- Listening sockets ---------------------------- */
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
@@ -88,3 +100,5 @@ io.sockets.on('connection', function (socket) {
 setInterval(function(){
     io.sockets.emit("up", game);
 }, 100000);     // Sends the whole game state to all the clients every 10 seconds
+
+log.info("All started");

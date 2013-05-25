@@ -5,7 +5,8 @@
 	"dependencies": {
         "socket.io": "0.9.14",
         "uuid":"1.4.1",
-        "redis": "0.8.3"
+        "redis": "0.8.3",
+        "node-logentries": "0.1.0"
 	},
 	"scripts": {
 		"start": "server/app.js"
