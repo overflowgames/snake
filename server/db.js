@@ -7,8 +7,8 @@ var log = logentries.logger({
 
 var services = JSON.parse(process.env.VCAP_SERVICES);
 
-var client = redis.createClient(parseInt(services["redis-2.2"]["credentials"]["port"],10), services["redis-2.2"]["credentials"]["host"]);
-client.auth(services["redis-2.2"]["credentials"]["password"]);
+var client = redis.createClient(parseInt(services["redis-2.2"][0]["credentials"]["port"],10), services["redis-2.2"][0]["credentials"]["host"]);
+client.auth(services["redis-2.2"][0]["credentials"]["password"]);
 
 client.on("error", function(err) {
     log.crit("Redis Error: " + err);
