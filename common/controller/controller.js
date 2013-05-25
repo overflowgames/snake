@@ -8,6 +8,7 @@ function Controller (options){
     var add_bonus_callback = options.callbacks.add_bonus;
     var add_snake_callback = options.callbacks.add_snake;
     var update_callback = options.callbacks.update;
+    var change_direction_callback = options.callbacks.change_direction;
     
     var points_bonnus = options.points_bonnus;
     
@@ -30,6 +31,7 @@ function Controller (options){
     
     this.changeDirection = function (id, direction) {
         snakes[id].direction = direction;
+        change_direction_callback(id, direction);
     };
     
     this.addBonus = function (id, coords) {
