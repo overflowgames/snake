@@ -1,7 +1,12 @@
 var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
     uuid = require('uuid'),
     Controller = require('../common/controller/controller.js').Controller,
-    dbcontroller = require("./db.js");
+    dbcontroller = require("./db.js"),
+    logentries = require('node-logentries');
+
+var log = logentries.logger({
+  token:process.env.LOGENTRIES_TOKEN
+});
 
 var game = {}, directions = ["u", "d", "l", "r"];
 
