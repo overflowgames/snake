@@ -80,10 +80,12 @@ io.sockets.on('connection', function (socket) {
                                 ack("ok");
                             } else {
                                 ack("kol");
+                                log.notice("Someone has tried to acces to an id without permission");
                             }
                         });
                     } else {
                         ack("kod");
+                        log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                     }
                 });
                 
@@ -94,6 +96,7 @@ io.sockets.on('connection', function (socket) {
                 
             } else {
                 ack("ko");
+                log.notice("Someone has tried to ligin to an id already existing");
             }
         });
     });
