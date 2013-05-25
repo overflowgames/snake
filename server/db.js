@@ -21,6 +21,11 @@ function push_score(id, score) {
     });
 }
 
-function add_player(id){
-    client.set(id, 0);
+function add_player_if_not_exists(id, cb){
+    client.get(id, function (err, reply) {
+        if (reply === null){
+            client.set(id, 0);
+            log.info("Added player " + id);
+        }
+    });
 }
