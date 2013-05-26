@@ -43,5 +43,5 @@ function add_player_if_not_exists(id, cb){
             add_queue.push(id, cb);
             log.info("Added player " + id);
         }
-    });    
+    });
 }

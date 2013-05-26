@@ -43,9 +43,10 @@ function Controller (options){
         return num_snakes;
     };
     
-    function eatBonus(id) {
+    function eatBonus(id, by) {
         delete bonus[id];
-        eaten_bonus_callback(id);
+        snakes[by].size += 3;
+        eaten_bonus_callback(id, by);
     }
     
     function addPoints(id) {

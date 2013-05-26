@@ -29,7 +29,7 @@ var controller = new Controller({
             game.snakes = snakes;
             game.bonus = bonus;
         },
-        eaten_bonnus: function (id) {
+        eaten_bonnus: function (id, by) {
             io.sockets.emit("-b", [id]);
         },
         add_points: function (id, score) {
@@ -58,9 +58,8 @@ var controller = new Controller({
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
-        dbcontroller.add_player_if_not_exists(function () {
-            if (typeof game.snakes[data.id] === "undefined"){
-                
+        if (typeof game.snakes[data.id] === "undefined"){
+            dbcontroller.add_player_if_not_exists(function () {
                 var snake_coords = [[0,0], [0, 1], [0, 2]];
                 var snake_direction = "u";
                 var snake_score = 0;
@@ -88,17 +87,17 @@ io.sockets.on('connection', function (socket) {
                         log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                     }
                 });
-                
+                    
                 socket.on("disconnect", function () {
                     socket.broadcast.emit("-", data.id);
                     dbcontroller.push_score(data.id, game.snakes[data.id].score);
                 });
                 
-            } else {
-                ack("ko");
-                log.notice("Someone has tried to ligin to an id already existing");
-            }
-        });
+            });
+        } else {
+            ack("ko");
+            log.notice("Someone has tried to login to an id already existing");
+        }
     });
 });
 
