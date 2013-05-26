@@ -7,14 +7,16 @@ var log = logentries.logger({
 });
 
 var add_queue = async.queue(function (id, cb) {
-    client.get(id, function (err, reply) {
-        if (reply === null){
-            client.set(id, 0);
-            log.info("Added player " + id);
-        }
+            client.set(id, 0, function(){
+                cb();
+            });
+}, 3);
+
+var score_queue = async.queue(function(task, cb) {
+    client.set(task.id, (parseInt(task.score, 10) + parseInt(task.reply, 10)), function () {
         cb();
-    });    
-}, 4)
+    });
+}, 3);
 
 var services = JSON.parse(process.env.VCAP_SERVICES);
 
@@ -25,10 +27,10 @@ client.on("error", function(err) {
     log.crit("Redis Error: " + err);
 });
 
-function push_score(id, score) {
+function push_score(id, score, cb) {
     client.get(id, function (err, reply) {
         if (reply !== null){
-            client.set(id, (parseInt(score, 10) + parseInt(reply, 10)));
+            score_queue.push({"score": score, "reply": reply, "id":id});
         } else {
             log.warning("Redis Error: Impossible to update snake score, id "+id+" does not exist in database");
         }
@@ -36,5 +38,10 @@ function push_score(id, score) {
 }
 
 function add_player_if_not_exists(id, cb){
-    add_queue.push(id, cb);
+    client.get(id, function (err, reply) {
+        if (reply === null){
+            add_queue.push(id, cb);
+            log.info("Added player " + id);
+        }
+    });    
 }
