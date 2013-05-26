@@ -30,5 +30,6 @@ function add_player_if_not_exists(id, cb){
             client.set(id, 0);
             log.info("Added player " + id);
         }
+        cb();
     });
 }
