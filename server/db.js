@@ -1,9 +1,20 @@
 var redis = require("redis"),
-    logentries = require('node-logentries');
+    logentries = require('node-logentries'),
+    async = require("async");
 
 var log = logentries.logger({
   token:process.env.LOGENTRIES_TOKEN
 });
+
+var add_queue = async.queue(function (id, cb) {
+    client.get(id, function (err, reply) {
+        if (reply === null){
+            client.set(id, 0);
+            log.info("Added player " + id);
+        }
+        cb();
+    });    
+}, 4)
 
 var services = JSON.parse(process.env.VCAP_SERVICES);
 
@@ -25,11 +36,5 @@ function push_score(id, score) {
 }
 
 function add_player_if_not_exists(id, cb){
-    client.get(id, function (err, reply) {
-        if (reply === null){
-            client.set(id, 0);
-            log.info("Added player " + id);
-        }
-        cb();
-    });
+    add_queue.push(id, cb);
 }
