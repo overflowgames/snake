@@ -58,46 +58,42 @@ var controller = new Controller({
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
-        if (typeof game.snakes[data.id] === "undefined"){
-            dbcontroller.add_player_if_not_exists(function () {
-                var snake_coords = [[0,0], [0, 1], [0, 2]];
-                var snake_direction = "u";
-                var snake_score = 0;
-                var snake_size = snake_coords.length;
-                
-                controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size);
-                
-                socket.set("login", [data.id, data.secret], function () {
-                    ack("k");
-                });
-                            
-                socket.on("chdir", function(data, ack) {
-                    if (directions.indexOf(data.direction) !== -1){
-                        socket.get("login", function (err, login) {
-                            if (data.secret == login.secret){
-                                controller.changeDirection(login.id, data.direction);
-                                ack("ok");
-                            } else {
-                                ack("kol");
-                                log.notice("Someone has tried to acces to an id without permission");
-                            }
-                        });
-                    } else {
-                        ack("kod");
-                        log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
-                    }
-                });
-                    
-                socket.on("disconnect", function () {
-                    socket.broadcast.emit("-", data.id);
-                    dbcontroller.push_score(data.id, game.snakes[data.id].score);
-                });
-                
+        dbcontroller.add_player_if_not_exists(data.secret, function () {
+            var snake_coords = [[0,0], [0, 1], [0, 2]];
+            var snake_direction = "u";
+            var snake_score = 0;
+            var snake_size = snake_coords.length;
+            var id = uuid.v4();
+            
+            controller.addSnake(id, snake_coords, snake_direction, snake_score, snake_size);
+            
+            socket.set("login", [id, data.secret], function () {
+                ack(id);
             });
-        } else {
-            ack("ko");
-            log.notice("Someone has tried to login to an id already existing");
-        }
+                        
+            socket.on("chdir", function(data, ack) {
+                if (directions.indexOf(data.direction) !== -1){
+                    socket.get("login", function (err, login) {
+                        if (data.secret == login.secret){
+                            controller.changeDirection(login.id, data.direction);
+                            ack("ok");
+                        } else {
+                            ack("kol");
+                            log.notice("Someone has tried to acces to an id without permission");
+                        }
+                    });
+                } else {
+                    ack("kod");
+                    log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
+                }
+            });
+                
+            socket.on("disconnect", function () {
+                socket.broadcast.emit("-", id);
+                dbcontroller.push_score(id, game.snakes[id].score);
+            });
+            
+        });
     });
 });
 
