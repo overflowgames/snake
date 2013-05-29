@@ -22,12 +22,15 @@ function genBonusCoords (){
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
-            if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
-                var id = uuid.v4();
-                controller.addBonus(id, genBonusCoords());
+            if (controller.getNumSnakes() > 0){
+                if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+                    var id = uuid.v4();
+                    controller.addBonus(id, genBonusCoords());
+                }
             }
             game.snakes = snakes;
             game.bonus = bonus;
+            log.info("Game updated");
         },
         eaten_bonnus: function (id, by) {
             io.sockets.emit("-b", [id]);
