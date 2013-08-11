@@ -1,51 +1,99 @@
-var w = window,
-    d = document,
-    e = d.documentElement,
-    g = d.getElementsByTagName('body')[0],
-    width = w.innerWidth || e.clientWidth || g.clientWidth,
-    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
-var cX=0, cY=0;
+var canvas = document.getElementById('app');
+if(!canvas) {
+    alert("Impossible de récupérer le canvas");
+    return;
+}
 
-var stage = new Kinetic.Stage({
-  width: width,
-  height: height,
-  container: 'app'
-});
+canvas.width = 500;
+canvas.height = 500;
 
-var layer = new Kinetic.Layer();
-var map = [];
-for(var i=0;i<width/40;i++)
-    map[i] = [];
+var context = canvas.getContext('2d');
+if(!context) {
+    alert("Impossible de récupérer le context du canvas");
+    return;
+}
+ 
+ 
+var position_x=-145;
+var position_y=-145; 
 
+var offset_x=0;
+var offset_y=0; 
 
-for(var x=cX-cX%40; x<cX+width-40;x+=40) {
-    for(var y=cY-cY%40; y<cY+height-40;y+=40) {
-        if (typeof map[x/40][y/40] === "undefined"){
-            var t = new Kinetic.Rect({
-                  x: x,
-                  y: y,
-                  width: 39,
-                  height: 39,
-                  fill: '#00e2ff',
-                  stroke: 'black',
-                  strokeWidth: 1
-            });
-            layer.add(t);
-            
-            map[x/40][y/40]=t;
-        }
+var height = 500;
+var width = 500;
+
+var sq_w=10;
+
+function draw_grid() {
+    for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, height);
+        context.stroke();
+        context.closePath();
+    }
+    
+    for(var y=(-position_y+offset_y)%sq_w; y<=height;y+=sq_w) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(width, y);
+        context.stroke();
+        context.closePath();
     }
 }
 
+function update_dimensions(){
+    var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    win_x = w.innerWidth || e.clientWidth || g.clientWidth,
+    win_y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+    
+    height = win_y;
+    width = win_x;
+    
+    canvas.height = win_y;
+    canvas.width = win_x;
+}
 
-            
+function draw_hud() {
+    context.font = "18px Helvetica";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
+    context.fillStyle = "#ffffff";
+    context.fillText("x: "+position_x, 30, 30);
+    context.fillText("y: "+position_y, 30, 50);
+}
+
+
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
+            // #Get the viewport dimensions
+            update_dimensions();
+            
+            // #Reset the canvas
+            context.fillStyle = "#000000";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // #Draw the snakes
             for(var i in snakes) {
-                
+                for(var ii = 0; ii < snakes[i].coords.length;ii++) {
+                    var cx = snakes[i].coords[ii][0];
+                    var cy = snakes[i].coords[ii][1];
+                    
+                   context.fillStyle = "#00ffff";
+                   context.fillRect(cx*sq_w-position_x+offset_x/*-(position_x%sq_w)*/, cy*sq_w-position_y+offset_y/*-(position_y%sq_w)*/, sq_w, sq_w);
+                }
             }
+            context.strokeStyle = "#ffffff";
+            context.lineWidth=0.5;
+            // #Draw the grid
+            draw_grid();
+            
+            // #Draw the HUD
+            draw_hud();
         },
         eaten_bonnus: function (id) { },
         add_points: function (id, score) { },
@@ -57,4 +105,94 @@ var controller = new Controller({
     points_bonnus: 10,
     update_rate: 5
 });
-stage.add(layer);
+
+
+var c = [[4,2]];
+controller.addSnake(0,c, "d",0,42);
+
+
+
+document.onkeydown = function(event) {
+    event = event || window.event; 
+    switch (event.keyCode) {
+        case 37:// left
+            position_x--;
+            controller.changeDirection(0, "l");
+            break;
+        case 38://up
+            position_y--;
+            controller.changeDirection(0, "u");
+            break;
+        case 39://right
+            position_x++;
+            controller.changeDirection(0, "r");
+            break;
+        case 40://down
+            position_y++;
+            controller.changeDirection(0, "d");
+            break;
+    }
+    
+    
+};
+
+if  (document.getElementById){
+(function(){
+
+    //Stop Opera selecting anything whilst dragging.
+    if (window.opera){
+        document.write("<input type='hidden' id='Q' value=' '>");
+    }
+    
+    var n = 500;
+    var dragok = false;
+    var y,x,d,dy,dx;
+    
+    function move(e){
+        if (!e) e = window.event;
+         if (dragok){
+          var lft=dx + e.clientX - x,top=dy + e.clientY - y;
+          offset_x=lft;
+          offset_y=top;
+          return false;
+        }
+    }
+    
+    function down(e){
+    if (!e) e = window.event;
+    var temp = (typeof e.target != "undefined")?e.target:e.srcElement;
+    if (temp.tagName != "HTML"|"BODY" && temp.className != "dragclass"){
+     temp = (typeof temp.parentNode != "undefined")?temp.parentNode:temp.parentElement;
+     }
+    if (temp.className == "dragclass"){
+     if (window.opera){
+      document.getElementById("Q").focus();
+     }
+     dragok = true;
+     temp.style.zIndex = n++;
+     d = temp;
+     dx = parseInt(temp.style.left+0);
+     dy = parseInt(temp.style.top+0);
+     x = e.clientX;
+     y = e.clientY;
+     document.onmousemove = move;
+     return false;
+     }
+    }
+    
+    function up(){
+        dragok = false;
+        document.onmousemove = null;
+        
+        position_x-=offset_x;
+        position_y-=offset_y;
+        
+        offset_x=0;
+        offset_y=0;
+    }
+    
+    document.onmousedown = down;
+    document.onmouseup = up;
+    
+    })();
+}//End.

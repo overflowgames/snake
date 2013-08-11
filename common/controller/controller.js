@@ -15,6 +15,7 @@ function Controller (options){
     var to_kill = [], num_snakes = 0;
     
     this.addSnake = function (id, coords, direction, score, size) {
+        snakes[id] = {};
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
@@ -30,8 +31,10 @@ function Controller (options){
     };
     
     this.changeDirection = function (id, direction) {
+        if(validateMove(snakes[id].direction, direction)) {
         snakes[id].direction = direction;
         change_direction_callback(id, direction);
+        }
     };
     
     this.addBonus = function (id, coords) {
@@ -63,10 +66,10 @@ function Controller (options){
             var newcoords = [];
             switch (snakes[i].direction) {
                 case "u" :
-                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] + 1];
+                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] - 1];
                 break;
                 case "d" :
-                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] - 1];
+                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] + 1];
                 break;
                 case "l" :
                     newcoords = [snakes[i].coords[0][0] - 1, snakes[i].coords[0][1]];
@@ -81,12 +84,14 @@ function Controller (options){
         }
     }
     
-    function checkCollision(){
+    function checkCollision(){ 
         for (var tested in snakes){
             for (var reciever in snakes){
                 for (var i in snakes[reciever].coords){
-                    if (snakes[tested].coords[0] == snakes[reciever].coords[i]){
-                        to_kill.push(tested);
+                    if(i != 0) { //Sans cette condition tout les snakes meurent. 
+                        if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
+                            to_kill.push(tested);
+                        }
                     }
                 }
             }
@@ -103,12 +108,23 @@ function Controller (options){
         }
     }
     
+    function validateMove(position, new_position) {
+        return !((position == "u" && new_position == "d") ||(position == "d" && new_position == "u")||(position == "l" && new_position == "r")||(position == "r" && new_position == "l"));
+    }
+    
+    function comparePos(p1, p2) {
+        return (p1[0] == p2[0]) && (p1[1] == p2[1]);
+    }
+    
     this.update = function () {     // This is where the magic happens
         updatePosition();
         checkCollision();
         
         while (to_kill.length > 0){
-            this.killSnake(to_kill.pop());
+            delete snakes[to_kill.pop()];// TODO: Y'avais une couille dans l'appel de la fonction
+            num_snakes--;
+            killed_snake_callback(to_kill.pop());
+            alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
         }
         
         checkBonus();
