@@ -25,6 +25,7 @@ var height = 500;
 var width = 500;
 
 var sq_w=10;
+var my_id=0;
 
 function draw_grid() {
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
@@ -99,7 +100,10 @@ var controller = new Controller({
         add_points: function (id, score) { },
         add_bonus: function (id, coords) { },
         add_snake: function (id, coords, direction, score, size) { },
-        killed_snake: function (id) {},
+        killed_snake: function (id) {
+            alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+            
+        },
         change_direction: function (id, direction) {}
     },
     points_bonnus: 10,
@@ -108,7 +112,7 @@ var controller = new Controller({
 
 
 var c = [[4,2]];
-controller.addSnake(0,c, "d",0,42);
+controller.addSnake(my_id,c, "d",0,42);
 
 
 

@@ -31,9 +31,9 @@ function Controller (options){
     };
     
     this.changeDirection = function (id, direction) {
-        if(validateMove(snakes[id].direction, direction)) {
-        snakes[id].direction = direction;
-        change_direction_callback(id, direction);
+        if(validateMove(id, direction)) {
+            snakes[id].direction = direction;
+            change_direction_callback(id, direction);
         }
     };
     
@@ -108,8 +108,21 @@ function Controller (options){
         }
     }
     
-    function validateMove(position, new_position) {
-        return !((position == "u" && new_position == "d") ||(position == "d" && new_position == "u")||(position == "l" && new_position == "r")||(position == "r" && new_position == "l"));
+    function validateMove(id_snake, new_direction) {
+        var theSnake = snakes[id_snake];
+        var theCoords = theSnake.coords;
+        var orientation;
+        
+        if((theCoords[0][0] == theCoords[1][0]) && (theCoords[0][1] == theCoords[1][1] + 1)) //going down
+            orientation="d";
+        else if((theCoords[0][0] == theCoords[1][0]) && (theCoords[0][1] == theCoords[1][1] - 1))//going up
+            orientation="u";
+        else if((theCoords[0][0] == theCoords[1][0] - 1) && (theCoords[0][1] == theCoords[1][1]))//going left
+            orientation="l";
+        else if((theCoords[0][0] == theCoords[1][0] + 1) && (theCoords[0][1] == theCoords[1][1]))//going right
+            orientation="r";
+            
+        return !((orientation == "u" && new_direction == "d") ||(orientation == "d" && new_direction == "u")||(orientation == "l" && new_direction == "r")||(orientation == "r" && new_direction == "l"));
     }
     
     function comparePos(p1, p2) {
@@ -121,10 +134,9 @@ function Controller (options){
         checkCollision();
         
         while (to_kill.length > 0){
-            delete snakes[to_kill.pop()];// TODO: Y'avais une couille dans l'appel de la fonction
+            delete snakes[to_kill.pop()];// TOFIX: Y'avais une couille dans l'appel de la fonction
             num_snakes--;
             killed_snake_callback(to_kill.pop());
-            alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
         }
         
         checkBonus();
