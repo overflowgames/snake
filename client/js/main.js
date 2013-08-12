@@ -71,11 +71,20 @@ function draw_hud() {
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
+            // #Generate random bonus (normally server side, but here for testing purpose)
+            if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+                var id = uuid.v4();
+                controller.addBonus(id, genBonusCoords());
+            }
+            
+            
+            
+            
             // #Get the viewport dimensions
             update_dimensions();
             
             // #Reset the canvas
-            context.fillStyle = "#000000";
+            context.fillStyle = "#3B5998";
             context.fillRect(0, 0, canvas.width, canvas.height);
             
             // #Draw the snakes
@@ -88,13 +97,17 @@ var controller = new Controller({
                    context.fillRect(cx*sq_w-position_x+offset_x/*-(position_x%sq_w)*/, cy*sq_w-position_y+offset_y/*-(position_y%sq_w)*/, sq_w, sq_w);
                 }
             }
+            
+            
+            // #Draw the grid
             context.strokeStyle = "#ffffff";
             context.lineWidth=0.5;
-            // #Draw the grid
             draw_grid();
             
             // #Draw the HUD
             draw_hud();
+            
+            
         },
         eaten_bonnus: function (id) { },
         add_points: function (id, score) { },
