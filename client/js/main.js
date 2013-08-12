@@ -27,6 +27,8 @@ var width = 500;
 var sq_w=10;
 var my_id=0;
 
+var last_snakes, last_bonus;
+
 function draw_grid() {
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
         context.beginPath();
@@ -67,47 +69,52 @@ function draw_hud() {
     context.fillText("y: "+position_y, 30, 50);
 }
 
+function update_canvas(snakes, bonus) {
+    // #Generate random bonus (normally server side, but here for testing purpose)
+    if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+        var id = uuid.v4();
+        controller.addBonus(id, genBonusCoords());
+    }
+    
+    
+    
+    
+    // #Get the viewport dimensions
+    update_dimensions();
+    
+    // #Reset the canvas
+    context.fillStyle = "#3B5998";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // #Draw the snakes
+    for(var i in snakes) {
+        for(var ii = 0; ii < snakes[i].coords.length;ii++) {
+            var cx = snakes[i].coords[ii][0];
+            var cy = snakes[i].coords[ii][1];
+            
+           context.fillStyle = "#00ffff";
+           context.fillRect(cx*sq_w-position_x+offset_x/*-(position_x%sq_w)*/, cy*sq_w-position_y+offset_y/*-(position_y%sq_w)*/, sq_w, sq_w);
+        }
+    }
+    
+    
+    // #Draw the grid
+    context.strokeStyle = "#ffffff";
+    context.lineWidth=0.5;
+    draw_grid();
+    
+    // #Draw the HUD
+    draw_hud();
+    
+}
+
 
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
-            // #Generate random bonus (normally server side, but here for testing purpose)
-            if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
-                var id = uuid.v4();
-                controller.addBonus(id, genBonusCoords());
-            }
-            
-            
-            
-            
-            // #Get the viewport dimensions
-            update_dimensions();
-            
-            // #Reset the canvas
-            context.fillStyle = "#3B5998";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // #Draw the snakes
-            for(var i in snakes) {
-                for(var ii = 0; ii < snakes[i].coords.length;ii++) {
-                    var cx = snakes[i].coords[ii][0];
-                    var cy = snakes[i].coords[ii][1];
-                    
-                   context.fillStyle = "#00ffff";
-                   context.fillRect(cx*sq_w-position_x+offset_x/*-(position_x%sq_w)*/, cy*sq_w-position_y+offset_y/*-(position_y%sq_w)*/, sq_w, sq_w);
-                }
-            }
-            
-            
-            // #Draw the grid
-            context.strokeStyle = "#ffffff";
-            context.lineWidth=0.5;
-            draw_grid();
-            
-            // #Draw the HUD
-            draw_hud();
-            
-            
+            last_snakes=snakes;
+            last_bonus=bonus;
+            update_canvas(snakes, bonus);
         },
         eaten_bonnus: function (id) { },
         add_points: function (id, score) { },
@@ -167,10 +174,11 @@ if  (document.getElementById){
     
     function move(e){
         if (!e) e = window.event;
-         if (dragok){
+        if (dragok){
           var lft=dx + e.clientX - x,top=dy + e.clientY - y;
           offset_x=lft;
           offset_y=top;
+          update_canvas(last_snakes, last_bonus);
           return false;
         }
     }
