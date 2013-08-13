@@ -29,6 +29,8 @@ var my_id=0;
 
 var last_snakes, last_bonus;
 
+var padding = 50;
+
 function draw_grid() {
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
         context.beginPath();
@@ -83,7 +85,7 @@ function update_canvas(snakes, bonus) {
     update_dimensions();
     
     if(isLocked()) {
-        centerOnSnake(my_id);
+        followSnake(my_id);
     }
     
     // #Reset the canvas
@@ -131,7 +133,7 @@ var controller = new Controller({
         change_direction: function (id, direction) {}
     },
     points_bonnus: 10,
-    update_rate: 5
+    update_rate: 15
 });
 
 
@@ -153,23 +155,55 @@ function centerOnSnake(id) {
     position_y = py - height/2;
 }
 
+function followSnake(id) {
+    if(typeof last_snakes[id] == "undefined")
+        return;
+    
+    
+    var cx = last_snakes[id].coords[0][0];
+    var cy = last_snakes[id].coords[0][1];
+    
+    var px = cx * sq_w;
+    var py = cy * sq_w;
+    
+    if(px < position_x) {
+        centerOnSnake(id);
+        return;
+    } else if(px < position_x + padding) {
+        position_x = px - padding;
+    } else if(px > position_x + width) {
+        centerOnSnake(id);
+        return;
+    } else if(px > position_x + width - padding) {
+        position_x = px - width + padding;
+    }
+    
+    if(py < position_y) {
+        centerOnSnake(id);
+        return;
+    } else if(py < position_y + padding) {
+        position_y = py - padding;
+    } else if(py > position_y + height) {
+        centerOnSnake(id);
+        return;
+    } else if(py > position_y + height - padding) {
+        position_y = py - height + padding;
+    }
+}
+
 document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            position_x--;
             controller.changeDirection(0, "l");
             break;
         case 38://up
-            position_y--;
             controller.changeDirection(0, "u");
             break;
         case 39://right
-            position_x++;
             controller.changeDirection(0, "r");
             break;
         case 40://down
-            position_y++;
             controller.changeDirection(0, "d");
             break;
     }
