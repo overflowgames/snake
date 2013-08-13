@@ -6,10 +6,18 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/kineticjs/4.3.3/kinetic.min.js"></script>
         <script type="text/javascript" src="../common/controller/controller.js"></script>
     </head>
-    <body style="margin:0; overflow: hidden;">
-        <canvas class="dragclass" id="app" width="500" height="500">
-            
-        </canvas>
+    <body>
+        <canvas class="dragclass" id="app" width="500" height="500"></canvas>
+        <div id="button_lock" onClick="toggleLock()"><img id="img_lock" class="locked"  src="assets/lock.png" alt="lock"/></div>
         <script type="text/javascript" src="js/main.js"></script>
+        <script>
+            function toggleLock() {
+                var img = document.getElementById("img_lock");
+                if(img.className == "locked")
+                    img.className = "";
+                else
+                    img.className = "locked";
+            }
+        </script>
     </body>
 </html>
