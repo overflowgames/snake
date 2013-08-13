@@ -13,10 +13,12 @@
         <script>
             function toggleLock() {
                 var img = document.getElementById("img_lock");
-                if(img.className == "locked")
+                if(isLocked()) {
                     img.className = "";
-                else
+                } else {
                     img.className = "locked";
+                    update_canvas();
+                }
             }
             
             function isLocked() {
