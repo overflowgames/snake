@@ -82,6 +82,10 @@ function update_canvas(snakes, bonus) {
     // #Get the viewport dimensions
     update_dimensions();
     
+    if(isLocked()) {
+        centerOnSnake(my_id);
+    }
+    
     // #Reset the canvas
     context.fillStyle = "#3B5998";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -93,7 +97,7 @@ function update_canvas(snakes, bonus) {
             var cy = snakes[i].coords[ii][1];
             
            context.fillStyle = "#00ffff";
-           context.fillRect(cx*sq_w-position_x+offset_x/*-(position_x%sq_w)*/, cy*sq_w-position_y+offset_y/*-(position_y%sq_w)*/, sq_w, sq_w);
+           context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
         }
     }
     
@@ -134,7 +138,20 @@ var controller = new Controller({
 var c = [[4,2]];
 controller.addSnake(my_id,c, "d",0,42);
 
-
+function centerOnSnake(id) {
+    var cx = last_snakes[id].coords[0][0];
+    var cy = last_snakes[id].coords[0][1];
+    
+    var px = cx * sq_w;
+    var py = cy * sq_w;
+    
+    // px = (position_x + position_x + width) / 2
+    // px = position_x + width/2
+    // position_x = px - width/2
+    
+    position_x = px - width/2;
+    position_y = py - height/2;
+}
 
 document.onkeydown = function(event) {
     event = event || window.event; 
