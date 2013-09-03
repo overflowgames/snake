@@ -14,21 +14,28 @@
         </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
         
-        <div id="button_lock" onClick="toggleLock()"><img id="img_lock" class="locked"  src="assets/lock.png" alt="lock"/></div>
+        <div id="button_lock" onClick="lock()"><img src="assets/lock.png" alt="lock"/></div>
+        <div id="button_locked" onClick="unlock()" style="display: none;"><img src="assets/locked.png" alt="locked"/></div>
+        
         <script type="text/javascript" src="js/main.js"></script>
         <script>
-            function toggleLock() {
-                var img = document.getElementById("img_lock");
-                if(isLocked()) {
-                    img.className = "";
-                } else {
-                    img.className = "locked";
-                    update_canvas();
-                }
+            var locked = false;
+            function lock() {
+                locked=true;
+                $("#button_lock").hide();
+                $("#button_locked").show();
+                update_canvas();    
+            }
+            
+            function unlock() {
+                locked=false;
+                $("#button_locked").hide();
+                $("#button_lock").show();
+                update_canvas();   
             }
             
             function isLocked() {
-                return document.getElementById("img_lock").className == "locked";
+                return locked;
             }
         </script>
     </body>

@@ -4,27 +4,11 @@ body {
     font-family: Ubuntu;
 }
 
-#button_lock {
+#button_lock, #button_locked {
     z-index: 1000;
     position: absolute;
     bottom: 0;
     left: 10px;
-}
-
-#button_lock img {
-    filter: invert(0);
-    -webkit-filter: invert(0);
-    -moz-filter: invert(0);
-    -o-filter: invert(0);
-    -ms-filter: invert(0);
-}
-
-#button_lock .locked {
-    filter: invert(1);
-    -webkit-filter: invert(1);
-    -moz-filter: invert(1);
-    -o-filter: invert(1);
-    -ms-filter: invert(1);
 }
 
 #spawndiv {
