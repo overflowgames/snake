@@ -3,11 +3,17 @@
     <head>
         <title>Bienvenue chez les Nerdz</title>
         <link rel="stylesheet" href="css/main.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/kineticjs/4.3.3/kinetic.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/2.0.3/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="../common/controller/controller.js"></script>
     </head>
     <body>
+    
+        <div id="spawndiv" onClick="spawn_snake()">
+            <span>Spawn system: </span>
+            <a href="#">ready to teleport snake.</a>
+        </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
+        
         <div id="button_lock" onClick="toggleLock()"><img id="img_lock" class="locked"  src="assets/lock.png" alt="lock"/></div>
         <script type="text/javascript" src="js/main.js"></script>
         <script>

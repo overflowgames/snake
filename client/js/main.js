@@ -128,6 +128,7 @@ var controller = new Controller({
         add_snake: function (id, coords, direction, score, size) { },
         killed_snake: function (id) {
             alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+            $("#spawndiv").slideDown();
             
         },
         change_direction: function (id, direction) {}
@@ -136,9 +137,16 @@ var controller = new Controller({
     update_rate: 15
 });
 
+function spawn_snake() {
+    
+    var c = [[0,0]];
+    controller.addSnake(my_id,c, "d",0,20);
+    centerOnSnake(my_id);
+    
+    $("#spawndiv").slideUp();
+}
 
-var c = [[4,2]];
-controller.addSnake(my_id,c, "d",0,42);
+
 
 function centerOnSnake(id) {
     var cx = last_snakes[id].coords[0][0];

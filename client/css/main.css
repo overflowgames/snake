@@ -1,6 +1,7 @@
 body {
     margin:0; 
     overflow: hidden;
+    font-family: Ubuntu;
 }
 
 #button_lock {
@@ -24,4 +25,16 @@ body {
     -moz-filter: invert(1);
     -o-filter: invert(1);
     -ms-filter: invert(1);
+}
+
+#spawndiv {
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 25px;
+}
+
+#spawndiv a {
+    color: #22ff55;
+    text-decoration: none;
 }
