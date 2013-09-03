@@ -2,7 +2,6 @@
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
-    return;
 }
 
 canvas.width = 500;
@@ -11,7 +10,6 @@ canvas.height = 500;
 var context = canvas.getContext('2d');
 if(!context) {
     alert("Impossible de récupérer le context du canvas");
-    return;
 }
  
  
