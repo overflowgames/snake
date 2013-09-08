@@ -1,12 +1,28 @@
-var io = require('socket.io').listen(parseInt(process.env.PORT, 10)),
+var sio = require('socket.io'),
     uuid = require('uuid'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js"),
-    logentries = require('node-logentries');
+    logentries = require('node-logentries'),
+    http = require('http'),
+    express = require('express');
+
 
 var log = logentries.logger({
   token:process.env.LOGENTRIES_TOKEN
 });
+
+var app = express();
+
+app.use(express.static(__dirname + '/../client'));
+app.use('/common', express.static(__dirname + '/../common'));
+console.log(__dirname + '/../client');
+
+
+var server = http.createServer(app)
+
+server.listen(parseInt(process.env.PORT, 10));
+
+var io = sio.listen(server);
 
 log.info("Starting App");
 

@@ -1,4 +1,4 @@
-
+var socket = io.connect('http://boundless-snake.konfiot.c9.io/');
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -23,11 +23,12 @@ var height = 500;
 var width = 500;
 
 var sq_w=10;
-var my_id=0;
+var my_id="";
 
 var last_snakes, last_bonus;
 
 var padding = 50;
+
 
 function draw_grid() {
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
@@ -112,27 +113,32 @@ function update_canvas(snakes, bonus) {
     
 }
 
+var controller
 
-var controller = new Controller({
-    callbacks: {
-        update: function (snakes, bonus) {
-            last_snakes=snakes;
-            last_bonus=bonus;
-            update_canvas(snakes, bonus);
+socket.emit("login", "dan", function(data){
+    my_id=data;
+    controller = new Controller({
+        callbacks: {
+            update: function (snakes, bonus) {
+                last_snakes=snakes;
+                last_bonus=bonus;
+                update_canvas(snakes, bonus);
+            },
+            eaten_bonnus: function (id) { },
+            add_points: function (id, score) { },
+            add_bonus: function (id, coords) { },
+            add_snake: function (id, coords, direction, score, size) { },
+            killed_snake: function (id) {
+                alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+                $("#spawndiv").slideDown();
+                
+            },
+            change_direction: function (id, direction) {}
         },
-        eaten_bonnus: function (id) { },
-        add_points: function (id, score) { },
-        add_bonus: function (id, coords) { },
-        add_snake: function (id, coords, direction, score, size) { },
-        killed_snake: function (id) {
-            alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
-            $("#spawndiv").slideDown();
-            
-        },
-        change_direction: function (id, direction) {}
-    },
-    points_bonnus: 10,
-    update_rate: 15
+        points_bonnus: 10,
+        update_rate: 15
+    });
+    $("#spawndiv").slideDown();
 });
 
 function spawn_snake() {
@@ -201,16 +207,16 @@ document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            controller.changeDirection(0, "l");
+            controller.changeDirection(my_id, "l");
             break;
         case 38://up
-            controller.changeDirection(0, "u");
+            controller.changeDirection(my_id, "u");
             break;
         case 39://right
-            controller.changeDirection(0, "r");
+            controller.changeDirection(my_id, "r");
             break;
         case 40://down
-            controller.changeDirection(0, "d");
+            controller.changeDirection(my_id, "d");
             break;
     }
     

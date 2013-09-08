@@ -2,7 +2,7 @@ var redis = require("redis"),
     logentries = require('node-logentries'),
     async = require("async");
 
-var log = logentries.logger({
+/*var log = logentries.logger({
   token:process.env.LOGENTRIES_TOKEN
 });
 
@@ -25,23 +25,27 @@ client.auth(services["redis-2.2"][0]["credentials"]["password"]);
 
 client.on("error", function(err) {
     log.crit("Redis Error: " + err);
-});
+});*/
 
 function push_score(id, score, cb) {
-    client.get(id, function (err, reply) {
+/*    client.get(id, function (err, reply) {
         if (reply !== null){
             score_queue.push({"score": score, "reply": reply, "id":id});
         } else {
             log.warning("Redis Error: Impossible to update snake score, id "+id+" does not exist in database");
         }
-    });
+    });*/
 }
 
 function add_player_if_not_exists(id, cb){
-    client.get(id, function (err, reply) {
+/*    client.get(id, function (err, reply) {
         if (reply === null){
             add_queue.push(id, cb);
             log.info("Added player " + id);
         }
-    });
+    });*/
+    cb();
 }
+
+module.exports.add_player_if_not_exists = add_player_if_not_exists;
+module.exports.push_score = push_score;

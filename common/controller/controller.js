@@ -22,6 +22,7 @@ function Controller (options){
         snakes[id].size = size;
         num_snakes++;
         add_snake_callback(id, coords, direction, score, size);
+        console.log(snakes);
     };
     
     this.killSnake = function (id) {
