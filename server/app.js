@@ -84,16 +84,25 @@ io.sockets.on('connection', function (socket) {
             var snake_size = snake_coords.length;
             var id = uuid.v4();
             
-            controller.addSnake(id, snake_coords, snake_direction, snake_score, snake_size);
-            
-            socket.set("login", [id, data.secret], function () {
+            socket.set("login", {"id": id, "secret" : data}, function () {
                 ack(id);
+            });
+            
+            socket.on("spawn", function(data, ack){
+                socket.get("login", function(err, login){
+                    if (data.secret === login.secret){
+                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size);
+                        ack("ok");
+                    } else {
+                        ack("ko");
+                    }
+                });
             });
                         
             socket.on("chdir", function(data, ack) {
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {
-                        if (data.secret == login.secret){
+                        if (data.secret === login.secret){
                             controller.changeDirection(login.id, data.direction);
                             ack("ok");
                         } else {

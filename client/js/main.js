@@ -133,7 +133,17 @@ socket.emit("login", "dan", function(data){
                 $("#spawndiv").slideDown();
                 
             },
-            change_direction: function (id, direction) {}
+            change_direction: function (id, direction) {
+                if (id === my_id){
+                        socket.emit("spawn", {"id":my_id, "secret":"dan", "direction": direction}, function(data){
+                            if (data === "kol"){
+                                console.log("Y'a une couille avec le secret de la direction !!!");
+                            } else if (data === "kod"){
+                                console.log("Y'a une couille avec la direction !!!");
+                            }
+                    });
+                }
+            }
         },
         points_bonnus: 10,
         update_rate: 15
@@ -142,12 +152,16 @@ socket.emit("login", "dan", function(data){
 });
 
 function spawn_snake() {
-    
-    var c = [[0,0]];
-    controller.addSnake(my_id,c, "d",0,20);
-    centerOnSnake(my_id);
-    
-    $("#spawndiv").slideUp();
+    socket.emit("spawn", {"id":my_id, "secret":"dan"}, function(data){
+        if (data === "ko"){
+            console.log("Y'a une couille avec le secret !!!");
+        }
+        var c = [[0,0]];
+        controller.addSnake(my_id,c, "d",0,20);
+        centerOnSnake(my_id);
+        
+        $("#spawndiv").slideUp();
+    });
 }
 
 
