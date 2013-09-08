@@ -78,7 +78,7 @@ var controller = new Controller({
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
         dbcontroller.add_player_if_not_exists(data.secret, function () {
-            var snake_coords = [[0,0], [0, 1], [0, 2]];
+            var snake_coords = [[0,0], [0,1], [0,2]];
             var snake_direction = "u";
             var snake_score = 0;
             var snake_size = snake_coords.length;

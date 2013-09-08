@@ -151,13 +151,17 @@ socket.emit("login", "dan", function(data){
     $("#spawndiv").slideDown();
 });
 
+socket.on("+", function(data){
+    controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
+});
+
 function spawn_snake() {
     socket.emit("spawn", {"id":my_id, "secret":"dan"}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
-        var c = [[0,0]];
-        controller.addSnake(my_id,c, "d",0,20);
+        var c = [[0,0], [0,1], [0,2]];
+        controller.addSnake(my_id,c, "u",0,20);
         centerOnSnake(my_id);
         
         $("#spawndiv").slideUp();
