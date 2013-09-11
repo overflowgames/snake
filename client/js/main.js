@@ -132,6 +132,8 @@ socket.emit("login", "dan", function(data){
                 if(id === my_id){
                     alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
                     $("#spawndiv").slideDown();
+                } else {
+                    console.log(id + " vs " + my_id);
                 }
                 
             },

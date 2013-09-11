@@ -145,9 +145,10 @@ function Controller (options){
         checkCollision();
         
         while (to_kill.length > 0){
-            delete snakes[to_kill.pop()];// TOFIX: Y'avais une couille dans l'appel de la fonction
+            var tokill = to_kill.pop()
+            delete snakes[tokill];// TOFIX: Y'avais une couille dans l'appel de la fonction
             num_snakes--;
-            killed_snake_callback(to_kill.pop());
+            killed_snake_callback(tokill);
         }
         
         checkBonus();
