@@ -110,7 +110,13 @@ function Controller (options){
     
     function validateMove(id_snake, new_direction) {
         var theSnake = snakes[id_snake];
-        var theCoords = theSnake.coords;
+        
+        if (typeof(theSnake) === "undefined"){
+            return false;
+        }
+        
+        var theCoords = theSnake.coords ;
+        
         var orientation;
         
         if((theCoords[0][0] == theCoords[1][0]) && (theCoords[0][1] == theCoords[1][1] + 1)) //going down
@@ -127,6 +133,11 @@ function Controller (options){
     
     function comparePos(p1, p2) {
         return (p1[0] == p2[0]) && (p1[1] == p2[1]);
+    }
+    
+    this.load = function(s, b) {
+        snakes = s;
+        bonus = b;
     }
     
     this.update = function () {     // This is where the magic happens

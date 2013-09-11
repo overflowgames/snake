@@ -72,10 +72,10 @@ function draw_hud() {
 
 function update_canvas(snakes, bonus) {
     // #Generate random bonus (normally server side, but here for testing purpose)
-    if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+    /*if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
         var id = uuid.v4();
         controller.addBonus(id, genBonusCoords());
-    }
+    }*/
     
     
     
@@ -129,20 +129,16 @@ socket.emit("login", "dan", function(data){
             add_bonus: function (id, coords) { },
             add_snake: function (id, coords, direction, score, size) { },
             killed_snake: function (id) {
-                alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
-                $("#spawndiv").slideDown();
+                if(id === my_id){
+                    alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+                    $("#spawndiv").slideDown();
+                }
                 
             },
             change_direction: function (id, direction) {
-                if (id === my_id){
-                        socket.emit("spawn", {"id":my_id, "secret":"dan", "direction": direction}, function(data){
-                            if (data === "kol"){
-                                console.log("Y'a une couille avec le secret de la direction !!!");
-                            } else if (data === "kod"){
-                                console.log("Y'a une couille avec la direction !!!");
-                            }
-                    });
-                }
+                /*if (id === my_id){
+                    socket.emit("c", {"id":my_id, "secret":"dan", "direction": direction}, function(data){});
+                }*/
             }
         },
         points_bonnus: 10,
@@ -152,7 +148,23 @@ socket.emit("login", "dan", function(data){
 });
 
 socket.on("+", function(data){
-    controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
+    if (data[0] != my_id){
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
+    }
+});
+
+socket.on("-", function(data){
+        controller.killSnake(data);
+});
+
+socket.on("up", function(data){
+        controller.load(data.snakes, data.bonus);
+});
+
+socket.on("c", function(data){
+    //if (data[0] != my_id){
+        controller.changeDirection(data[0],data[1]);
+    //}
 });
 
 function spawn_snake() {
@@ -160,7 +172,7 @@ function spawn_snake() {
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
-        var c = [[0,0], [0,1], [0,2]];
+        var c = [[0,0]];
         controller.addSnake(my_id,c, "u",0,20);
         centerOnSnake(my_id);
         
@@ -225,16 +237,16 @@ document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            controller.changeDirection(my_id, "l");
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "l"}, function(data){});
             break;
         case 38://up
-            controller.changeDirection(my_id, "u");
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "u"}, function(data){});
             break;
         case 39://right
-            controller.changeDirection(my_id, "r");
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "r"}, function(data){});
             break;
         case 40://down
-            controller.changeDirection(my_id, "d");
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "d"}, function(data){});
             break;
     }
     

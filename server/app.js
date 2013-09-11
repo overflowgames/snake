@@ -39,37 +39,37 @@ var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
             if (controller.getNumSnakes() > 0){
-                if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+                /*if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
-                }
+                }*/
             }
             game.snakes = snakes;
             game.bonus = bonus;
-            log.info("Game updated");
+            //log.info("Game updated");
         },
         eaten_bonnus: function (id, by) {
-            io.sockets.emit("-b", [id]);
+            io.sockets.emit("-b", [id], function(){});
         },
         add_points: function (id, score) {
-            io.sockets.emit("s", [id, score]);
+            io.sockets.emit("s", [id, score], function(){});
         },
         add_bonus: function (id, coords) {
-            io.sockets.emit("+b", [id, coords]);
+            io.sockets.emit("+b", [id, coords], function(){});
         },
         add_snake: function (id, coords, direction, score, size) {
-            io.sockets.emit("+", [id, coords, direction, score, size]);
+            io.sockets.emit("+", [id, coords, direction, score, size], function(){});
         },
         killed_snake: function (id) {
-            io.sockets.broadcast.emit("-", id);
-            dbcontroller.push_score(id, game.snakes[id].score);
+            io.sockets.emit("-", id, function(){});
+            //dbcontroller.push_score(id, game.snakes[id].score);
         },
         change_direction: function (id, direction) {
-            io.sockets.broadcast.emit("chdir", [id, direction]);
+            io.sockets.emit("c", [id, direction], function(){});
         }
     },
     points_bonnus: 10,
-    update_rate: 5
+    update_rate: 15
 });
 
 
@@ -78,10 +78,10 @@ var controller = new Controller({
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
         dbcontroller.add_player_if_not_exists(data.secret, function () {
-            var snake_coords = [[0,0], [0,1], [0,2]];
+            var snake_coords = [[0,0]];
             var snake_direction = "u";
             var snake_score = 0;
-            var snake_size = snake_coords.length;
+            var snake_size = 20;
             var id = uuid.v4();
             
             socket.set("login", {"id": id, "secret" : data}, function () {
@@ -99,7 +99,7 @@ io.sockets.on('connection', function (socket) {
                 });
             });
                         
-            socket.on("chdir", function(data, ack) {
+            socket.on("c", function(data, ack) {
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {
                         if (data.secret === login.secret){
@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
                 
             socket.on("disconnect", function () {
                 socket.broadcast.emit("-", id);
-                dbcontroller.push_score(id, game.snakes[id].score);
+                //dbcontroller.push_score(id, game.snakes[id].score);
             });
             
         });
@@ -126,7 +126,9 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function(){
-    io.sockets.emit("up", game);
-}, 100000);     // Sends the whole game state to all the clients every 10 seconds
+    io.sockets.emit("up", game, function(){
+        
+    });
+}, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
 log.info("All started");
