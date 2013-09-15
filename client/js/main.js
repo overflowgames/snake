@@ -1,4 +1,5 @@
-var socket = io.connect('http://boundless-snake.eu01.aws.af.cm/');
+var controller;
+var socket = io.connect('http://boundless-snake-konfiot.rhcloud.com:8000/');
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -113,7 +114,6 @@ function update_canvas(snakes, bonus) {
     
 }
 
-var controller
 
 socket.emit("login", "dan", function(data){
     my_id=data;
