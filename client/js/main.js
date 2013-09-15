@@ -1,4 +1,4 @@
-var socket = io.connect('http://boundless-snake.konfiot.c9.io/');
+var socket = io.connect('http://boundless-snake.eu01.aws.af.cm/');
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -130,7 +130,7 @@ socket.emit("login", "dan", function(data){
             add_snake: function (id, coords, direction, score, size) { },
             killed_snake: function (id) {
                 if(id === my_id){
-                    alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+                    //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
                     $("#spawndiv").slideDown();
                 } else {
                     console.log(id + " vs " + my_id);
@@ -144,7 +144,8 @@ socket.emit("login", "dan", function(data){
             }
         },
         points_bonnus: 10,
-        update_rate: 15
+        update_rate: 15,
+        disable_update: true
     });
     $("#spawndiv").slideDown();
 });
@@ -166,6 +167,12 @@ socket.on("up", function(data){
 socket.on("c", function(data){
     //if (data[0] != my_id){
         controller.changeDirection(data[0],data[1]);
+    //}
+});
+
+socket.on("u", function(data){
+    //if (data[0] != my_id){
+        controller.update();
     //}
 });
 

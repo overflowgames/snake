@@ -7,9 +7,9 @@ var sio = require('socket.io'),
     express = require('express');
 
 
-var log = logentries.logger({
+/*var log = logentries.logger({
   token:process.env.LOGENTRIES_TOKEN
-});
+});*/
 
 var app = express();
 
@@ -20,11 +20,11 @@ console.log(__dirname + '/../client');
 
 var server = http.createServer(app)
 
-server.listen(parseInt(process.env.PORT, 10));
+server.listen(parseInt(process.env.PORT, 10) );
 
 var io = sio.listen(server);
 
-log.info("Starting App");
+//log.info("Starting App");
 
 var game = {}, directions = ["u", "d", "l", "r"];
 
@@ -46,26 +46,27 @@ var controller = new Controller({
             }
             game.snakes = snakes;
             game.bonus = bonus;
+            io.sockets.emit("u");
             //log.info("Game updated");
         },
         eaten_bonnus: function (id, by) {
-            io.sockets.emit("-b", [id], function(){});
+            io.sockets.emit("-b", [id]);
         },
         add_points: function (id, score) {
-            io.sockets.emit("s", [id, score], function(){});
+            io.sockets.emit("s", [id, score]);
         },
         add_bonus: function (id, coords) {
-            io.sockets.emit("+b", [id, coords], function(){});
+            io.sockets.emit("+b", [id, coords]);
         },
         add_snake: function (id, coords, direction, score, size) {
-            io.sockets.emit("+", [id, coords, direction, score, size], function(){});
+            io.sockets.emit("+", [id, coords, direction, score, size]);
         },
         killed_snake: function (id) {
-            io.sockets.emit("-", id, function(){});
+            io.sockets.emit("-", id);
             //dbcontroller.push_score(id, game.snakes[id].score);
         },
         change_direction: function (id, direction) {
-            io.sockets.emit("c", [id, direction], function(){});
+            io.sockets.emit("c", [id, direction]);
         }
     },
     points_bonnus: 10,
@@ -107,12 +108,12 @@ io.sockets.on('connection', function (socket) {
                             ack("ok");
                         } else {
                             ack("kol");
-                            log.notice("Someone has tried to acces to an id without permission");
+                           //log.notice("Someone has tried to acces to an id without permission");
                         }
                     });
                 } else {
                     ack("kod");
-                    log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
+                    //log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                 }
             });
                 
@@ -131,4 +132,4 @@ setInterval(function(){
     });
 }, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
-log.info("All started");
+//log.info("All started");

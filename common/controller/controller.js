@@ -155,8 +155,9 @@ function Controller (options){
         update_callback(snakes, bonus);
     };
 
-    setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
-
+    if (!(options.disable_update === true)){
+        setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
+    }
 }
 
 module.exports.Controller = Controller;
