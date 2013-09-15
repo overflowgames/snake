@@ -20,7 +20,7 @@ console.log(__dirname + '/../client');
 
 var server = http.createServer(app)
 
-server.listen(parseInt(process.env.PORT, 10) );
+server.listen(8080);
 
 var io = sio.listen(server);
 
