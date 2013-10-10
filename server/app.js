@@ -27,25 +27,87 @@ var io = sio.listen(server);
 log.info("Starting App");
 
 var game = {}, directions = ["u", "d", "l", "r"];
+var probability_matrix;
 
 function genBonusCoords (){
     
+    /*
+     * Génération du tableau des probabilités.
+     */
+    
+    probability_matrix = [];
+    for(var snake in game.snakes) {
+        update_probs(snake.coords[0][0], snake.coords[0][1], snake.direction);
+    }
+    
+    /*
+     * Préparation du traitement des probabilités. 
+     */
+    
+    var sum = 0; // Somme des probabilités
+    var probs = []; // Probabilité à l'index i
+    var probx = []; // Position x de la probabilité à l'index i
+    var proby = []; // Position y de la probabilité à l'index i
+    
+    for (var x in probability_matrix) {
+        for (var y in probability_matrix[x]) {
+            sum += probability_matrix[x][y];
+            probs.push(probability_matrix[x][y]);
+            probx.push(x);
+            proby.push(y);
+        }
+    }
+    
+    /*
+     * Sélection d'une coordonnée aléatoire selon les probabilités.
+     */ 
+     
+    var r = Math.ceil(Math.random()*sum);
+    var ecc = 0;
+    
+    for(var index in probs) {
+        ecc += probs[index];
+        
+        if(ecc >= r) {
+            var coord = [];
+            coord [0] = probx[index];
+            coord [1] = proby[index];
+            return coord;
+        }
+    }
 }
 
+/// Met à jour la matrice des probabilités pour un snake positionné en (x,y) et dirigé vers direction.
+function update_probs(x, y, direction) {
+    var void_radius = 2;
+    var max_val     = 5;
+    for(var px = x - max_val*2 + 1 - void_radius + 1; px <= x-void_radius; px++) {
+        for(var py = y - max_val*2 + 1; py <= y; py++) {
+            var delta_total = Math.abs(x - px) + Math.abs(y - py);
+            
+            if(delta_total <= max_val)
+                delta_total = 2*max_val - delta_total;
+            
+            if((delta_total > 0) && (delta_total <= max_val)){
+                probability_matrix[px][py] += delta_total;
+            }
+        }
+    }
+}
 
 /* ---------------------------- Creating controller ---------------------------- */
 
 var controller = new Controller({
     callbacks: {
         update: function (snakes, bonus) {
+            game.snakes = snakes;
+            game.bonus = bonus;
             if (controller.getNumSnakes() > 0){
                 /*if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
                 }*/
             }
-            game.snakes = snakes;
-            game.bonus = bonus;
             //log.info("Game updated");
         },
         eaten_bonnus: function (id, by) {

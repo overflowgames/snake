@@ -1,4 +1,4 @@
-var socket = io.connect('http://boundless-snake.konfiot.c9.io/');
+var socket = io.connect('http://snake-c9-jmouloude42.c9.io/');
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
