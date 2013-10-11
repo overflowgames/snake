@@ -1,5 +1,6 @@
+var socket = io.connect('https://snake-c9-jmouloude42.c9.io/');
 var controller;
-var socket = io.connect('http://boundless-snake-konfiot.rhcloud.com:8000/');
+
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -100,7 +101,17 @@ function update_canvas(snakes, bonus) {
             
            context.fillStyle = "#00ffff";
            context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
+           
         }
+    }
+    
+    // #Draw bonuses
+    for(var i in bonus) {
+        var cx = bonus[i][0];
+        var cy = bonus[i][1];
+        
+        context.fillStyle = "#ffaa00";
+        context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
     }
     
     
@@ -108,6 +119,30 @@ function update_canvas(snakes, bonus) {
     context.strokeStyle = "#ffffff";
     context.lineWidth=0.5;
     draw_grid();
+    
+    // #Draw names
+    for(var i in snakes) {
+        var sx, sy;
+        var tx, ty;
+        sx = snakes[i].coords[0][0];
+        sy = snakes[i].coords[0][1];
+        
+        context.fillStyle = "#424242";
+        context.font = "16px Helvetica";
+        
+        var tw = context.measureText(snakes[i].name).width;
+        
+        tx = sx*sq_w-position_x+offset_x - tw/2;
+        ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
+        
+        
+        context.fillRect(tx-2, ty-16, tw + 4, 20);
+    
+        context.fillStyle = "#ffffff";
+        context.fillText(snakes[i].name, tx, ty);
+        
+    }
+    
     
     // #Draw the HUD
     draw_hud();
@@ -127,7 +162,7 @@ socket.emit("login", "dan", function(data){
             eaten_bonnus: function (id) { },
             add_points: function (id, score) { },
             add_bonus: function (id, coords) { },
-            add_snake: function (id, coords, direction, score, size) { },
+            add_snake: function (id, coords, direction, score, size, name) { },
             killed_snake: function (id) {
                 if(id === my_id){
                     //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
@@ -144,8 +179,8 @@ socket.emit("login", "dan", function(data){
             }
         },
         points_bonnus: 10,
-        update_rate: 15,
-        disable_update: true
+        disable_update: true,
+        update_rate: 10
     });
     $("#spawndiv").slideDown();
 });
@@ -155,6 +190,10 @@ socket.on("+", function(data){
         controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
     }
 });
+
+socket.on("+b", function(data){
+        controller.addBonus(data[0],data[1]);
+})
 
 socket.on("-", function(data){
         controller.killSnake(data);
@@ -176,13 +215,21 @@ socket.on("u", function(data){
     //}
 });
 
+
+$('#daniel').keyup(function (e) {
+    if (e.keyCode === 13) {
+       spawn_snake();
+    }
+});
+  
+  
 function spawn_snake() {
-    socket.emit("spawn", {"id":my_id, "secret":"dan"}, function(data){
+    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
         var c = [[0,0]];
-        controller.addSnake(my_id,c, "u",0,20);
+        controller.addSnake(my_id,c, "u",0,20,document.getElementById('daniel').value);
         centerOnSnake(my_id);
         
         $("#spawndiv").slideUp();

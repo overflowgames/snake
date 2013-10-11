@@ -5,13 +5,16 @@
         <link rel="stylesheet" href="css/main.css">
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/2.0.3/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/common/controller/controller.js"></script>
+        <script type="text/javascript" src="common/controller/controller.js"></script>
+
     </head>
     <body>
     
-        <div id="spawndiv" onClick="spawn_snake()" style="display:none">
+        <div id="spawndiv" style="display:none">
             <span>Spawn system: </span>
-            <a href="#">ready to teleport snake.</a>
+            <a href="#" onClick="spawn_snake()" >ready to teleport snake.</a>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | | | | | | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <!-- #je code comme un porc -->
+            <input type="text" id="daniel" placeholder="Entrez votre Kouby" value="Jean-Masturbin" />
         </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
         

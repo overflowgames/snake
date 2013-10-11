@@ -14,14 +14,15 @@ function Controller (options){
     
     var to_kill = [], num_snakes = 0;
     
-    this.addSnake = function (id, coords, direction, score, size) {
+    this.addSnake = function (id, coords, direction, score, size, name) {
         snakes[id] = {};
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
         snakes[id].size = size;
+        snakes[id].name = name;
         num_snakes++;
-        add_snake_callback(id, coords, direction, score, size);
+        add_snake_callback(id, coords, direction, score, size, name);
     };
     
     this.killSnake = function (id) {
@@ -101,8 +102,8 @@ function Controller (options){
     function checkBonus() {
         for (var i in snakes){
             for (var j in bonus){
-                if (snakes[i].coords[0] == bonus[j]){
-                    eatBonus(j);
+                if (comparePos(snakes[i].coords[0],bonus[j])){
+                    eatBonus(j,i);
                 }
             }
         }
@@ -132,6 +133,8 @@ function Controller (options){
     }
     
     function comparePos(p1, p2) {
+        if((typeof p1 == "undefined") || (typeof p2 == "undefined"))
+            return false;
         return (p1[0] == p2[0]) && (p1[1] == p2[1]);
     }
     
@@ -154,7 +157,7 @@ function Controller (options){
         checkBonus();
         update_callback(snakes, bonus);
     };
-
+    
     if (!(options.disable_update === true)){
         setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
     }
