@@ -1,4 +1,6 @@
 var socket = io.connect('https://snake-c9-jmouloude42.c9.io/');
+var controller;
+
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -122,7 +124,6 @@ function update_canvas(snakes, bonus) {
     
 }
 
-var controller
 
 socket.emit("login", "dan", function(data){
     my_id=data;
@@ -139,7 +140,7 @@ socket.emit("login", "dan", function(data){
             add_snake: function (id, coords, direction, score, size) { },
             killed_snake: function (id) {
                 if(id === my_id){
-                    alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
+                    //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
                     $("#spawndiv").slideDown();
                 } else {
                     console.log(id + " vs " + my_id);
@@ -153,8 +154,8 @@ socket.emit("login", "dan", function(data){
             }
         },
         points_bonnus: 10,
-        update_rate: 15,
-        disable_update: true
+        disable_update: true,
+        update_rate: 15
     });
     $("#spawndiv").slideDown();
 });

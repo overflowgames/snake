@@ -156,6 +156,7 @@ function Controller (options){
         checkBonus();
         update_callback(snakes, bonus);
     };
+    
     if (!(options.disable_update === true)){
         setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
     }

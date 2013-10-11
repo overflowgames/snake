@@ -190,12 +190,12 @@ io.sockets.on('connection', function (socket) {
                             ack("ok");
                         } else {
                             ack("kol");
-                            log.notice("Someone has tried to acces to an id without permission");
+                           //log.notice("Someone has tried to acces to an id without permission");
                         }
                     });
                 } else {
                     ack("kod");
-                    log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
+                    //log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                 }
             });
                 
@@ -214,4 +214,4 @@ setInterval(function(){
     });
 }, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
-log.info("All started");
+//log.info("All started");
