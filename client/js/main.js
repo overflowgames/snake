@@ -101,6 +101,7 @@ function update_canvas(snakes, bonus) {
             
            context.fillStyle = "#00ffff";
            context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
+           
         }
     }
     
@@ -118,6 +119,30 @@ function update_canvas(snakes, bonus) {
     context.strokeStyle = "#ffffff";
     context.lineWidth=0.5;
     draw_grid();
+    
+    // #Draw names
+    for(var i in snakes) {
+        var sx, sy;
+        var tx, ty;
+        sx = snakes[i].coords[0][0];
+        sy = snakes[i].coords[0][1];
+        
+        context.fillStyle = "#424242";
+        context.font = "16px Helvetica";
+        
+        var tw = context.measureText(snakes[i].name).width;
+        
+        tx = sx*sq_w-position_x+offset_x - tw/2;
+        ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
+        
+        
+        context.fillRect(tx-2, ty-16, tw + 4, 20);
+    
+        context.fillStyle = "#ffffff";
+        context.fillText(snakes[i].name, tx, ty);
+        
+    }
+    
     
     // #Draw the HUD
     draw_hud();
@@ -137,7 +162,7 @@ socket.emit("login", "dan", function(data){
             eaten_bonnus: function (id) { },
             add_points: function (id, score) { },
             add_bonus: function (id, coords) { },
-            add_snake: function (id, coords, direction, score, size) { },
+            add_snake: function (id, coords, direction, score, size, name) { },
             killed_snake: function (id) {
                 if(id === my_id){
                     //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
@@ -155,7 +180,7 @@ socket.emit("login", "dan", function(data){
         },
         points_bonnus: 10,
         disable_update: true,
-        update_rate: 15
+        update_rate: 10
     });
     $("#spawndiv").slideDown();
 });
@@ -191,12 +216,12 @@ socket.on("u", function(data){
 });
 
 function spawn_snake() {
-    socket.emit("spawn", {"id":my_id, "secret":"dan"}, function(data){
+    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":"Jean-Masturbin"}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
         var c = [[0,0]];
-        controller.addSnake(my_id,c, "u",0,20);
+        controller.addSnake(my_id,c, "u",0,20,"Jean-Masturbin");
         centerOnSnake(my_id);
         
         $("#spawndiv").slideUp();

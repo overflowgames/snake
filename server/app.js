@@ -124,7 +124,7 @@ var controller = new Controller({
             if (controller.getNumSnakes() > 0){
                 
               //  if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
-                if(Math.random() < 0.05) {
+                if(Math.random() < 0.02) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
                 }
@@ -140,8 +140,8 @@ var controller = new Controller({
         add_bonus: function (id, coords) {
             io.sockets.emit("+b", [id, coords]);
         },
-        add_snake: function (id, coords, direction, score, size) {
-            io.sockets.emit("+", [id, coords, direction, score, size]);
+        add_snake: function (id, coords, direction, score, size, name) {
+            io.sockets.emit("+", [id, coords, direction, score, size, name]);
         },
         killed_snake: function (id) {
             io.sockets.emit("-", id);
@@ -152,7 +152,7 @@ var controller = new Controller({
         }
     },
     points_bonnus: 10,
-    update_rate: 15
+    update_rate: 10
 });
 
 
@@ -174,7 +174,7 @@ io.sockets.on('connection', function (socket) {
             socket.on("spawn", function(data, ack){
                 socket.get("login", function(err, login){
                     if (data.secret === login.secret){
-                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size);
+                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name);
                         ack("ok");
                     } else {
                         ack("ko");
