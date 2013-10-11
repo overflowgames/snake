@@ -102,7 +102,7 @@ function Controller (options){
         for (var i in snakes){
             for (var j in bonus){
                 if (comparePos(snakes[i].coords[0],bonus[j])){
-                    eatBonus(j);
+                    eatBonus(j,i);
                 }
             }
         }
