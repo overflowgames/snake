@@ -165,6 +165,10 @@ socket.on("+", function(data){
     }
 });
 
+socket.on("+b", function(data){
+        controller.addBonus(data[0],data[1]);
+})
+
 socket.on("-", function(data){
         controller.killSnake(data);
 });
