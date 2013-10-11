@@ -215,13 +215,21 @@ socket.on("u", function(data){
     //}
 });
 
+
+$('#daniel').keyup(function (e) {
+    if (e.keyCode === 13) {
+       spawn_snake();
+    }
+});
+  
+  
 function spawn_snake() {
-    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":"Jean-Masturbin"}, function(data){
+    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
         var c = [[0,0]];
-        controller.addSnake(my_id,c, "u",0,20,"Jean-Masturbin");
+        controller.addSnake(my_id,c, "u",0,20,document.getElementById('daniel').value);
         centerOnSnake(my_id);
         
         $("#spawndiv").slideUp();
