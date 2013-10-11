@@ -132,6 +132,8 @@ function Controller (options){
     }
     
     function comparePos(p1, p2) {
+        if((typeof p1 == "undefined") || (typeof p2 == "undefined"))
+            return false;
         return (p1[0] == p2[0]) && (p1[1] == p2[1]);
     }
     
@@ -154,9 +156,9 @@ function Controller (options){
         checkBonus();
         update_callback(snakes, bonus);
     };
-
-    setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
-
+    if (!(options.disable_update === true)){
+        setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
+    }
 }
 
 module.exports.Controller = Controller;

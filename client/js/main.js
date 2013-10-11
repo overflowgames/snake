@@ -1,4 +1,4 @@
-var socket = io.connect('http://snake-c9-jmouloude42.c9.io/');
+var socket = io.connect('https://snake-c9-jmouloude42.c9.io/');
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -153,7 +153,8 @@ socket.emit("login", "dan", function(data){
             }
         },
         points_bonnus: 10,
-        update_rate: 15
+        update_rate: 15,
+        disable_update: true
     });
     $("#spawndiv").slideDown();
 });
@@ -175,6 +176,12 @@ socket.on("up", function(data){
 socket.on("c", function(data){
     //if (data[0] != my_id){
         controller.changeDirection(data[0],data[1]);
+    //}
+});
+
+socket.on("u", function(data){
+    //if (data[0] != my_id){
+        controller.update();
     //}
 });
 

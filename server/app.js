@@ -24,6 +24,7 @@ server.listen(parseInt(process.env.PORT, 10));
 
 var io = sio.listen(server);
 
+
 log.info("Starting App");
 
 var game = {}, directions = ["u", "d", "l", "r"];
@@ -36,8 +37,14 @@ function genBonusCoords (){
      */
     
     probability_matrix = [];
-    for(var snake in game.snakes) {
-        update_probs(snake.coords[0][0], snake.coords[0][1], snake.direction);
+    for(var i in game.snakes) {
+        var currentSnake = game.snakes[i];
+        if(currentSnake.coords == undefined) {
+            console.log("yolo");
+        } else {
+            console.log("yea");
+            update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], currentSnake.direction);
+        }
     }
     
     /*
@@ -65,6 +72,8 @@ function genBonusCoords (){
     var r = Math.ceil(Math.random()*sum);
     var ecc = 0;
     
+    console.log("sum = "+sum+" ; random = "+r);
+    
     for(var index in probs) {
         ecc += probs[index];
         
@@ -72,6 +81,7 @@ function genBonusCoords (){
             var coord = [];
             coord [0] = probx[index];
             coord [1] = proby[index];
+            console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
             return coord;
         }
     }
@@ -85,10 +95,16 @@ function update_probs(x, y, direction) {
         for(var py = y - max_val*2 + 1; py <= y; py++) {
             var delta_total = Math.abs(x - px) + Math.abs(y - py);
             
-            if(delta_total <= max_val)
+            if(delta_total > max_val)
                 delta_total = 2*max_val - delta_total;
             
             if((delta_total > 0) && (delta_total <= max_val)){
+                if(probability_matrix[px] == undefined)
+                    probability_matrix[px] = [];
+                    
+                if(probability_matrix[px][py] == undefined)
+                    probability_matrix[px][py] = 0;
+                    
                 probability_matrix[px][py] += delta_total;
             }
         }
@@ -102,32 +118,37 @@ var controller = new Controller({
         update: function (snakes, bonus) {
             game.snakes = snakes;
             game.bonus = bonus;
+            io.sockets.emit("u");
+            
+    
             if (controller.getNumSnakes() > 0){
-                /*if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+                
+              //  if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
+                if(Math.random() < 0.05) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
-                }*/
+                }
             }
             //log.info("Game updated");
         },
         eaten_bonnus: function (id, by) {
-            io.sockets.emit("-b", [id], function(){});
+            io.sockets.emit("-b", [id]);
         },
         add_points: function (id, score) {
-            io.sockets.emit("s", [id, score], function(){});
+            io.sockets.emit("s", [id, score]);
         },
         add_bonus: function (id, coords) {
-            io.sockets.emit("+b", [id, coords], function(){});
+            io.sockets.emit("+b", [id, coords]);
         },
         add_snake: function (id, coords, direction, score, size) {
-            io.sockets.emit("+", [id, coords, direction, score, size], function(){});
+            io.sockets.emit("+", [id, coords, direction, score, size]);
         },
         killed_snake: function (id) {
-            io.sockets.emit("-", id, function(){});
+            io.sockets.emit("-", id);
             //dbcontroller.push_score(id, game.snakes[id].score);
         },
         change_direction: function (id, direction) {
-            io.sockets.emit("c", [id, direction], function(){});
+            io.sockets.emit("c", [id, direction]);
         }
     },
     points_bonnus: 10,
