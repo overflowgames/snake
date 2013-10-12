@@ -204,6 +204,10 @@ io.sockets.on('connection', function (socket) {
             
             socket.on("spawn", function(data, ack){
                 socket.get("login", function(err, login){
+                    snake_coords = [[0,0]];
+                    snake_direction = "u";
+                    snake_score = 0;
+                    snake_size = 20;
                     if (data.secret === login.secret){
                         controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name);
                         ack("ok");
