@@ -25,13 +25,14 @@ var height = 500;
 var width = 500;
 
 var sq_w=10;
+var anim;
 
 var my_id="";
 var ma_direction="u"; // CEY MA DIRAYCTION! JAY PAYTAY LAY PLOMB ////
 
 var last_snakes, last_bonus;
 
-var padding = 50;
+var padding = 150;
 
 
 function draw_grid() {
@@ -75,26 +76,17 @@ function draw_hud() {
     context.fillText("y: "+position_y, 30, 50);
 }
 
+setInterval(function() {
+    if(isLocked()) 
+        followSnake(my_id);
+},1000/500);
+
 function update_canvas(snakes, bonus) {
-    // #Generate random bonus (normally server side, but here for testing purpose)
-    /*if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
-        var id = uuid.v4();
-        controller.addBonus(id, genBonusCoords());
-    }*/
-    
-    
-    
-    
     // #Get the viewport dimensions
     update_dimensions();
-    
-    if(isLocked()) {
-        followSnake(my_id);
-    }
-    
+
     // #Reset the canvas
     context.fillStyle = "#3B5998";
- //   context.fillRect(0, 0, canvas.width, canvas.height);
     
     var gradient = context.createLinearGradient(offset_x-position_x,offset_y-position_y,canvas.width+offset_x-position_x, canvas.height+offset_y-position_y);
     gradient.addColorStop(0,"#3B5998");     // Départ
@@ -164,7 +156,6 @@ function update_canvas(snakes, bonus) {
     
     // #Draw the HUD
     draw_hud();
-    
 }
 
 
@@ -269,6 +260,7 @@ function centerOnSnake(id) {
     
     position_x = px - width/2;
     position_y = py - height/2;
+    update_canvas(last_snakes, last_bonus);
 }
 
 function followSnake(id) {
@@ -282,29 +274,40 @@ function followSnake(id) {
     var px = cx * sq_w;
     var py = cy * sq_w;
     
+    anim=false;
+    
     if(px < position_x) {
         centerOnSnake(id);
         return;
     } else if(px < position_x + padding) {
-        position_x = px - padding;
+        position_x = position_x - 3;
+        if(px < position_x + padding)
+            anim = true;
     } else if(px > position_x + width) {
         centerOnSnake(id);
         return;
     } else if(px > position_x + width - padding) {
-        position_x = px - width + padding;
+        position_x = position_x + 3;
+        if(px > position_x + width - padding)
+            anim = true;
     }
     
     if(py < position_y) {
         centerOnSnake(id);
         return;
     } else if(py < position_y + padding) {
-        position_y = py - padding;
+        position_y = position_y - 3;
+        if(py < position_y + padding)
+            anim = true;
     } else if(py > position_y + height) {
         centerOnSnake(id);
         return;
     } else if(py > position_y + height - padding) {
-        position_y = py - height + padding;
+        position_y = position_y + 3;
+        if(py > position_y + height - padding)
+            anim = true;
     }
+    update_canvas(last_snakes, last_bonus);
 }
 
 document.onkeydown = function(event) {
