@@ -88,7 +88,11 @@ function update_canvas(snakes, bonus) {
     // #Reset the canvas
     context.fillStyle = "#3B5998";
     
-    var gradient = context.createLinearGradient(offset_x-position_x,offset_y-position_y,canvas.width+offset_x-position_x, canvas.height+offset_y-position_y);
+    var offx, offy;
+    offx = offset_x-position_x;
+    offy = offset_y-position_y;
+    
+    var gradient = context.createLinearGradient(offx,offy,canvas.width+offx, canvas.height+offy);
     gradient.addColorStop(0,"#3B5998");     // Départ
     gradient.addColorStop(0.1,"#4B7BC9"); // Intermédiaire
     gradient.addColorStop(0.2,"#3B5998"); // Intermédiaire
