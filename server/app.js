@@ -30,6 +30,9 @@ log.info("Starting App");
 var game = {}, directions = ["u", "d", "l", "r"];
 var probability_matrix;
 
+var void_radius = 2;
+var max_val     = 5;
+    
 function genBonusCoords (){
     
     /*
@@ -89,25 +92,53 @@ function genBonusCoords (){
 
 /// Met à jour la matrice des probabilités pour un snake positionné en (x,y) et dirigé vers direction.
 function update_probs(x, y, direction) {
-    var void_radius = 2;
-    var max_val     = 5;
-    for(var px = x - max_val*2 + 1 - void_radius + 1; px <= x-void_radius; px++) {
-        for(var py = y - max_val*2 + 1; py <= y; py++) {
-            var delta_total = Math.abs(x - px) + Math.abs(y - py);
-            
-            if(delta_total > max_val)
-                delta_total = 2*max_val - delta_total;
-            
-            if((delta_total > 0) && (delta_total <= max_val)){
-                if(probability_matrix[px] == undefined)
-                    probability_matrix[px] = [];
-                    
-                if(probability_matrix[px][py] == undefined)
-                    probability_matrix[px][py] = 0;
-                    
-                probability_matrix[px][py] += delta_total;
+    
+    if(direction === "u" || direction === "d") {
+        for(var px = x - max_val*2 + 1 - void_radius + 1; px <= x + max_val*2 - 1 + void_radius - 1; px++) {
+            if(px <= x - void_radius || px >= x + void_radius) {
+                if(direction === "u") {
+                    for(var py = y - max_val*2 + 1; py <= y; py++) {
+                        matrix_pos(x,y,px,py);
+                    }
+                } else {
+                    for(var py = y; py <= y + max_val*2 - 1; py++) {
+                        matrix_pos(x,y,px,py);
+                    }
+                }
             }
         }
+    } else {
+        for(var py = y - max_val*2 + 1 - void_radius + 1; py <= y + max_val*2 - 1 + void_radius - 1; py++) {
+            if(py <= y - void_radius || px >= y + void_radius) {
+                if(direction === "l") {
+                    for(var px = x - max_val*2 + 1; px <= x; px++) {
+                        matrix_pos(x,y,px,py);
+                    }
+                } else {
+                    for(var px = x ; px <= x + max_val*2 - 1; px++) {
+                        matrix_pos(x,y,px,py);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Calcule la probabilité pour le point (x,y) à partir d'un snake (px,py)
+function matrix_pos(x, y, px, py) {
+    var delta_total = Math.abs(x - px) + Math.abs(y - py);
+    
+    if(delta_total > max_val)
+        delta_total = 2*max_val - delta_total;
+    
+    if((delta_total > 0) && (delta_total <= max_val)){
+        if(probability_matrix[px] == undefined)
+            probability_matrix[px] = [];
+            
+        if(probability_matrix[px][py] == undefined)
+            probability_matrix[px][py] = 0;
+            
+        probability_matrix[px][py] += delta_total;
     }
 }
 
