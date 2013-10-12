@@ -25,7 +25,9 @@ var height = 500;
 var width = 500;
 
 var sq_w=10;
+
 var my_id="";
+var ma_direction="u"; // CEY MA DIRAYCTION! JAY PAYTAY LAY PLOMB ////
 
 var last_snakes, last_bonus;
 
@@ -33,6 +35,7 @@ var padding = 50;
 
 
 function draw_grid() {
+
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
         context.beginPath();
         context.moveTo(x, 0);
@@ -91,6 +94,21 @@ function update_canvas(snakes, bonus) {
     
     // #Reset the canvas
     context.fillStyle = "#3B5998";
+ //   context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    var gradient = context.createLinearGradient(offset_x-position_x,offset_y-position_y,canvas.width+offset_x-position_x, canvas.height+offset_y-position_y);
+    gradient.addColorStop(0,"#3B5998");     // Départ
+    gradient.addColorStop(0.1,"#4B7BC9"); // Intermédiaire
+    gradient.addColorStop(0.2,"#3B5998"); // Intermédiaire
+    gradient.addColorStop(0.3,"#4B7BC9"); // Intermédiaire
+    gradient.addColorStop(0.4,"#3B5998"); // Intermédiaire
+    gradient.addColorStop(0.5,"#4B7BC9"); // Intermédiaire
+    gradient.addColorStop(0.6,"#3B5998"); // Intermédiaire
+    gradient.addColorStop(0.7,"#4B7BC9"); // Intermédiaire
+    gradient.addColorStop(0.8,"#3B5998"); // Intermédiaire
+    gradient.addColorStop(0.9,"#4B7BC9"); // Intermédiaire
+    gradient.addColorStop(1,"#3B5998");    // Arrivée
+    context.fillStyle = gradient; 
     context.fillRect(0, 0, canvas.width, canvas.height);
     
     // #Draw the snakes
@@ -293,16 +311,16 @@ document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "l"}, function(data){});
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "l"}, function(data){ma_direction=data[1]});
             break;
         case 38://up
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "u"}, function(data){});
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "u"}, function(data){ma_direction=data[1]});
             break;
         case 39://right
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "r"}, function(data){});
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "r"}, function(data){ma_direction=data[1]});
             break;
         case 40://down
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "d"}, function(data){});
+            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "d"}, function(data){ma_direction=data[1]});
             break;
     }
     
