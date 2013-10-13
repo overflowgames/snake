@@ -1,6 +1,26 @@
 var socket = io.connect('https://snake-c9-jmouloude42.c9.io/');
 var controller;
 
+
+
+// set up a pattern, something really elaborate!
+var pattern = document.createElement('canvas');
+pattern.width = 512;
+pattern.height = 512;
+var pctx = pattern.getContext('2d');
+
+var gradient = pctx.createLinearGradient(0,0,pattern.width, pattern.height);
+gradient.addColorStop(0,"#3B5998");    
+gradient.addColorStop(1/4,"#4B7BC9"); 
+gradient.addColorStop(2/4,"#3B5998");
+gradient.addColorStop(3/4,"#4B7BC9"); 
+gradient.addColorStop(1,"#3B5998");  
+pctx.fillStyle = gradient; 
+pctx.fillRect(0, 0, pattern.width, pattern.height);
+
+
+
+
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -81,31 +101,24 @@ setInterval(function() {
         followSnake(my_id);
 },1000/500);
 
+var pattern_ = context.createPattern(pattern, "repeat");
+    
 function update_canvas(snakes, bonus) {
     // #Get the viewport dimensions
     update_dimensions();
 
     // #Reset the canvas
-    context.fillStyle = "#3B5998";
-    
     var offx, offy;
     offx = offset_x-position_x;
     offy = offset_y-position_y;
     
-    var gradient = context.createLinearGradient(offx,offy,canvas.width+offx, canvas.height+offy);
-    gradient.addColorStop(0,"#3B5998");     // Départ
-    gradient.addColorStop(0.1,"#4B7BC9"); // Intermédiaire
-    gradient.addColorStop(0.2,"#3B5998"); // Intermédiaire
-    gradient.addColorStop(0.3,"#4B7BC9"); // Intermédiaire
-    gradient.addColorStop(0.4,"#3B5998"); // Intermédiaire
-    gradient.addColorStop(0.5,"#4B7BC9"); // Intermédiaire
-    gradient.addColorStop(0.6,"#3B5998"); // Intermédiaire
-    gradient.addColorStop(0.7,"#4B7BC9"); // Intermédiaire
-    gradient.addColorStop(0.8,"#3B5998"); // Intermédiaire
-    gradient.addColorStop(0.9,"#4B7BC9"); // Intermédiaire
-    gradient.addColorStop(1,"#3B5998");    // Arrivée
-    context.fillStyle = gradient; 
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.beginPath();
+    context.fillStyle = pattern_;
+    
+    context.translate(offx, offy);
+    context.fillRect(-offx,-offy,canvas.width+Math.abs(offx),canvas.height+Math.abs(offy));
+    context.translate(-offx, -offy);
+
     
     // #Draw the snakes
     for(var i in snakes) {
