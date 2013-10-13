@@ -230,15 +230,12 @@ socket.on("up", function(data){
 });
 
 socket.on("c", function(data){
-    //if (data[0] != my_id){
-        controller.changeDirection(data[0],data[1]);
-    //}
+    controller.changeDirection(data[0],data[1]);
 });
 
 socket.on("u", function(data){
-    //if (data[0] != my_id){
+    if(controller != undefined)
         controller.update();
-    //}
 });
 
 
@@ -281,7 +278,9 @@ function centerOnSnake(id) {
 }
 
 function followSnake(id) {
-    if(typeof last_snakes[id] == "undefined")
+    if(last_snakes == undefined)
+        return;
+    if(last_snakes[id] == undefined)
         return;
     
     
