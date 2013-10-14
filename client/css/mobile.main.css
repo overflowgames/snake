@@ -1,0 +1,51 @@
+
+#go_up {
+    z-index: 1000;
+    position: absolute;
+    bottom: 13%;
+    left: 45%;
+}
+
+#go_down {
+    z-index: 1000;
+    position: absolute;
+    bottom: 2%;
+    left: 45%;
+    
+    -ms-transform:rotate(180deg); /* IE 9 */
+    -webkit-transform:rotate(180deg); 
+    -o-transform:rotate(180deg); 
+    -moz-transform:rotate(180deg); 
+    transform:rotate(180deg);
+}
+
+#go_left {
+    z-index: 1000;
+    position: absolute;
+    bottom: 2%;
+    left: 26%;
+    
+    -ms-transform:rotate(-90deg); /* IE 9 */
+    -webkit-transform:rotate(-90deg); 
+    -o-transform:rotate(-90deg); 
+    -moz-transform:rotate(-90deg); 
+    transform:rotate(-90deg);
+}
+
+#go_right {
+    z-index: 1000;
+    position: absolute;
+    bottom: 2%;
+    left: 64%;
+    
+    -ms-transform:rotate(90deg); /* IE 9 */
+    -webkit-transform:rotate(90deg); 
+    -o-transform:rotate(90deg); 
+    -moz-transform:rotate(90deg); 
+    transform:rotate(90deg);
+}
+
+img {
+    width:60px;
+    height:60px;
+}

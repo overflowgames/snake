@@ -18,9 +18,6 @@ gradient.addColorStop(1,"#3B5998");
 pctx.fillStyle = gradient; 
 pctx.fillRect(0, 0, pattern.width, pattern.height);
 
-
-
-
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -97,7 +94,7 @@ function draw_hud() {
 }
 
 setInterval(function() {
-    if(isLocked()) 
+    if(isLocked() || mobile) 
         followSnake(my_id);
 },1000/500);
 
@@ -118,7 +115,6 @@ function update_canvas(snakes, bonus) {
     context.translate(offx, offy);
     context.fillRect(-offx,-offy,canvas.width+Math.abs(offx),canvas.height+Math.abs(offy));
     context.translate(-offx, -offy);
-
     
     // #Draw the snakes
     for(var i in snakes) {
@@ -144,7 +140,10 @@ function update_canvas(snakes, bonus) {
     
     // #Draw the grid
     context.strokeStyle = "#ffffff";
-    context.lineWidth=0.5;
+    if(mobile)
+        context.lineWidth=1;
+    else 
+        context.lineWidth=0.5;
     draw_grid();
     
     // #Draw names
