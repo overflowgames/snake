@@ -212,7 +212,7 @@ socket.emit("login", "dan", function(data){
 
 socket.on("+", function(data){
     if (data[0] != my_id){
-        controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5]);
     }
 });
 
