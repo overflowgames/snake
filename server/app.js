@@ -204,7 +204,7 @@ io.sockets.on('connection', function (socket) {
             
             socket.on("spawn", function(data, ack){
                 socket.get("login", function(err, login){
-                    snake_coords = [[0,0]];
+                    snake_coords = data.pos;
                     snake_direction = "u";
                     snake_score = 0;
                     snake_size = 20;

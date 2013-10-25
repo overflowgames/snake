@@ -246,11 +246,12 @@ $('#daniel').keyup(function (e) {
   
   
 function spawn_snake() {
-    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value}, function(data){
+    var c = [[Math.round(position_x/sq_w), Math.round(position_y/sq_w)]]
+    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value, "pos":c}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
-        var c = [[0,0]];
+        
         controller.addSnake(my_id,c, "u",0,20,document.getElementById('daniel').value);
         centerOnSnake(my_id);
         
