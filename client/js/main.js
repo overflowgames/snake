@@ -89,8 +89,12 @@ function update_dimensions(){
 function draw_hud() {
     context.font = "18px Helvetica";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
     context.fillStyle = "#ffffff";
-    context.fillText("x: "+position_x, 30, 30);
-    context.fillText("y: "+position_y, 30, 50);
+    
+    var cx = Math.round((position_x+canvas.width/2)/sq_w);
+    var cy = Math.round((position_y+canvas.height/2)/sq_w);
+    
+    context.fillText("x: "+cx, 30, 30);
+    context.fillText("y: "+cy, 30, 50);
 }
 
 setInterval(function() {
@@ -246,7 +250,7 @@ $('#daniel').keyup(function (e) {
   
   
 function spawn_snake() {
-    var c = [[Math.round(position_x/sq_w), Math.round(position_y/sq_w)]]
+    var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
     socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value, "pos":c}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
