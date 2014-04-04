@@ -155,7 +155,7 @@ var controller = new Controller({
             if (controller.getNumSnakes() > 0){
                 
               //  if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
-                if(Math.random() < 0.02) {
+                if(Math.random() < 0.02*controller.getNumSnakes()) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
                 }
