@@ -18,9 +18,6 @@ gradient.addColorStop(1,"#3B5998");
 pctx.fillStyle = gradient; 
 pctx.fillRect(0, 0, pattern.width, pattern.height);
 
-
-
-
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -92,12 +89,16 @@ function update_dimensions(){
 function draw_hud() {
     context.font = "18px Helvetica";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
     context.fillStyle = "#ffffff";
-    context.fillText("x: "+position_x, 30, 30);
-    context.fillText("y: "+position_y, 30, 50);
+    
+    var cx = Math.round((position_x+canvas.width/2)/sq_w);
+    var cy = Math.round((position_y+canvas.height/2)/sq_w);
+    
+    context.fillText("x: "+cx, 30, 30);
+    context.fillText("y: "+cy, 30, 50);
 }
 
 setInterval(function() {
-    if(isLocked()) 
+    if(isLocked() || mobile) 
         followSnake(my_id);
 },1000/500);
 
@@ -118,7 +119,6 @@ function update_canvas(snakes, bonus) {
     context.translate(offx, offy);
     context.fillRect(-offx,-offy,canvas.width+Math.abs(offx),canvas.height+Math.abs(offy));
     context.translate(-offx, -offy);
-
     
     // #Draw the snakes
     for(var i in snakes) {
@@ -144,7 +144,10 @@ function update_canvas(snakes, bonus) {
     
     // #Draw the grid
     context.strokeStyle = "#ffffff";
-    context.lineWidth=0.5;
+    if(mobile)
+        context.lineWidth=1;
+    else 
+        context.lineWidth=0.5;
     draw_grid();
     
     // #Draw names
@@ -213,7 +216,7 @@ socket.emit("login", "dan", function(data){
 
 socket.on("+", function(data){
     if (data[0] != my_id){
-        controller.addSnake(data[0],data[1], data[2],data[3],data[4]);
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5]);
     }
 });
 
@@ -247,11 +250,12 @@ $('#daniel').keyup(function (e) {
   
   
 function spawn_snake() {
-    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value}, function(data){
+    var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
+    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value, "pos":c}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
-        var c = [[0,0]];
+        
         controller.addSnake(my_id,c, "u",0,20,document.getElementById('daniel').value);
         centerOnSnake(my_id);
         
