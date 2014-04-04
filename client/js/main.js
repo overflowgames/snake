@@ -1,4 +1,4 @@
-var socket = io.connect('https://snake-c9-jmouloude42.c9.io/');
+var socket = io.connect();
 var controller;
 
 
