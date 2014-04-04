@@ -237,7 +237,6 @@ io.sockets.on('connection', function (socket) {
             socket.on("disconnect", function () {
                 socket.broadcast.emit("-", id);
                 controller.killSnake(id);
-                //dbcontroller.push_score(id, game.snakes[id].score);
             });
             
         });
