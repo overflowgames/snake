@@ -178,8 +178,8 @@ function update_canvas(snakes, bonus) {
     draw_hud();
 }
 
-
-socket.emit("login", "dan", function(data){
+var secret = uuid.v4();
+socket.emit("login", {secret : secret}, function(data){
     my_id=data;
     controller = new Controller({
         callbacks: {
@@ -203,7 +203,7 @@ socket.emit("login", "dan", function(data){
             },
             change_direction: function (id, direction) {
                 /*if (id === my_id){
-                    socket.emit("c", {"id":my_id, "secret":"dan", "direction": direction}, function(data){});
+                    socket.emit("c", {"id":my_id, "secret":secret, "direction": direction}, function(data){});
                 }*/
             }
         },
@@ -216,7 +216,7 @@ socket.emit("login", "dan", function(data){
 
 socket.on("+", function(data){
     if (data[0] != my_id){
-        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5]);
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6]);
     }
 });
 
@@ -251,7 +251,7 @@ $('#daniel').keyup(function (e) {
   
 function spawn_snake() {
     var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
-    socket.emit("spawn", {"id":my_id, "secret":"dan", "name":document.getElementById('daniel').value, "pos":c}, function(data){
+    socket.emit("spawn", {"id":my_id, "secret":secret, "name":document.getElementById('daniel').value, "pos":c}, function(data){
         if (data === "ko"){
             console.log("Y'a une couille avec le secret !!!");
         }
@@ -334,16 +334,16 @@ document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "l"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "l"}, function(data){ma_direction=data[1]});
             break;
         case 38://up
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "u"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "u"}, function(data){ma_direction=data[1]});
             break;
         case 39://right
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "r"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "r"}, function(data){ma_direction=data[1]});
             break;
         case 40://down
-            socket.emit("c", {"id":my_id, "secret":"dan", "direction": "d"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "d"}, function(data){ma_direction=data[1]});
             break;
     }
     

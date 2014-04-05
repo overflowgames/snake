@@ -2,14 +2,10 @@ var sio = require('socket.io'),
     uuid = require('uuid'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js"),
-    logentries = require('node-logentries'),
     http = require('http'),
     express = require('express');
 
 
-var log = logentries.logger({
-  token:process.env.LOGENTRIES_TOKEN
-});
 
 var app = express();
 
@@ -18,14 +14,13 @@ app.use('/common', express.static(__dirname + '/../common'));
 console.log(__dirname + '/../client');
 
 
-var server = http.createServer(app)
+var server = http.createServer(app);
 
 server.listen(parseInt(process.env.PORT, 10));
 
 var io = sio.listen(server);
 
-
-log.info("Starting App");
+var secrets = [];
 
 var game = {}, directions = ["u", "d", "l", "r"];
 var probability_matrix;
@@ -174,9 +169,9 @@ var controller = new Controller({
         add_snake: function (id, coords, direction, score, size, name) {
             io.sockets.emit("+", [id, coords, direction, score, size, name]);
         },
-        killed_snake: function (id) {
+        killed_snake: function (id, score) {
             io.sockets.emit("-", id);
-            //dbcontroller.push_score(id, game.snakes[id].score);
+            dbcontroller.push_score(secrets[id], score);
         },
         change_direction: function (id, direction) {
             io.sockets.emit("c", [id, direction]);
@@ -198,7 +193,9 @@ io.sockets.on('connection', function (socket) {
             var snake_size = 20;
             var id = uuid.v4();
             
-            socket.set("login", {"id": id, "secret" : data}, function () {
+            secrets[id] = data.secret;
+            
+            socket.set("login", {"id": id, "secret" : data.secret}, function () {
                 ack(id);
             });
             
@@ -216,7 +213,7 @@ io.sockets.on('connection', function (socket) {
                     }
                 });
             });
-                        
+
             socket.on("c", function(data, ack) {
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {

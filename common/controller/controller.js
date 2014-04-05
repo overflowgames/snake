@@ -26,9 +26,11 @@ function Controller (options){
     };
     
     this.killSnake = function (id) {
-        delete snakes[id];
-        num_snakes--;
-        killed_snake_callback(id);
+        if (typeof snakes[id] !== "undefined"){ 
+            killed_snake_callback(id, snakes[id].score);
+            delete snakes[id];
+            num_snakes--;
+        }
     };
     
     this.changeDirection = function (id, direction) {
@@ -48,9 +50,10 @@ function Controller (options){
     };
     
     function eatBonus(id, by) {
-        delete bonus[id];
         snakes[by].size += 3;
         eaten_bonus_callback(id, by);
+        addPoints(by);
+        delete bonus[id];
     }
     
     function addPoints(id) {
@@ -141,17 +144,17 @@ function Controller (options){
     this.load = function(s, b) {
         snakes = s;
         bonus = b;
-    }
+    };
+    
+    var that = this;
     
     this.update = function () {     // This is where the magic happens
         updatePosition();
         checkCollision();
         
         while (to_kill.length > 0){
-            var tokill = to_kill.pop()
-            delete snakes[tokill];// TOFIX: Y'avais une couille dans l'appel de la fonction
-            num_snakes--;
-            killed_snake_callback(tokill);
+            var tokill = to_kill.pop();
+            that.killSnake(tokill);
         }
         
         checkBonus();

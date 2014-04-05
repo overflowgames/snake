@@ -1,50 +1,46 @@
-var redis = require("redis"),
-    logentries = require('node-logentries'),
-    async = require("async");
+var async = require("async"),
+    fs = require("fs");
 
-/*var log = logentries.logger({
-  token:process.env.LOGENTRIES_TOKEN
-});
 
-var add_queue = async.queue(function (id, cb) {
-            client.set(id, 0, function(){
+var filename = "scores.json";
+
+var add_queue = async.queue(function (task, cb) {
+    fs.readFile(filename, function(err, data){
+        if (err) throw err;
+        var players = JSON.parse(data);
+        if (typeof players[task.id] === "undefined"){
+            players[task.id] = {score: 0};
+            fs.writeFile(filename, JSON.stringify(players), function(err){
+                if (err) throw err;
                 cb();
             });
-}, 3);
-
-var score_queue = async.queue(function(task, cb) {
-    client.set(task.id, (parseInt(task.score, 10) + parseInt(task.reply, 10)), function () {
-        cb();
+        } else {
+            cb();
+        }
     });
 }, 3);
 
-var services = JSON.parse(process.env.VCAP_SERVICES);
-
-var client = redis.createClient(parseInt(services["redis-2.2"][0]["credentials"]["port"],10), services["redis-2.2"][0]["credentials"]["host"]);
-client.auth(services["redis-2.2"][0]["credentials"]["password"]);
-
-client.on("error", function(err) {
-    log.crit("Redis Error: " + err);
-});*/
+var score_queue = async.queue(function(task, cb) {
+    fs.readFile(filename, function(err, data){
+        if (err) throw err;
+        if (typeof task.id === "undefined") {
+            return;
+        }
+        var players = JSON.parse(data);
+        players[task.id].score += parseInt(task.score, 10);
+        fs.writeFile(filename, JSON.stringify(players), function(err){
+            if (err) throw err;
+            cb();
+        });
+    });
+}, 3);
 
 function push_score(id, score, cb) {
-/*    client.get(id, function (err, reply) {
-        if (reply !== null){
-            score_queue.push({"score": score, "reply": reply, "id":id});
-        } else {
-            log.warning("Redis Error: Impossible to update snake score, id "+id+" does not exist in database");
-        }
-    });*/
+    score_queue.push({score: score, id: id}, cb);
 }
 
 function add_player_if_not_exists(id, cb){
-/*    client.get(id, function (err, reply) {
-        if (reply === null){
-            add_queue.push(id, cb);
-            log.info("Added player " + id);
-        }
-    });*/
-    cb();
+    add_queue.push({id: id}, cb);
 }
 
 module.exports.add_player_if_not_exists = add_player_if_not_exists;
