@@ -186,10 +186,11 @@ var controller = new Controller({
 
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
-        dbcontroller.add_player_if_not_exists(data.secret, function () {
+        dbcontroller.add_player_if_not_exists(data.secret, function (score) {
             var snake_coords = [[0,0]];
             var snake_direction = "u";
             var snake_score = 0;
+            var snake_cum_score = score;
             var snake_size = 20;
             var id = uuid.v4();
             
@@ -201,13 +202,15 @@ io.sockets.on('connection', function (socket) {
             
             socket.on("spawn", function(data, ack){
                 socket.get("login", function(err, login){
+                    console.log(data.pos)
+                    data.pos[0][0] = parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10);
+                    data.pos[0][1] = parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10);
+                    console.log(data.pos)
                     snake_coords = data.pos;
                     snake_direction = "u";
-                    snake_score = 0;
-                    snake_size = 20;
                     if (data.secret === login.secret){
-                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name);
-                        ack("ok");
+                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_cum_score);
+                        ack(data.pos);
                     } else {
                         ack("ko");
                     }

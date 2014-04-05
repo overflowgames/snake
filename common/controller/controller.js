@@ -14,15 +14,16 @@ function Controller (options){
     
     var to_kill = [], num_snakes = 0;
     
-    this.addSnake = function (id, coords, direction, score, size, name) {
+    this.addSnake = function (id, coords, direction, score, size, name, cum_score) {
         snakes[id] = {};
         snakes[id].coords = coords;
         snakes[id].direction = direction;
         snakes[id].score = score;
         snakes[id].size = size;
         snakes[id].name = name;
+        snakes[id].cum_score = cum_score;
         num_snakes++;
-        add_snake_callback(id, coords, direction, score, size, name);
+        add_snake_callback(id, coords, direction, score, size, name, cum_score);
     };
     
     this.killSnake = function (id) {

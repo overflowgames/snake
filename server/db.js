@@ -4,43 +4,50 @@ var async = require("async"),
 
 var filename = "scores.json";
 
-var add_queue = async.queue(function (task, cb) {
+var queue = async.queue(function (task, cb) {
     fs.readFile(filename, function(err, data){
         if (err) throw err;
         var players = JSON.parse(data);
-        if (typeof players[task.id] === "undefined"){
-            players[task.id] = {score: 0};
-            fs.writeFile(filename, JSON.stringify(players), function(err){
-                if (err) throw err;
-                cb();
-            });
-        } else {
-            cb();
+        switch(task.action){
+            case "add":
+                if (typeof players[task.id] === "undefined"){
+                    players[task.id] = {score: 0};
+                    fs.writeFile(filename, JSON.stringify(players), function(err){
+                        if (err) throw err;
+                        cb();
+                    });
+                } else {
+                    cb(players[task.id].score);
+                }
+            break;
+            case "push" :
+                players[task.id].score += parseInt(task.score, 10);
+                fs.writeFile(filename, JSON.stringify(players), function(err){
+                    if (err) throw err;
+                    cb();
+                });
+            break;
+            case "read" :
+                if (typeof players[task.id] !== "undefined") {
+                    cb(players[task.id].score);
+                } else {
+                    cb();
+                }
+            break;
         }
-    });
-}, 3);
-
-var score_queue = async.queue(function(task, cb) {
-    fs.readFile(filename, function(err, data){
-        if (err) throw err;
-        if (typeof task.id === "undefined") {
-            return;
-        }
-        var players = JSON.parse(data);
-        players[task.id].score += parseInt(task.score, 10);
-        fs.writeFile(filename, JSON.stringify(players), function(err){
-            if (err) throw err;
-            cb();
-        });
     });
 }, 3);
 
 function push_score(id, score, cb) {
-    score_queue.push({score: score, id: id}, cb);
+    queue.push({action: "push", score: score, id: id}, cb);
 }
 
 function add_player_if_not_exists(id, cb){
-    add_queue.push({id: id}, cb);
+    queue.push({action: "add", id: id}, cb);
+}
+
+function read_score(id, cb){
+    queue.push({action: "read", id: id}, cb);
 }
 
 module.exports.add_player_if_not_exists = add_player_if_not_exists;
