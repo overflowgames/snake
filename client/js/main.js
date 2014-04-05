@@ -178,7 +178,8 @@ function update_canvas(snakes, bonus) {
     draw_hud();
 }
 
-var secret = uuid.v4();
+var secret = localStorage.getItem("secret") || uuid.v4();
+localStorage.setItem("secret", secret)
 socket.emit("login", {secret : secret}, function(data){
     my_id=data;
     controller = new Controller({
