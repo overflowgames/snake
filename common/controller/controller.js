@@ -28,7 +28,7 @@ function Controller (options){
     
     this.killSnake = function (id, by) {
         if (typeof snakes[id] !== "undefined"){ 
-            if (by !== id){
+            if ((by !== id) && (typeof snakes[by] !== "undefined")){
                 snakes[by].size += snakes[id].size/2;
                 snakes[by].score += snakes[id].score/2;
             }
@@ -96,8 +96,8 @@ function Controller (options){
     function checkCollision(){ 
         for (var tested in snakes){
             for (var reciever in snakes){
-                if (reciever !== tested){
-                    for (var i in snakes[reciever].coords){
+                for (var i in snakes[reciever].coords){
+                    if ((reciever !== tested) || (i != 0)) {
                         if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
                             to_kill.push([tested, reciever]);
                         }
