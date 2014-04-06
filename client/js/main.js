@@ -49,6 +49,8 @@ var ma_direction="u"; // CEY MA DIRAYCTION! JAY PAYTAY LAY PLOMB ////
 
 var last_snakes, last_bonus;
 
+var spawned = false;
+
 var padding = 150;
 
 var my_score = 0;
@@ -203,6 +205,8 @@ socket.emit("login", {secret : secret}, function(data){
             add_snake: function (id, coords, direction, score, size, name) { },
             killed_snake: function (id) {
                 if(id === my_id){
+                    
+                    spawned = false;
                     //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
                     $("#spawndiv").slideDown();
                 } else {
@@ -263,10 +267,18 @@ $('#daniel').keyup(function (e) {
   
   
 function spawn_snake() {
+    if(spawned) {
+        return;
+    }
+    
+    spawned = true;
     var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
     socket.emit("spawn", {"id":my_id, "secret":secret, "name":document.getElementById('daniel').value, "pos":c}, function(pos){
+       
         if (pos === "ko"){
+            spawned = false;
             console.log("Y'a une couille avec le secret !!!");
+            return;
         }
         console.log(pos)
         controller.addSnake(my_id,pos, "u",0,20,document.getElementById('daniel').value);
