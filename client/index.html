@@ -41,6 +41,8 @@
                 update_canvas();   
             }
             
+            window.onscroll = function () { window.scrollTo(0, 0); };
+
             function isLocked() {
                 return locked;
             }

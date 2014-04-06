@@ -51,6 +51,8 @@ var last_snakes, last_bonus;
 
 var padding = 150;
 
+var my_score = 0;
+
 
 function draw_grid() {
 
@@ -90,11 +92,12 @@ function draw_hud() {
     context.font = "18px Helvetica";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
     context.fillStyle = "#ffffff";
     
-    var cx = Math.round((position_x+canvas.width/2)/sq_w);
-    var cy = Math.round((position_y+canvas.height/2)/sq_w);
+    var cx = Math.round((position_x-offset_x+canvas.width/2)/sq_w);
+    var cy = Math.round((position_y-offset_y+canvas.height/2)/sq_w);
     
     context.fillText("x: "+cx, 30, 30);
     context.fillText("y: "+cy, 30, 50);
+    context.fillText("score: "+my_score, 30, 70);
 }
 
 setInterval(function() {
@@ -173,6 +176,9 @@ function update_canvas(snakes, bonus) {
         
     }
     
+    if(typeof snakes[my_id] != 'undefined') {
+        my_score = snakes[my_id].score;
+    }
     
     // #Draw the HUD
     draw_hud();

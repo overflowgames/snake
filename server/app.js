@@ -166,7 +166,7 @@ var controller = new Controller({
                 var continuer = false;
                 if(bonusTimeoutQueue.length > 0) {
                     var firstBonus = bonusTimeoutQueue[0];
-                    if(new Date().getTime()-firstBonus[1] > 5000) {
+                    if(new Date().getTime()-firstBonus[1] > 15000) {
                         continuer = true;
                         bonusTimeoutQueue.shift();
                         controller.eatBonus(firstBonus[0],-1);
