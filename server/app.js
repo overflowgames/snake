@@ -206,8 +206,8 @@ var controller = new Controller({
         add_snake: function (id, coords, direction, score, size, name) {
             io.sockets.emit("+", [id, coords, direction, score, size, name]);
         },
-        killed_snake: function (id, score) {
-            io.sockets.emit("-", id);
+        killed_snake: function (id, score, by) {
+            io.sockets.emit("-", [id, by]);
             dbcontroller.push_score(secrets[id], score);
         },
         change_direction: function (id, direction) {

@@ -242,7 +242,7 @@ socket.on("-b", function(data){
 })
 
 socket.on("-", function(data){
-        controller.killSnake(data);
+        controller.killSnake(data[0], data[1]);
 });
 
 socket.on("up", function(data){

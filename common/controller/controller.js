@@ -31,6 +31,12 @@ function Controller (options){
             if ((by !== id) && (typeof snakes[by] !== "undefined")){
                 snakes[by].size += snakes[id].size/2;
                 snakes[by].score += snakes[id].score/2;
+                console.log("OKKKOKOK");
+            } else {
+                console.log(by !== id);
+                console.log(typeof snakes[by] !== "undefined");
+                console.log(id);
+                console.log(by);
             }
             killed_snake_callback(id, snakes[id].score, by);
             delete snakes[id];
@@ -107,6 +113,7 @@ function Controller (options){
                     if ((reciever !== tested) || (i != 0)) {
                         if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
                             to_kill.push([tested, reciever]);
+                            console.log(to_kill);
                         }
                     }
                 }
