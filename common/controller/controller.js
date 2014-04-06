@@ -56,8 +56,8 @@ function Controller (options){
     };
     
     this.eatBonus = function(id, by) {
-        console.log("Eaten bonus by "+by);
-        if(by == -1) {
+        
+        if(by == -1 || typeof by == 'undefined') {
             eaten_bonus_callback(id, by);
             delete bonus[id];
             return;
@@ -117,8 +117,10 @@ function Controller (options){
     function checkBonus() {
         for (var i in snakes){
             for (var j in bonus){
-                if (comparePos(snakes[i].coords[0],bonus[j])){
-                    that.eatBonus(j,i);
+                if(bonus[j] != null) {
+                    if (comparePos(snakes[i].coords[0],bonus[j])){
+                        that.eatBonus(j,i);
+                    }
                 }
             }
         }

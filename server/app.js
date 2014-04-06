@@ -77,15 +77,35 @@ function genBonusCoords (){
     
     for(var index in probs) {
         ecc += probs[index];
-        
         if(ecc >= r) {
-            var coord = [];
-            coord [0] = probx[index];
-            coord [1] = proby[index];
-            console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
-            return coord;
+            while (ecc < sum) {
+                var coord = [];
+                coord [0] = probx[index];
+                coord [1] = proby[index];
+                
+                if(!surunserpent(coord)) {
+                console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
+                    return coord;
+                }
+                ecc++;
+            }    
         }
     }
+}
+
+function surunserpent(coord) {
+    for(var i in game.snakes) {
+        for(var j in game.snakes[i].coords) {
+            if(typeof game.snakes[i].coords[j] != 'undefined') {
+                sx = game.snakes[i].coords[j][0];
+                sy = game.snakes[i].coords[j][1];
+                if(sx == coord[0] && sy == coord[1])
+                    return true;
+            }
+                
+        }
+    }
+    return false;
 }
 
 /// Met à jour la matrice des probabilités pour un snake positionné en (x,y) et dirigé vers direction.
@@ -175,7 +195,7 @@ var controller = new Controller({
             } while(continuer);
         },
         eaten_bonnus: function (id, by) {
-            io.sockets.emit("-b", [id]);
+            io.sockets.emit("-b", [id, by]);
         },
         add_points: function (id, score) {
             io.sockets.emit("s", [id, score]);

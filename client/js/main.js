@@ -137,11 +137,13 @@ function update_canvas(snakes, bonus) {
     
     // #Draw bonuses
     for(var i in bonus) {
-        var cx = bonus[i][0];
-        var cy = bonus[i][1];
-        
-        context.fillStyle = "#ffaa00";
-        context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
+        if(bonus[i] != null) {
+            var cx = bonus[i][0];
+            var cy = bonus[i][1];
+            
+            context.fillStyle = "#ffaa00";
+            context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
+        }
     }
     
     
