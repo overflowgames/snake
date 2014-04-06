@@ -4,8 +4,9 @@
 	"description": "A boundless snake",
 	"dependencies": {
         "socket.io": "0.9.14",
-        "node-uuid":"1.4.1",
-        "express":"3.5.1",
+        "uuid":"1.4.1",
+        "redis": "0.8.3",
+        "node-logentries": "0.1.0",
         "async": "0.2.8"
 	},
 	"scripts": {

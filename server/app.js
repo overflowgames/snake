@@ -1,5 +1,5 @@
 var sio = require('socket.io'),
-    uuid = require('node-uuid'),
+    uuid = require('uuid'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js"),
     http = require('http'),

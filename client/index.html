@@ -26,6 +26,12 @@
         <script type="text/javascript" src="js/uuid.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script>
+            if(localStorage.getItem("pseudo") != null && localStorage.getItem("pseudo") != "") {
+                document.getElementById('daniel').value = localStorage.getItem("pseudo");
+            }
+        
+        
+        
             var locked = true;
             function lock() {
                 locked=true;
