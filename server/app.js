@@ -19,6 +19,7 @@ var server = http.createServer(app);
 server.listen(parseInt(process.env.PORT, 10));
 
 var io = sio.listen(server);
+io.set('log level', 1);
 
 var secrets = [];
 
@@ -27,6 +28,8 @@ var probability_matrix;
 
 var void_radius = 2;
 var max_val     = 5;
+
+var bonusTimeoutQueue = [];
     
 function genBonusCoords (){
     
@@ -153,9 +156,23 @@ var controller = new Controller({
                 if(Math.random() < 0.02*controller.getNumSnakes()) {
                     var id = uuid.v4();
                     controller.addBonus(id, genBonusCoords());
+                    
+                    bonusTimeoutQueue.push([id, new Date().getTime()]);
                 }
+                
+               
             }
-            //log.info("Game updated");
+            do {
+                var continuer = false;
+                if(bonusTimeoutQueue.length > 0) {
+                    var firstBonus = bonusTimeoutQueue[0];
+                    if(new Date().getTime()-firstBonus[1] > 5000) {
+                        continuer = true;
+                        bonusTimeoutQueue.shift();
+                        controller.eatBonus(firstBonus[0],-1);
+                    }
+                } 
+            } while(continuer);
         },
         eaten_bonnus: function (id, by) {
             io.sockets.emit("-b", [id]);

@@ -45,6 +45,7 @@ function Controller (options){
         }
     };
     
+    
     this.addBonus = function (id, coords) {
         bonus[id] = coords;
         add_bonus_callback(id, coords);
@@ -54,7 +55,13 @@ function Controller (options){
         return num_snakes;
     };
     
-    function eatBonus(id, by) {
+    this.eatBonus = function(id, by) {
+        console.log("Eaten bonus by "+by);
+        if(by == -1) {
+            eaten_bonus_callback(id, by);
+            delete bonus[id];
+            return;
+        }
         snakes[by].size += 3;
         eaten_bonus_callback(id, by);
         addPoints(by);
@@ -111,7 +118,7 @@ function Controller (options){
         for (var i in snakes){
             for (var j in bonus){
                 if (comparePos(snakes[i].coords[0],bonus[j])){
-                    eatBonus(j,i);
+                    that.eatBonus(j,i);
                 }
             }
         }
