@@ -164,7 +164,7 @@ function update_canvas(snakes, bonus) {
         sx = snakes[i].coords[0][0];
         sy = snakes[i].coords[0][1];
         
-        context.fillStyle = "#424242";
+        context.fillStyle = "rgba(66, 66, 66, 0.5)";
         context.font = "16px Helvetica";
         
         var tw = context.measureText(snakes[i].name).width;
@@ -189,7 +189,7 @@ function update_canvas(snakes, bonus) {
 }
 
 var secret = localStorage.getItem("secret") || uuid.v4();
-localStorage.setItem("secret", secret)
+localStorage.setItem("secret", secret);
 socket.emit("login", {secret : secret}, function(data){
     my_id=data;
     controller = new Controller({
@@ -267,13 +267,20 @@ $('#daniel').keyup(function (e) {
   
   
 function spawn_snake() {
+    var pseudo = document.getElementById('daniel').value;
+    if(pseudo == "") {
+        return;
+    }
+        
+    localStorage.setItem("pseudo", pseudo);
+    
     if(spawned) {
         return;
     }
     
     spawned = true;
     var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
-    socket.emit("spawn", {"id":my_id, "secret":secret, "name":document.getElementById('daniel').value, "pos":c}, function(pos){
+    socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
        
         if (pos === "ko"){
             spawned = false;
