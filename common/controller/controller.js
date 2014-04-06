@@ -26,9 +26,13 @@ function Controller (options){
         add_snake_callback(id, coords, direction, score, size, name, cum_score);
     };
     
-    this.killSnake = function (id) {
+    this.killSnake = function (id, by) {
         if (typeof snakes[id] !== "undefined"){ 
-            killed_snake_callback(id, snakes[id].score);
+            if (by !== id){
+                snakes[by].size += snakes[id].size/2;
+                snakes[by].score += snakes[id].score/2;
+            }
+            killed_snake_callback(id, snakes[id].score, by);
             delete snakes[id];
             num_snakes--;
         }
@@ -94,11 +98,9 @@ function Controller (options){
             for (var reciever in snakes){
                 if (reciever !== tested){
                     for (var i in snakes[reciever].coords){
-                        //if(i != 0) { //Sans cette condition tout les snakes meurent. 
-                            if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
-                                to_kill.push(tested);
-                            }
-                        //}
+                        if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
+                            to_kill.push([tested, reciever]);
+                        }
                     }
                 }
             }
@@ -157,7 +159,7 @@ function Controller (options){
         
         while (to_kill.length > 0){
             var tokill = to_kill.pop();
-            that.killSnake(tokill);
+            that.killSnake(tokill[0], tokill[1]);
         }
         
         checkBonus();

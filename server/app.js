@@ -202,10 +202,8 @@ io.sockets.on('connection', function (socket) {
             
             socket.on("spawn", function(data, ack){
                 socket.get("login", function(err, login){
-                    console.log(data.pos)
                     data.pos[0][0] = parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10);
                     data.pos[0][1] = parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10);
-                    console.log(data.pos)
                     snake_coords = data.pos;
                     snake_direction = "u";
                     if (data.secret === login.secret){
