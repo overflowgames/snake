@@ -307,37 +307,41 @@ function followSnake(id) {
     var px = cx * sq_w;
     var py = cy * sq_w;
     
+    var paddingx = width /5 - 20;
+        
+    var paddingy = height/5 - 20;
+    
     anim=false;
     
     if(px < position_x) {
         centerOnSnake(id);
         return;
-    } else if(px < position_x + padding) {
+    } else if(px < position_x + paddingx) {
         position_x = position_x - 3;
-        if(px < position_x + padding)
+        if(px < position_x + paddingx)
             anim = true;
     } else if(px > position_x + width) {
         centerOnSnake(id);
         return;
-    } else if(px > position_x + width - padding) {
+    } else if(px > position_x + width - paddingx) {
         position_x = position_x + 3;
-        if(px > position_x + width - padding)
+        if(px > position_x + width - paddingx)
             anim = true;
     }
     
     if(py < position_y) {
         centerOnSnake(id);
         return;
-    } else if(py < position_y + padding) {
+    } else if(py < position_y + paddingy) {
         position_y = position_y - 3;
-        if(py < position_y + padding)
+        if(py < position_y + paddingy)
             anim = true;
     } else if(py > position_y + height) {
         centerOnSnake(id);
         return;
-    } else if(py > position_y + height - padding) {
+    } else if(py > position_y + height - paddingy) {
         position_y = position_y + 3;
-        if(py > position_y + height - padding)
+        if(py > position_y + height - paddingy)
             anim = true;
     }
     update_canvas(last_snakes, last_bonus);
