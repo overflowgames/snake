@@ -92,11 +92,13 @@ function Controller (options){
     function checkCollision(){ 
         for (var tested in snakes){
             for (var reciever in snakes){
-                for (var i in snakes[reciever].coords){
-                    if(i != 0) { //Sans cette condition tout les snakes meurent. 
-                        if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
-                            to_kill.push(tested);
-                        }
+                if (reciever !== tested){
+                    for (var i in snakes[reciever].coords){
+                        //if(i != 0) { //Sans cette condition tout les snakes meurent. 
+                            if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
+                                to_kill.push(tested);
+                            }
+                        //}
                     }
                 }
             }
