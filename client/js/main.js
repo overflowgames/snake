@@ -164,7 +164,7 @@ function update_canvas(snakes, bonus) {
         sx = snakes[i].coords[0][0];
         sy = snakes[i].coords[0][1];
         
-        context.fillStyle = "#424242";
+        context.fillStyle = "rgba(66, 66, 66, 0.5)";
         context.font = "16px Helvetica";
         
         var tw = context.measureText(snakes[i].name).width;
