@@ -179,5 +179,6 @@ function Controller (options){
         setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
     }
 }
-
-module.exports.Controller = Controller;
+if (typeof module !== "undefined"){
+    module.exports.Controller = Controller;
+}
