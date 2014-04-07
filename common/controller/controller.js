@@ -19,6 +19,7 @@ function Controller (options){
     var that = this;
     
     var game_history = [];
+    var action_history = [];
 
     this.addSnake = function (id, coords, direction, score, size, name, cum_score) {
         snakes[id] = {};
@@ -55,6 +56,7 @@ function Controller (options){
             snakes[id].direction = direction;
             change_direction_callback(id, direction, counter);
         }
+        action_history.push({id : id, direction : direction});
     };
     
     
@@ -187,6 +189,9 @@ function Controller (options){
         game_history.push({snakes : snakes, bonus: bonus});
         if (game_history.length > 20){
             game_history.unshift();
+        }
+        if (action_history.length > 20){
+            action_history.unshift();
         }
         update_callback(snakes, bonus);
     };
