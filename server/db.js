@@ -4,6 +4,12 @@ var async = require("async"),
 
 var filename = "scores.json";
 
+fs.exists(filename, function (exists) {
+    if (!(exists)){
+        fs.writeFileSync(filename, "{}");
+    }
+});
+
 var queue = async.queue(function (task, cb) {
     fs.readFile(filename, function(err, data){
         if (err) throw err;
