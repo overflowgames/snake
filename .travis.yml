@@ -6,7 +6,7 @@ deploy:
   provider: heroku
   api_key:
     secure: VJIV3fBb/EAUsJMQVrUuOrpUv6H/42SekAUbLPTHfPvj9ATr5HP+4tPB0ayKSemzq+WwG/gusXw6ljpGHoT5BFlOC6Bhv9cssClOHSAEycxAG3qVB1fN4IoPmZ4UlqTJfa/60Txm/2PqOs4I9fMiz/u61GUJKXQtT2o28l2jTI8=
-  app: boudless-snake
+  app: boundless-snake
   on:
     repo: overflowgames/snake
     branch: master
