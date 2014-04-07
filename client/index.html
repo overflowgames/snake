@@ -10,15 +10,15 @@
     <body>
     
         <div id="spawndiv" style="display:none">
-            <div id="pseudal"><span>ENTREZ VOTRE PSEUDO: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Entrez votre élément de type pseudonyme" value="Jack Banane" />
+            <div id="pseudal"><span>ENTREZ VOTRE PSEUDO: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
             </div>
-            <button href="#" onClick="spawn_snake()" >SPAWN DU SNAKE OF THE DEAD</button>
+            <button href="#" onClick="spawn_snake()" >FAIRE APPARAITRE VOTRE SERPENT</button>
             <div style="clear:both"></div>
         </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
         
-        <div id="button_lock" onClick="lock()"><img src="assets/lock.png" alt="lock"/></div>
-        <div id="button_locked" onClick="unlock()" style="display: none;"><img src="assets/locked.png" alt="locked"/></div>
+        <div id="button_lock" onClick="lock()" style="display: none"><img src="assets/lock.png" alt="lock"/></div>
+        <div id="button_locked" onClick="unlock()"><img src="assets/locked.png" alt="locked"/></div>
         
         <script type="text/javascript" src="dist.js"></script>
         <script>
