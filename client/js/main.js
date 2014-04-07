@@ -268,9 +268,6 @@ $('#daniel').keyup(function (e) {
   
 function spawn_snake() {
     var pseudo = document.getElementById('daniel').value;
-    if(pseudo == "") {
-        return;
-    }
         
     localStorage.setItem("pseudo", pseudo);
     
@@ -280,7 +277,12 @@ function spawn_snake() {
     
     spawned = true;
     var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
-    socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
+    
+	if(pseudo == "") {
+		pseudo = "Jack Banane";
+	}
+
+	socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
        
         if (pos === "ko"){
             spawned = false;
@@ -288,7 +290,7 @@ function spawn_snake() {
             return;
         }
         console.log(pos)
-        controller.addSnake(my_id,pos, "u",0,20,document.getElementById('daniel').value);
+        controller.addSnake(my_id,pos, "u",0,20,pseudo);
         //centerOnSnake(my_id);
         
         $("#spawndiv").slideUp();
