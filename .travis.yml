@@ -2,13 +2,11 @@ language: node_js
 node_js:
   - '0.11'
   - '0.10'
-  - '0.8'
-  - '0.6'
 deploy:
   provider: heroku
   api_key:
     secure: VJIV3fBb/EAUsJMQVrUuOrpUv6H/42SekAUbLPTHfPvj9ATr5HP+4tPB0ayKSemzq+WwG/gusXw6ljpGHoT5BFlOC6Bhv9cssClOHSAEycxAG3qVB1fN4IoPmZ4UlqTJfa/60Txm/2PqOs4I9fMiz/u61GUJKXQtT2o28l2jTI8=
-  app: snake
+  app: boudless-snake
   on:
     repo: overflowgames/snake
     branch: master

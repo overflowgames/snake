@@ -11,8 +11,8 @@
     "socket.io-client": "~0.9.16"
   },
   "scripts": {
-    "start": "server/app.js",
-    "test" : "npm install --dev && node_modules/grunt-cli/bin/grunt test"
+    "start": "node server/app.js",
+    "test" : "node_modules/grunt-cli/bin/grunt test"
   },
   "repository": {
     "type": "git",
