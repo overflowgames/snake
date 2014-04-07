@@ -14,6 +14,12 @@ function Controller (options){
     
     var to_kill = [], num_snakes = 0;
     
+    var counter = 0;
+    
+    var that = this;
+    
+    var game_history = [];
+
     this.addSnake = function (id, coords, direction, score, size, name, cum_score) {
         snakes[id] = {};
         snakes[id].coords = coords;
@@ -23,7 +29,7 @@ function Controller (options){
         snakes[id].name = name;
         snakes[id].cum_score = cum_score;
         num_snakes++;
-        add_snake_callback(id, coords, direction, score, size, name, cum_score);
+        add_snake_callback(id, coords, direction, score, size, name, cum_score, counter);
     };
     
     this.killSnake = function (id, by) {
@@ -47,14 +53,14 @@ function Controller (options){
     this.changeDirection = function (id, direction) {
         if(validateMove(id, direction)) {
             snakes[id].direction = direction;
-            change_direction_callback(id, direction);
+            change_direction_callback(id, direction, counter);
         }
     };
     
     
     this.addBonus = function (id, coords) {
         bonus[id] = coords;
-        add_bonus_callback(id, coords);
+        add_bonus_callback(id, coords, counter);
     };
     
     this.getNumSnakes = function () {
@@ -62,17 +68,16 @@ function Controller (options){
     };
     
     this.eatBonus = function(id, by) {
-        
         if(by == -1 || typeof by == 'undefined') {
-            eaten_bonus_callback(id, by);
+            eaten_bonus_callback(id, undefined, counter);
             delete bonus[id];
             return;
         }
         snakes[by].size += 3;
-        eaten_bonus_callback(id, by);
+        eaten_bonus_callback(id, by, counter);
         addPoints(by);
         delete bonus[id];
-    }
+    };
     
     function addPoints(id) {
         snakes[id].score += points_bonnus;
@@ -167,7 +172,6 @@ function Controller (options){
         bonus = b;
     };
     
-    var that = this;
     
     this.update = function () {     // This is where the magic happens
         updatePosition();
@@ -179,7 +183,22 @@ function Controller (options){
         }
         
         checkBonus();
+        counter++;
+        game_history.push({snakes : snakes, bonus: bonus});
+        if (game_history.length > 20){
+            game_history.unshift();
+        }
         update_callback(snakes, bonus);
+    };
+    
+    this.seek = function(to){
+        if (to == counter) {
+            return;
+        } else if (to > counter){
+            
+        } else {
+            
+        }
     };
     
     if (!(options.disable_update === true)){
