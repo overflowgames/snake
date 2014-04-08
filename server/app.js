@@ -5,8 +5,6 @@ var sio = require('socket.io'),
     http = require('http'),
     express = require('express');
 
-
-
 var app = express();
 
 app.use(express.static(__dirname + '/../client'));
@@ -30,6 +28,8 @@ var void_radius = 2;
 var max_val     = 5;
 
 var bonusTimeoutQueue = [];
+
+var ticks;
     
 function genBonusCoords (){
     
@@ -164,10 +164,13 @@ function matrix_pos(x, y, px, py) {
 
 var controller = new Controller({
     callbacks: {
-        update: function (snakes, bonus) {
+        update: function (snakes, bonus, counter, game_history, action_history) {
             game.snakes = snakes;
             game.bonus = bonus;
-            io.sockets.emit("u");
+            //game.game_history = game_history;
+            //game.action_history = action_history;
+            ticks = counter;
+            //io.sockets.emit("u");
             
     
             if (controller.getNumSnakes() > 0){
@@ -182,7 +185,7 @@ var controller = new Controller({
                 
                
             }
-            do {
+            do {    // TODO : A implémenter dans le controlleur, sinon le client veut pas ..."
                 var continuer = false;
                 if(bonusTimeoutQueue.length > 0) {
                     var firstBonus = bonusTimeoutQueue[0];
@@ -210,8 +213,8 @@ var controller = new Controller({
             io.sockets.emit("-", [id, by]);
             dbcontroller.push_score(secrets[id], score);
         },
-        change_direction: function (id, direction) {
-            io.sockets.emit("c", [id, direction]);
+        change_direction: function (id, direction, counter) {
+            io.sockets.emit("c", [id, direction, counter]);
         }
     },
     points_bonnus: 10,
@@ -257,7 +260,7 @@ io.sockets.on('connection', function (socket) {
                     socket.get("login", function (err, login) {
                         if (data.secret === login.secret){
                             controller.changeDirection(login.id, data.direction);
-                            ack("ok");
+                            ack(controller.getCounter()); // TOFIX : Ca plante quand il y a pas de callback
                         } else {
                             ack("kol");
                            //log.notice("Someone has tried to acces to an id without permission");
@@ -279,9 +282,9 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function(){
-    io.sockets.emit("up", game, function(){
+    io.sockets.emit("up", {game: game, counter: ticks}, function(){
         
     });
-}, 5000);     // Sends the whole game state to all the clients every 10 seconds
+}, 10000);     // Sends the whole game state to all the clients every 10 seconds
 
 //log.info("All started");

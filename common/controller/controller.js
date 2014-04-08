@@ -39,11 +39,6 @@ function Controller (options){
                 snakes[by].size += snakes[id].size/2;
                 snakes[by].score += snakes[id].score/2;
                 console.log("OKKKOKOK");
-            } else {
-                console.log(by !== id);
-                console.log(typeof snakes[by] !== "undefined");
-                console.log(id);
-                console.log(by);
             }
             killed_snake_callback(id, snakes[id].score, by);
             delete snakes[id];
@@ -51,12 +46,17 @@ function Controller (options){
         }
     };
     
-    this.changeDirection = function (id, direction) {
+    this.changeDirection = function (id, direction, c) {
+        var ticks = c || counter;
+        action_history.unshift({id : id, direction : direction, counter: ticks});
         if(validateMove(id, direction)) {
-            snakes[id].direction = direction;
-            change_direction_callback(id, direction, counter);
+            if (ticks !== counter) {
+                that.seek(ticks);
+            } else {
+                snakes[id].direction = direction;
+            }
+            change_direction_callback(id, direction, ticks);
         }
-        action_history.push({id : id, direction : direction});
     };
     
     
@@ -169,13 +169,15 @@ function Controller (options){
         return (p1[0] == p2[0]) && (p1[1] == p2[1]);
     }
     
-    this.load = function(s, b) {
+    this.load = function(s, b, c, g, a) {
         snakes = s;
         bonus = b;
+        counter = c;
     };
     
     
-    this.update = function () {     // This is where the magic happens
+    this.update = function (callback) {     // This is where the magic happens
+        counter++;
         updatePosition();
         checkCollision();
         
@@ -185,25 +187,51 @@ function Controller (options){
         }
         
         checkBonus();
-        counter++;
-        game_history.push({snakes : snakes, bonus: bonus});
-        if (game_history.length > 20){
-            game_history.unshift();
+        game_history.unshift({snakes : snakes, bonus: bonus});
+        while (game_history.length > 20){
+            game_history.shift();
         }
-        if (action_history.length > 20){
-            action_history.unshift();
+        while (action_history.length > 20){
+            action_history.shift();
         }
-        update_callback(snakes, bonus);
+        if ((typeof callback === "undefined") || (callback === true)){
+            update_callback(snakes, bonus, counter, game_history, action_history);
+        }
     };
     
     this.seek = function(to){
         if (to == counter) {
             return;
-        } else if (to > counter){
-            
+        } else if (to > counter){ // TODO : A simplifier
+            console.log("Server was early, going to " + to + ". Was at " + counter);
+            for (var f = counter ; f <= to ; f++){
+                for (var g in action_history){
+                    if (action_history[g].counter == f){
+                        that.changeDirection(action_history[g].id, action_history[g].direction);
+                    }
+                }
+                if (f < to) {
+                    that.update(false);
+                }
+            }
         } else {
-            
+            console.log("Server was late, going to " + to + ". Was at " + counter);
+            //var max = counter;
+            console.log(game_history);
+            that.load(game_history[counter-to].snakes, game_history[counter-to].bonus, to);
+            //for (var i = to ; i < max ; i++){
+                for (var j in action_history){
+                    if (action_history[j].counter == to){
+                        that.changeDirection(action_history[j].id, action_history[j].direction);
+                    }
+                }
+                that.update(false);
+            //}
         }
+    };
+    
+    this.getCounter = function () {
+        return this.counter;
     };
     
     if (!(options.disable_update === true)){

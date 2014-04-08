@@ -45,7 +45,6 @@ var sq_w=10;
 var anim;
 
 var my_id="";
-var ma_direction="u"; // CEY MA DIRAYCTION! JAY PAYTAY LAY PLOMB ////
 
 var last_snakes, last_bonus;
 
@@ -221,7 +220,7 @@ socket.emit("login", {secret : secret}, function(data){
             }
         },
         points_bonnus: 10,
-        disable_update: true,
+        disable_update: false,
         update_rate: 10
     });
     $("#spawndiv").slideDown();
@@ -246,17 +245,18 @@ socket.on("-", function(data){
 });
 
 socket.on("up", function(data){
-        controller.load(data.snakes, data.bonus);
+    console.log("FULLUP");
+    controller.load(data.game.snakes, data.game.bonus, data.counter);
 });
 
 socket.on("c", function(data){
-    controller.changeDirection(data[0],data[1]);
+    controller.changeDirection(data[0],data[1], data[2]);
 });
 
-socket.on("u", function(data){
+/*socket.on("u", function(data){
     if(controller != undefined)
         controller.update();
-});
+});*/
 
 
 $('#daniel').keyup(function (e) {
@@ -372,16 +372,16 @@ document.onkeydown = function(event) {
     event = event || window.event; 
     switch (event.keyCode) {
         case 37:// left
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "l"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "l"}, function(data){});
             break;
         case 38://up
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "u"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "u"}, function(data){});
             break;
         case 39://right
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "r"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "r"}, function(data){});
             break;
         case 40://down
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "d"}, function(data){ma_direction=data[1]});
+            socket.emit("c", {"id":my_id, "secret":secret, "direction": "d"}, function(data){});
             break;
     }
     
