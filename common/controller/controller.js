@@ -225,7 +225,7 @@ function Controller (options){
                         that.changeDirection(action_history[j].id, action_history[j].direction);
                     }
                 }
-                that.update(false);
+                //that.update(false);
             //}
         }
     };
