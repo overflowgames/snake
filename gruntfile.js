@@ -4,7 +4,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             dist: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/mobile.main.js'],
                 dest: 'client/dist.js'
             }
         },
