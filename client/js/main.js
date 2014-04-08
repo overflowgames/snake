@@ -59,20 +59,18 @@ var my_score = 0;
 function draw_grid() {
 
     for(var x=(-position_x+offset_x)%sq_w; x<=width;x+=sq_w) {
-        context.beginPath();
+        
         context.moveTo(x, 0);
         context.lineTo(x, height);
-        context.stroke();
-        context.closePath();
+        
     }
     
     for(var y=(-position_y+offset_y)%sq_w; y<=height;y+=sq_w) {
-        context.beginPath();
+        
         context.moveTo(0, y);
         context.lineTo(width, y);
-        context.stroke();
-        context.closePath();
     }
+    context.stroke();
 }
 
 function update_dimensions(){
@@ -82,7 +80,9 @@ function update_dimensions(){
     g = d.getElementsByTagName('body')[0],
     win_x = w.innerWidth || e.clientWidth || g.clientWidth,
     win_y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-    
+
+    if(height == win_y && width  == win_x)
+	return;    
     height = win_y;
     width = win_x;
     
