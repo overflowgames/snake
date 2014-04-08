@@ -2,7 +2,6 @@ var socket = io.connect();
 var controller;
 
 
-
 // set up a pattern, something really elaborate!
 var pattern = document.createElement('canvas');
 pattern.width = 512;
@@ -107,6 +106,7 @@ setInterval(function() {
         followSnake(my_id);
 },1000/500);
 
+    
 var pattern_ = context.createPattern(pattern, "repeat");
     
 function update_canvas(snakes, bonus) {
@@ -119,12 +119,36 @@ function update_canvas(snakes, bonus) {
     offy = offset_y-position_y;
     
     context.beginPath();
-    context.fillStyle = pattern_;
     
+    context.fillStyle = pattern_;
+
     context.translate(offx, offy);
-    context.fillRect(-offx,-offy,canvas.width+Math.abs(offx),canvas.height+Math.abs(offy));
+    context.fillRect(-offx, -offy, canvas.width, canvas.height);
     context.translate(-offx, -offy);
     
+    
+    draw_snakes (snakes);
+    draw_bonuses (bonus);
+    
+    // #Draw the grid
+    context.strokeStyle = "#ffffff";
+    if(mobile)
+        context.lineWidth=1;
+    else 
+        context.lineWidth=0.5;
+    draw_grid();
+    
+    draw_names(snakes);
+    
+    if(typeof snakes[my_id] != 'undefined') {
+        my_score = snakes[my_id].score;
+    }
+    
+    // #Draw the HUD
+    draw_hud();
+}
+
+function draw_snakes (snakes) {
     // #Draw the snakes
     for(var i in snakes) {
         for(var ii = 0; ii < snakes[i].coords.length;ii++) {
@@ -137,6 +161,9 @@ function update_canvas(snakes, bonus) {
         }
     }
     
+}
+
+function draw_bonuses (bonus) {
     // #Draw bonuses
     for(var i in bonus) {
         if(bonus[i] != null) {
@@ -147,16 +174,9 @@ function update_canvas(snakes, bonus) {
             context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
         }
     }
-    
-    
-    // #Draw the grid
-    context.strokeStyle = "#ffffff";
-    if(mobile)
-        context.lineWidth=1;
-    else 
-        context.lineWidth=0.5;
-    draw_grid();
-    
+}
+
+function draw_names (snakes) {
     // #Draw names
     for(var i in snakes) {
         var sx, sy;
@@ -179,13 +199,6 @@ function update_canvas(snakes, bonus) {
         context.fillText(snakes[i].name, tx, ty);
         
     }
-    
-    if(typeof snakes[my_id] != 'undefined') {
-        my_score = snakes[my_id].score;
-    }
-    
-    // #Draw the HUD
-    draw_hud();
 }
 
 var secret = localStorage.getItem("secret") || uuid.v4();
