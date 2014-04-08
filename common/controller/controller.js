@@ -189,10 +189,10 @@ function Controller (options){
         checkBonus();
         game_history.unshift({snakes : snakes, bonus: bonus});
         while (game_history.length > 20){
-            game_history.shift();
+            game_history.pop();
         }
         while (action_history.length > 20){
-            action_history.shift();
+            action_history.pop();
         }
         if ((typeof callback === "undefined") || (callback === true)){
             update_callback(snakes, bonus, counter, game_history, action_history);
