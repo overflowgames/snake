@@ -1,5 +1,5 @@
 var sio = require('socket.io'),
-    uuid = require('uuid'),
+    uuid = require('node-uuid'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js"),
     http = require('http'),
@@ -16,7 +16,7 @@ console.log(__dirname + '/../client');
 
 var server = http.createServer(app);
 
-server.listen(parseInt(process.env.PORT, 10));
+server.listen(parseInt(process.env.PORT || 1337, 10));
 
 var io = sio.listen(server);
 io.set('log level', 1);
