@@ -20,19 +20,18 @@
     <body>
     
         <div id="spawndiv" style="display:none">
-            <span>Spawn system: </span>
-            <a href="#" onClick="spawn_snake()" >ready to teleport snake.</a>
-            <br/>
-            <input type="text" id="daniel" placeholder="Entrez votre Kouby" value="Jean-Masturbin" />
+            <div id="pseudal"><span>Pseudo: </span> <input type="text" id="daniel" placeholder="Jack Banane" value="" /></div>
+            <a id="spawn" onClick="spawn_snake()" ><img src="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/go-next-512.png" /></a>
+            <div style="clear:both"></div>
         </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
         
-            <div id="go_up" onClick="socket.emit('c', {'id':my_id, 'secret':'dan', 'direction': 'u'}, function(data){ma_direction=data[1]});" ><img src="http://www.direct-signaletique.com/I-Grande-12530-plaque-de-porte-icone-fleche-en-haut.net.jpg"/></div>
-            <div id="go_down" onClick="socket.emit('c', {'id':my_id, 'secret':'dan', 'direction': 'd'}, function(data){ma_direction=data[1]});" ><img src="http://www.direct-signaletique.com/I-Grande-12530-plaque-de-porte-icone-fleche-en-haut.net.jpg"/></div>
-            <div id="go_left" onClick="socket.emit('c', {'id':my_id, 'secret':'dan', 'direction': 'l'}, function(data){ma_direction=data[1]});" ><img src="http://www.direct-signaletique.com/I-Grande-12530-plaque-de-porte-icone-fleche-en-haut.net.jpg"/></div>
-            <div id="go_right" onClick="socket.emit('c', {'id':my_id, 'secret':'dan', 'direction': 'r'}, function(data){ma_direction=data[1]});" ><img src="http://www.direct-signaletique.com/I-Grande-12530-plaque-de-porte-icone-fleche-en-haut.net.jpg"/></div>
-       
+        <div id="zoombox" >
+            <div class="zoom" onClick="zoomIn()">+</div>
+            <div class="zoom" onClick="zoomOut()">-</div>
+        </div>
         
         <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/mobile.main.js"></script>
     </body>
 </html>
