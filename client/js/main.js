@@ -17,6 +17,20 @@ gradient.addColorStop(1,"#3B5998");
 pctx.fillStyle = gradient; 
 pctx.fillRect(0, 0, pattern.width, pattern.height);
 
+
+var triangle_canvas = document.createElement('canvas');
+triangle_canvas.width = 20;
+triangle_canvas.height = 20;
+var tctx = triangle_canvas.getContext('2d');
+tctx.fillStyle="rgba(255,127,10,0.95)";
+tctx.beginPath();
+
+tctx.moveTo(10,0);
+tctx.lineTo(20,20);
+tctx.lineTo(0,20);
+tctx.closePath();
+tctx.fill();
+
 var canvas = document.getElementById('app');
 if(!canvas) {
     alert("Impossible de récupérer le canvas");
@@ -53,6 +67,7 @@ var spawned = false;
 var padding = 150;
 
 var my_score = 0;
+var nconnectes = 0;
 
 
 function draw_grid() {
@@ -99,6 +114,7 @@ function draw_hud() {
     context.fillText("x: "+cx, 30, 30);
     context.fillText("y: "+cy, 30, 50);
     context.fillText("score: "+my_score, 30, 70);
+    context.fillText("connectés: "+nconnectes, 30, 90);
 }
 
 setInterval(function() {
@@ -150,7 +166,9 @@ function update_canvas(snakes, bonus) {
 
 function draw_snakes (snakes) {
     // #Draw the snakes
+    nconnectes = 0;
     for(var i in snakes) {
+        nconnectes++;
         for(var ii = 0; ii < snakes[i].coords.length;ii++) {
             var cx = snakes[i].coords[ii][0];
             var cy = snakes[i].coords[ii][1];
@@ -179,26 +197,173 @@ function draw_bonuses (bonus) {
 function draw_names (snakes) {
     // #Draw names
     for(var i in snakes) {
-        var sx, sy;
-        var tx, ty;
-        sx = snakes[i].coords[0][0];
-        sy = snakes[i].coords[0][1];
+        if(visible(snakes[i])) {
+            var sx, sy;
+            var tx, ty;
+            sx = snakes[i].coords[0][0];
+            sy = snakes[i].coords[0][1];
+            
+            context.fillStyle = "rgba(66, 66, 66, 0.5)";
+            context.font = "16px Helvetica";
+            
+            var tw = context.measureText(snakes[i].name).width;
+            
+            tx = sx*sq_w-position_x+offset_x - tw/2;
+            ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
+            
+            
+            context.fillRect(tx-2, ty-16, tw + 4, 20);
         
-        context.fillStyle = "rgba(66, 66, 66, 0.5)";
-        context.font = "16px Helvetica";
-        
-        var tw = context.measureText(snakes[i].name).width;
-        
-        tx = sx*sq_w-position_x+offset_x - tw/2;
-        ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
-        
-        
-        context.fillRect(tx-2, ty-16, tw + 4, 20);
-    
-        context.fillStyle = "#ffffff";
-        context.fillText(snakes[i].name, tx, ty);
-        
+            context.fillStyle = "#ffffff";
+            context.fillText(snakes[i].name, tx, ty);
+        } else {
+            dists = getDistanceFromCenter(snakes[i]);
+            var dx = dists[0];
+            var dy = dists[1];
+            
+            
+            var drawx, drawy;
+            
+            if((Math.abs(dx)<600) && (Math.abs(dy) < 600)) {
+                var flagx,flagy;
+                var ofsx, ofsy;
+                
+                context.font = "18px Helvetica";
+                context.fillStyle = "#ffffff";
+                
+                var dist = Math.round(Math.sqrt(dx*dx + dy*dy));
+                var tw = context.measureText(dist).width;
+                
+                if(dx < -canvas.width/(2*sq_w)) {
+                    drawx = 10; 
+                    flagx=-1;
+                } else if(dx > canvas.width/(2*sq_w)) {
+                    drawx = canvas.width - 20;
+                    flagx=1;
+                } else {
+                    drawx = canvas.width/2 + dx *sq_w;
+                    flagx=0;
+                }
+                    
+                if(dy < -canvas.height/(2*sq_w)) {
+                    drawy = 10; 
+                    flagy=-1;
+                } else if(dy > canvas.height/(2*sq_w)) {
+                    drawy = canvas.height - 30;
+                    flagy=1;
+                } else {
+                    drawy = canvas.height/2 + dy *sq_w;
+                    flagy=0;
+                }
+                
+                context.save(); 
+                context.translate(drawx, drawy);
+                
+                switch(flagx) {
+                    case -1: 
+                        switch(flagy) { 
+                            case -1: // haut gauche
+                                context.rotate(-Math.PI/4);
+                                
+                                ofsx = 25;
+                                ofsy = 40;
+                                break;
+                            case 0: // gauche
+                                context.rotate(-Math.PI/2);
+                                
+                                ofsx = 25;
+                                ofsy = -5;
+                                break;
+                            case 1: // bas gauche
+                                context.rotate(-3*Math.PI/4);
+                                
+                                ofsx = 25;
+                                ofsy = -25;
+                                break;
+                        }
+                        break;
+                    case 0:
+                        switch(flagy) {
+                            case -1: // haut
+                                ofsx = 10-tw/2;
+                                ofsy = 40;
+                                break;
+                            case 1: // bas
+                                context.rotate(Math.PI);
+                                
+                                ofsx = -10-tw/2;
+                                ofsy = -25;
+                                break;
+                        }
+                        break;
+                    case 1: 
+                        switch(flagy) {
+                            case -1: // haut droite
+                                context.rotate(Math.PI/4);
+                                
+                                ofsx = -30-tw;
+                                ofsy = 40;
+                                break;
+                            case 0: // droite  
+                                context.rotate(Math.PI/2);
+                                
+                                ofsx = -30-tw;
+                                ofsy = 15;
+                                break;
+                            case 1: // basdroite
+                                context.rotate(3*Math.PI/4);
+                                
+                                ofsx = -30-tw;
+                                ofsy = -25;
+                                break;
+                        }
+                        break;
+                }
+                
+                
+                context.drawImage(triangle_canvas, 0, 0);
+                context.restore(); 
+                
+                
+                context.fillText(dist, drawx + ofsx, drawy + ofsy);
+            }
+        }
     }
+}
+
+function getDistanceFromCenter(snake) {
+    var sx = snake.coords[0][0];
+    var sy = snake.coords[0][1];
+    
+    var cx = Math.round((position_x-offset_x+canvas.width/2)/sq_w);
+    var cy = Math.round((position_y-offset_y+canvas.height/2)/sq_w);
+    
+    var distx = sx - cx;
+    var disty = sy - cy;
+        
+    return [distx, disty];
+}
+
+
+function visible(snake) {
+    var sx = snake.coords[0][0];
+    var sy = snake.coords[0][1];
+    
+    
+    var cx = Math.round((position_x-offset_x+canvas.width/2)/sq_w);
+    var cy = Math.round((position_y-offset_y+canvas.height/2)/sq_w);
+    
+    var distx = Math.abs(cx - sx);
+    var disty = Math.abs(cy - sy);
+    
+    distx -= canvas.width/(2*sq_w);
+    disty -= canvas.height/(2*sq_w);
+    
+    if(distx < 0 && disty < 0)
+        return 1;
+    else
+        return 0;
+    
 }
 
 var secret = localStorage.getItem("secret") || uuid.v4();
