@@ -2,11 +2,13 @@
  *  https://gist.githubusercontent.com/localpcguy/1373518/raw/24b15a23cc323f4f453888283452908c1a870036/swipeFunc.js
  * ********************************************************* */
 var swipeFunc = {
+    seuil : 10,
     touches : {
         "touchstart": {"x":-1, "y":-1}, 
         "touchmove" : {"x":-1, "y":-1}, 
         "touchend"  : false,
-        "direction" : "undetermined"
+        "direction" : "undetermined",
+        "last" : ""
     },
     touchHandler: function(event) {
         var touch;
@@ -14,16 +16,12 @@ var swipeFunc = {
             event.preventDefault(); 
             if (typeof event.touches !== 'undefined') {
                 touch = event.touches[0];
+                
+                swipeFunc.touches[event.type].x = touch.pageX;
+                swipeFunc.touches[event.type].y = touch.pageY;
+                
                 switch (event.type) {
-                    case 'touchstart':
                     case 'touchmove':
-                        swipeFunc.touches[event.type].x = touch.pageX;
-                        swipeFunc.touches[event.type].y = touch.pageY;
-                        break;
-                    case 'touchend':
-                        swipeFunc.touches[event.type] = true;
-                        
-                        // Détection de la direction
                         
                         var diffH = swipeFunc.touches.touchstart.x - swipeFunc.touches.touchmove.x;
                         var diffV = swipeFunc.touches.touchstart.y - swipeFunc.touches.touchmove.y;
@@ -33,11 +31,18 @@ var swipeFunc = {
                                 swipeFunc.touches.direction = diffH > 0 ? "l" : "r";
                             else
                                 swipeFunc.touches.direction = diffV > 0 ? "u" : "d";
-                            
-                            // DO STUFF HERE
-                            //console.log(swipeFunc.touches.direction);
+                        }
+                        
+                        if( (Math.max(Math.abs(diffH), Math.abs(diffV)) > swipeFunc.seuil) && (swipeFunc.touches.last != swipeFunc.touches.direction)) {
+                            swipeFunc.touches.touchstart = swipeFunc.touches.touchmove;
+                            swipeFunc.touches.start = swipeFunc.touches.start
                             socket.emit("c", {"id":my_id, "secret":secret, "direction": swipeFunc.touches.direction}, function(data){ma_direction=data[1]});
                         }
+                        
+                        break;
+                    case 'touchend':
+                        swipeFunc.touches.last = "";
+                        break;
                     default:
                         break;
                 }
