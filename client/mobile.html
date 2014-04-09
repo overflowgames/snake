@@ -4,29 +4,34 @@
         <title>Bienvenue chez les Nerdz</title>
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/mobile.main.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/2.0.3/jquery-2.0.3.min.js"></script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="common/controller/controller.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <script type="text/javascript">
-            var mobile=true;
-            
+            var mobile=false;
+        </script>
+    </head>
+    <body>
+    
+        <div id="spawndiv" style="display:none">
+            <div id="pseudal"><span>Pseudo: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" /> </div>
+            <button href="#" onClick="spawn_snake()" >Respawn</button>
+            <div style="clear:both"></div>
+        </div>
+        <canvas class="dragclass" id="app" width="500" height="500"></canvas>
+        
+        <div id="zoombox" class="mobile_only">
+            <div class="zoom" onClick="zoomC(-0.1)">+</div>
+            <div class="zoom" onClick="zoomC(0.1)">-</div>
+        </div>
+        
+        <script type="text/javascript" src="mobile.dist.js"></script>
+        <script type="text/javascript">
+            if(localStorage.getItem("pseudo") != null && localStorage.getItem("pseudo") != "") {
+                document.getElementById('daniel').value = localStorage.getItem("pseudo");
+            }
             
             function isLocked() {
                 return true;
             }
         </script>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    </head>
-    <body>
-    
-        <div id="spawndiv" style="display:none">
-            <div id="pseudal"><span>Pseudo: </span> <input type="text" id="daniel" placeholder="Jack Banane" value="" /></div>
-            <a id="spawn" onClick="spawn_snake()" ><img src="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/go-next-512.png" /></a>
-            <div style="clear:both"></div>
-        </div>
-        <canvas class="dragclass" id="app" width="500" height="500"></canvas>
-        
-        <script type="text/javascript" src="js/main.js"></script>
-        <script type="text/javascript" src="js/mobile.main.js"></script>
     </body>
 </html>

@@ -4,6 +4,11 @@ body {
     font-family: Ubuntu, Arial, sans-serif;
 }
 
+#app {
+    width: 100%;
+    height: 100%;
+}
+
 #button_lock, #button_locked {
     z-index: 1000;
     position: absolute;

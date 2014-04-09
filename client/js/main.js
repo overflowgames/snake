@@ -1,6 +1,7 @@
 var socket = io.connect();
 var controller;
 
+var zoom = 1;
 
 // set up a pattern, something really elaborate!
 var pattern = document.createElement('canvas');
@@ -93,6 +94,9 @@ function update_dimensions(){
     g = d.getElementsByTagName('body')[0],
     win_x = w.innerWidth || e.clientWidth || g.clientWidth,
     win_y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    win_x *= zoom;
+    win_y *= zoom;
 
     if(height == win_y && width  == win_x)
 	return;    
