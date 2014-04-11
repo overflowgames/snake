@@ -4,8 +4,12 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             dist: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/tactile.js'],
                 dest: 'client/dist.js'
+            },
+            dist_mobile: {
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
+                dest: 'client/mobile.dist.js'
             }
         },
         uglify : {
@@ -13,6 +17,10 @@ module.exports = function(grunt) {
                 src: "client/dist.js",
                 dest: "client/dist.min.js",
             },
+            mobile: {
+                src: "client/mobile.dist.js",
+                dest: "client/mobile.dist.min.js",
+            }
         }
     });
 

@@ -1,51 +1,45 @@
-
-#go_up {
-    z-index: 1000;
+#zoombox {
     position: absolute;
-    bottom: 13%;
-    left: 45%;
-}
-
-#go_down {
-    z-index: 1000;
-    position: absolute;
-    bottom: 2%;
-    left: 45%;
+    right: 0px;
+    bottom: 10%;
     
-    -ms-transform:rotate(180deg); /* IE 9 */
-    -webkit-transform:rotate(180deg); 
-    -o-transform:rotate(180deg); 
-    -moz-transform:rotate(180deg); 
-    transform:rotate(180deg);
-}
-
-#go_left {
-    z-index: 1000;
-    position: absolute;
-    bottom: 2%;
-    left: 26%;
+    width: 40px;
+    height: 60px;
+    padding-bottom: 10px;
+    z-index: 100;
     
-    -ms-transform:rotate(-90deg); /* IE 9 */
-    -webkit-transform:rotate(-90deg); 
-    -o-transform:rotate(-90deg); 
-    -moz-transform:rotate(-90deg); 
-    transform:rotate(-90deg);
-}
-
-#go_right {
-    z-index: 1000;
-    position: absolute;
-    bottom: 2%;
-    left: 64%;
+    background-color: black;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     
-    -ms-transform:rotate(90deg); /* IE 9 */
-    -webkit-transform:rotate(90deg); 
-    -o-transform:rotate(90deg); 
-    -moz-transform:rotate(90deg); 
-    transform:rotate(90deg);
 }
 
-img {
-    width:60px;
-    height:60px;
+.zoom {
+    color: white;
+    text-align: center;
+    
+    height: 30px;
+    font-size: 2em;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+/* ************************ */
+
+#spawndiv {
+    padding: 10px;
+}
+
+#spawndiv button{
+    float: left;
+    height: 50px;
+    width: calc(100% - 20px);
+    margin: 10px;
+}
+
+#pseudal {
+    float: left;
+    padding: 0px;
+    text-align: center;
+    width: 100%;
 }
