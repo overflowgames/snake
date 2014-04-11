@@ -188,15 +188,22 @@ function Controller (options){
         
         checkBonus();
         var snakes_new = [];
+        var bonus_new = [];
         for (var i in snakes){
                 snakes_new[i] = {
                     score: snakes[i].score,
-                    coords: snakes[i].coords,
                     name: snakes[i].name,
+                    coords: [],
                     direction: snakes[i].direction,
                     cum_score: snakes[i].cum_score,
                     size: snakes[i].size
+                };
+                for (var j in snakes[i].coords){
+                    snakes_new[i].coords[j] = [snakes[i].coords[j][0], snakes[i].coords[j][1]];
                 }
+        }
+        for (i in bonus){
+            bonus_new[i] = [bonus[i][0], bonus[i][0]];
         }
         game_history.unshift({snakes : snakes_new, bonus: bonus});
         
