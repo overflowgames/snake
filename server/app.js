@@ -164,11 +164,9 @@ function matrix_pos(x, y, px, py) {
 
 var controller = new Controller({
     callbacks: {
-        update: function (snakes, bonus, counter, game_history, action_history) {
+        update: function (snakes, bonus, counter) {
             game.snakes = snakes;
             game.bonus = bonus;
-            //game.game_history = game_history;
-            //game.action_history = action_history;
             ticks = counter;
             //io.sockets.emit("u");
             

@@ -187,7 +187,19 @@ function Controller (options){
         }
         
         checkBonus();
-        game_history.unshift({snakes : snakes, bonus: bonus});
+        var snakes_new = [];
+        for (var i in snakes){
+                snakes_new[i] = {
+                    score: snakes[i].score,
+                    coords: snakes[i].coords,
+                    name: snakes[i].name,
+                    direction: snakes[i].direction,
+                    cum_score: snakes[i].cum_score,
+                    size: snakes[i].size
+                }
+        }
+        game_history.unshift({snakes : snakes_new, bonus: bonus});
+        
         while (game_history.length > 20){
             game_history.pop();
         }
@@ -195,8 +207,9 @@ function Controller (options){
             action_history.pop();
         }
         if ((typeof callback === "undefined") || (callback === true)){
-            update_callback(snakes, bonus, counter, game_history, action_history);
+            update_callback(snakes, bonus, counter);
         }
+
     };
     
     this.seek = function(to){
@@ -219,14 +232,11 @@ function Controller (options){
             //var max = counter;
             console.log(game_history);
             that.load(game_history[counter-to].snakes, game_history[counter-to].bonus, to);
-            //for (var i = to ; i < max ; i++){
-                for (var j in action_history){
-                    if (action_history[j].counter == to){
-                        that.changeDirection(action_history[j].id, action_history[j].direction);
-                    }
+            for (var j in action_history){
+                if (action_history[j].counter == to){
+                    that.changeDirection(action_history[j].id, action_history[j].direction);
                 }
-                //that.update(false);
-            //}
+            }
         }
     };
     
