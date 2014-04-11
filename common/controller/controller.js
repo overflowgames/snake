@@ -202,8 +202,8 @@ function Controller (options){
                     snakes_new[i].coords[j] = [snakes[i].coords[j][0], snakes[i].coords[j][1]];
                 }
         }
-        for (i in bonus){
-            bonus_new[i] = [bonus[i][0], bonus[i][0]];
+        for (var k in bonus){
+            bonus_new[k] = [bonus[k][0], bonus[k][0]];
         }
         game_history.unshift({snakes : snakes_new, bonus: bonus});
         
@@ -230,19 +230,19 @@ function Controller (options){
                         that.changeDirection(action_history[g].id, action_history[g].direction);
                     }
                 }
-                if (f < to) {
-                    that.update(false);
-                }
+                that.update(false);
             }
         } else {
             console.log("Server was late, going to " + to + ". Was at " + counter);
-            //var max = counter;
-            console.log(game_history);
+            if (typeof game_history[counter-to] === "undefined"){
+                return
+            }
             that.load(game_history[counter-to].snakes, game_history[counter-to].bonus, to);
             for (var j in action_history){
                 if (action_history[j].counter == to){
                     that.changeDirection(action_history[j].id, action_history[j].direction);
                 }
+                that.update(false);
             }
         }
     };
