@@ -14,12 +14,7 @@ function Controller (options){
     
     var to_kill = [], num_snakes = 0;
     
-    var counter = 0;
-    
     var that = this;
-    
-    var game_history = [];
-    var action_history = [];
 
     this.addSnake = function (id, coords, direction, score, size, name, cum_score) {
         snakes[id] = {};
@@ -30,7 +25,7 @@ function Controller (options){
         snakes[id].name = name;
         snakes[id].cum_score = cum_score;
         num_snakes++;
-        add_snake_callback(id, coords, direction, score, size, name, cum_score, counter);
+        add_snake_callback(id, coords, direction, score, size, name, cum_score);
     };
     
     this.killSnake = function (id, by) {
@@ -38,7 +33,6 @@ function Controller (options){
             if ((by !== id) && (typeof snakes[by] !== "undefined")){
                 snakes[by].size += snakes[id].size/2;
                 snakes[by].score += snakes[id].score/2;
-                console.log("OKKKOKOK");
             }
             killed_snake_callback(id, snakes[id].score, by);
             delete snakes[id];
@@ -46,23 +40,17 @@ function Controller (options){
         }
     };
     
-    this.changeDirection = function (id, direction, c) {
-        var ticks = c || counter;
-        action_history.unshift({id : id, direction : direction, counter: ticks});
+    this.changeDirection = function (id, direction) {
         if(validateMove(id, direction)) {
-            if (ticks !== counter) {
-                that.seek(ticks);
-            } else {
-                snakes[id].direction = direction;
-            }
-            change_direction_callback(id, direction, ticks);
+            snakes[id].direction = direction;
+            change_direction_callback(id, direction);
         }
     };
     
     
     this.addBonus = function (id, coords) {
         bonus[id] = coords;
-        add_bonus_callback(id, coords, counter);
+        add_bonus_callback(id, coords);
     };
     
     this.getNumSnakes = function () {
@@ -70,13 +58,14 @@ function Controller (options){
     };
     
     this.eatBonus = function(id, by) {
-        if(by == -1 || typeof by == 'undefined') {
-            eaten_bonus_callback(id, undefined, counter);
+        if((typeof by === "undefined") || (by === null)) {
+            eaten_bonus_callback(id, undefined);
             delete bonus[id];
             return;
         }
+        console.log(by)
         snakes[by].size += 3;
-        eaten_bonus_callback(id, by, counter);
+        eaten_bonus_callback(id, by);
         addPoints(by);
         delete bonus[id];
     };
@@ -120,7 +109,6 @@ function Controller (options){
                     if ((reciever !== tested) || (i != 0)) {
                         if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
                             to_kill.push([tested, reciever]);
-                            console.log(to_kill);
                         }
                     }
                 }
@@ -169,15 +157,13 @@ function Controller (options){
         return (p1[0] == p2[0]) && (p1[1] == p2[1]);
     }
     
-    this.load = function(s, b, c, g, a) {
+    this.load = function(s, b) {
         snakes = s;
         bonus = b;
-        counter = c;
     };
     
     
     this.update = function (callback) {     // This is where the magic happens
-        counter++;
         updatePosition();
         checkCollision();
         
@@ -187,64 +173,10 @@ function Controller (options){
         }
         
         checkBonus();
-        var snakes_new = [];
-        var bonus_new = [];
-        for (var i in snakes){
-                snakes_new[i] = {
-                    score: snakes[i].score,
-                    name: snakes[i].name,
-                    coords: [],
-                    direction: snakes[i].direction,
-                    cum_score: snakes[i].cum_score,
-                    size: snakes[i].size
-                };
-                for (var j in snakes[i].coords){
-                    snakes_new[i].coords[j] = [snakes[i].coords[j][0], snakes[i].coords[j][1]];
-                }
-        }
-        for (var k in bonus){
-            bonus_new[k] = [bonus[k][0], bonus[k][0]];
-        }
-        game_history.unshift({snakes : snakes_new, bonus: bonus});
-        
-        while (game_history.length > 20){
-            game_history.pop();
-        }
-        while (action_history.length > 20){
-            action_history.pop();
-        }
         if ((typeof callback === "undefined") || (callback === true)){
-            update_callback(snakes, bonus, counter);
+            update_callback(snakes, bonus);
         }
 
-    };
-    
-    this.seek = function(to){
-        if (to == counter) {
-            return;
-        } else if (to > counter){ // TODO : A simplifier
-            console.log("Server was early, going to " + to + ". Was at " + counter);
-            for (var f = counter ; f <= to ; f++){
-                for (var g in action_history){
-                    if (action_history[g].counter == f){
-                        that.changeDirection(action_history[g].id, action_history[g].direction);
-                    }
-                }
-                that.update(false);
-            }
-        } else {
-            console.log("Server was late, going to " + to + ". Was at " + counter);
-            if (typeof game_history[counter-to] === "undefined"){
-                return
-            }
-            that.load(game_history[counter-to].snakes, game_history[counter-to].bonus, to);
-            for (var j in action_history){
-                if (action_history[j].counter == to){
-                    that.changeDirection(action_history[j].id, action_history[j].direction);
-                }
-                that.update(false);
-            }
-        }
     };
     
     this.getCounter = function () {

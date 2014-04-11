@@ -386,23 +386,15 @@ socket.emit("login", {secret : secret}, function(data){
             add_snake: function (id, coords, direction, score, size, name) { },
             killed_snake: function (id) {
                 if(id === my_id){
-                    
                     spawned = false;
-                    //alert("THE SNAKE IS A LIE THE SNAKE IS A LIE THE SNAKE IS A LIE");
                     $("#spawndiv").slideDown();
-                } else {
-                    console.log(id + " vs " + my_id);
                 }
                 
             },
-            change_direction: function (id, direction) {
-                /*if (id === my_id){
-                    socket.emit("c", {"id":my_id, "secret":secret, "direction": direction}, function(data){});
-                }*/
-            }
+            change_direction: function (id, direction) { }
         },
         points_bonnus: 10,
-        disable_update: false,
+        disable_update: true,
         update_rate: 10
     });
     $("#spawndiv").slideDown();
@@ -427,18 +419,17 @@ socket.on("-", function(data){
 });
 
 socket.on("up", function(data){
-    console.log("FULLUP");
-    controller.load(data.game.snakes, data.game.bonus, data.counter);
+    controller.load(data.game.snakes, data.game.bonus);
 });
 
 socket.on("c", function(data){
     controller.changeDirection(data[0],data[1], data[2]);
 });
 
-/*socket.on("u", function(data){
+socket.on("u", function(data){
     if(controller != undefined)
         controller.update();
-});*/
+});
 
 
 $('#daniel').keyup(function (e) {

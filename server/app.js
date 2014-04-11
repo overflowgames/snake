@@ -29,8 +29,6 @@ var max_val     = 5;
 
 var bonusTimeoutQueue = [];
 
-var ticks;
-    
 function genBonusCoords (){
     
     /*
@@ -164,11 +162,10 @@ function matrix_pos(x, y, px, py) {
 
 var controller = new Controller({
     callbacks: {
-        update: function (snakes, bonus, counter) {
+        update: function (snakes, bonus) {
             game.snakes = snakes;
             game.bonus = bonus;
-            ticks = counter;
-            //io.sockets.emit("u");
+            io.sockets.emit("u");
             
     
             if (controller.getNumSnakes() > 0){
@@ -190,7 +187,7 @@ var controller = new Controller({
                     if(new Date().getTime()-firstBonus[1] > 15000) {
                         continuer = true;
                         bonusTimeoutQueue.shift();
-                        controller.eatBonus(firstBonus[0],-1);
+                        controller.eatBonus(firstBonus[0]);
                     }
                 } 
             } while(continuer);
@@ -280,7 +277,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function(){
-    io.sockets.emit("up", {game: game, counter: ticks}, function(){
+    io.sockets.emit("up", {game: game}, function(){
         
     });
 }, 10000);     // Sends the whole game state to all the clients every 10 seconds
