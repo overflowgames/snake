@@ -622,3 +622,30 @@ if  (document.getElementById){
     
     })();
 }//End.
+if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
+    document.getElementById('daniel').value = localStorage.getItem("pseudo");
+}
+
+var locked = true;
+
+function lock() {
+    locked = true;
+    document.getElementById('button_locked').style.display = "block";
+    document.getElementById('button_lock').style.display = "nonez";
+    window.update_canvas();
+}
+
+function unlock() {
+    locked = false;
+    document.getElementById('button_locked').style.display = "none";
+    document.getElementById('button_lock').style.display = "block";
+    window.update_canvas();
+}
+
+window.onscroll = function() {
+    window.scrollTo(0, 0);
+};
+
+function isLocked() {
+    return locked;
+}
