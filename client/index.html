@@ -19,33 +19,5 @@
         <div id="button_locked" onClick="unlock()"><img src="assets/locked.png" alt="locked"/></div>
         
         <script type="text/javascript" src="dist.min.js"></script>
-        <script>
-            if(localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
-                document.getElementById('daniel').value = localStorage.getItem("pseudo");
-            }
-        
-        
-        
-            var locked = true;
-            function lock() {
-                locked=true;
-                document.getElementById('button_locked').style.display = "block";
-                document.getElementById('button_lock').style.display = "none";
-                window.update_canvas();    
-            }
-            
-            function unlock() {
-                locked=false;
-                document.getElementById('button_locked').style.display = "none";
-                document.getElementById('button_lock').style.display = "block";
-                window.update_canvas();   
-            }
-            
-            window.onscroll = function () { window.scrollTo(0, 0); };
-
-            function isLocked() {
-                return locked;
-            }
-        </script>
     </body>
 </html>
