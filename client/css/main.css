@@ -30,12 +30,24 @@ body {
     animation-duration: 1s;
     animation-name: slidein;
     animation-fill-mode: forwards;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-name: slidein;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-duration: 1s;
+    -moz-animation-name: slidein;
+    -moz-animation-fill-mode: forwards;
 }
 
 .hide {
     animation-duration: 1s;
     animation-name: slideout;
     animation-fill-mode: forwards;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-name: slideout;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-duration: 1s;
+    -moz-animation-name: slideout;
+    -moz-animation-fill-mode: forwards;
 }
 
 @keyframes slidein {
