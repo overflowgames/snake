@@ -7,7 +7,7 @@ var swipeFunc = {
         "touchstart": {"x":-1, "y":-1}, 
         "touchmove" : {"x":-1, "y":-1}, 
         "touchend"  : false,
-        "direction" : "undetermined",
+        "direction" : "u",
         "last" : ""
     },
     touchHandler: function(event) {
@@ -34,11 +34,12 @@ var swipeFunc = {
                         }
                         
                         if( (Math.max(Math.abs(diffH), Math.abs(diffV)) > swipeFunc.seuil) && (swipeFunc.touches.last != swipeFunc.touches.direction)) {
-                            swipeFunc.touches.touchstart = swipeFunc.touches.touchmove;
-                            swipeFunc.touches.start = swipeFunc.touches.start
+                            swipeFunc.touches.touchstart.x = swipeFunc.touches.touchmove.x;
+                            swipeFunc.touches.touchstart.y = swipeFunc.touches.touchmove.y;
+                            swipeFunc.touches.last = swipeFunc.touches.direction;
+                            
                             socket.emit("c", {"id":my_id, "secret":secret, "direction": swipeFunc.touches.direction}, function(data){ma_direction=data[1]});
                         }
-                        
                         break;
                     case 'touchend':
                         swipeFunc.touches.last = "";
