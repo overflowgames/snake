@@ -8,12 +8,10 @@
         </script>
     </head>
     <body>
-    
-        <div id="spawndiv" style="display:none">
+        <div id="spawndiv" class="hide">
             <div id="pseudal"><span>ENTREZ VOTRE PSEUDO: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
+                <button href="#" onClick="spawn_snake()" >FAIRE APPARAITRE VOTRE SERPENT</button>
             </div>
-            <button href="#" onClick="spawn_snake()" >FAIRE APPARAITRE VOTRE SERPENT</button>
-            <div style="clear:both"></div>
         </div>
         <canvas class="dragclass" id="app" width="500" height="500"></canvas>
         

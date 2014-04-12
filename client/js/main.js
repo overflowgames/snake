@@ -387,7 +387,7 @@ socket.emit("login", {secret : secret}, function(data){
             killed_snake: function (id) {
                 if(id === my_id){
                     spawned = false;
-                    $("#spawndiv").slideDown();
+                    document.getElementById("spawndiv").className = 'show';
                 }
                 
             },
@@ -397,7 +397,7 @@ socket.emit("login", {secret : secret}, function(data){
         disable_update: true,
         update_rate: 10
     });
-    $("#spawndiv").slideDown();
+    document.getElementById("spawndiv").className = 'show';
 });
 
 socket.on("+", function(data){
@@ -432,11 +432,11 @@ socket.on("u", function(data){
 });
 
 
-$('#daniel').keyup(function (e) {
+document.getElementById('daniel').onkeyup = function (e) {
     if (e.keyCode === 13) {
        spawn_snake();
     }
-});
+};
   
   
 function spawn_snake() {
@@ -466,7 +466,7 @@ function spawn_snake() {
         controller.addSnake(my_id,pos, "u",0,20,pseudo);
         //centerOnSnake(my_id);
         
-        $("#spawndiv").slideUp();
+        document.getElementById("spawndiv").className = 'hide';
     });
 }
 

@@ -1,14 +1,13 @@
 module.exports = function(grunt) {
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             dist: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/tactile.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js'],
                 dest: 'client/dist.js'
             },
             dist_mobile: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/jquery/dist/jquery.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
                 dest: 'client/mobile.dist.js'
             }
         },
@@ -30,5 +29,4 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['concat', 'uglify']);
     grunt.registerTask('dev', ['concat']);
     grunt.registerTask('test', ['default']);
-
 };

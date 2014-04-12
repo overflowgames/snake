@@ -17,25 +17,41 @@ body {
 }
 
 #spawndiv {
+    position: absolute;
+    top : -100%;
     text-align: center;
     background-color: black;
     color: white;
     padding: 25px;
+    width: 100%;
 }
 
-#spawndiv a {
-    color: #22ff55;
-    text-decoration: none;
+.show {
+    animation-duration: 1s;
+    animation-name: slidein;
+    animation-fill-mode: forwards;
 }
 
-#pseudal {
-    float: left;
-    padding-top: 36px;
+.hide {
+    animation-duration: 1s;
+    animation-name: slideout;
+    animation-fill-mode: forwards;
 }
 
-button {
-    float: right;
-    width: -webkit-calc(100% - 400px);
-    height: 100px;
-    font-size: 1.5em;
+@keyframes slidein {
+    from {
+        top: -100%;
+    }
+    to {
+        top: 0;
+    }
+}
+
+@keyframes slideout {
+    from {
+        top: 0;
+    }
+    to {
+        top: -100%;
+    }
 }
