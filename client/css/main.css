@@ -33,9 +33,6 @@ body {
     -webkit-animation-duration: 1s;
     -webkit-animation-name: slidein;
     -webkit-animation-fill-mode: forwards;
-    -moz-animation-duration: 1s;
-    -moz-animation-name: slidein;
-    -moz-animation-fill-mode: forwards;
 }
 
 .hide {
@@ -45,9 +42,6 @@ body {
     -webkit-animation-duration: 1s;
     -webkit-animation-name: slideout;
     -webkit-animation-fill-mode: forwards;
-    -moz-animation-duration: 1s;
-    -moz-animation-name: slideout;
-    -moz-animation-fill-mode: forwards;
 }
 
 @keyframes slidein {
@@ -60,6 +54,24 @@ body {
 }
 
 @keyframes slideout {
+    from {
+        top: 0;
+    }
+    to {
+        top: -100%;
+    }
+}
+
+@-webkit-keyframes slidein {
+    from {
+        top: -100%;
+    }
+    to {
+        top: 0;
+    }
+}
+
+@-webkit-keyframes slideout {
     from {
         top: 0;
     }
