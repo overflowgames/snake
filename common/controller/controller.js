@@ -41,8 +41,9 @@ function Controller (options){
     };
     
     this.changeDirection = function (id, direction) {
-        if(validateMove(id, direction)) {
+        if(validateMove(snakes[id].direction, direction)) {
             snakes[id].direction = direction;
+            snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
             change_direction_callback(id, direction);
         }
     };
@@ -63,7 +64,6 @@ function Controller (options){
             delete bonus[id];
             return;
         }
-        console.log(by)
         snakes[by].size += 3;
         eaten_bonus_callback(id, by);
         addPoints(by);
@@ -77,39 +77,34 @@ function Controller (options){
     
     function updatePosition (){
         for (var i in snakes){
-            if (snakes[i].size <= snakes[i].coords.length){
+            /*if (snakes[i].size <= snakes[i].coords.length){
                 snakes[i].coords.pop();
-            }
+            }*/
             
-            var newcoords = [];
             switch (snakes[i].direction) {
                 case "u" :
-                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] - 1];
+                    snakes[i].coords[0][1] -= 1;
                 break;
                 case "d" :
-                    newcoords = [snakes[i].coords[0][0], snakes[i].coords[0][1] + 1];
+                    snakes[i].coords[0][1] += 1;
                 break;
                 case "l" :
-                    newcoords = [snakes[i].coords[0][0] - 1, snakes[i].coords[0][1]];
+                    snakes[i].coords[0][0] -= 1;
                 break;
                 case "r" :
-                    newcoords = [snakes[i].coords[0][0] + 1, snakes[i].coords[0][1]];
+                    snakes[i].coords[0][0] += 1;
                 break;
                 default:
             }
-            snakes[i].coords.unshift(newcoords);
-            
         }
     }
     
     function checkCollision(){ 
         for (var tested in snakes){
             for (var reciever in snakes){
-                for (var i in snakes[reciever].coords){
-                    if ((reciever !== tested) || (i != 0)) {
-                        if (comparePos(snakes[tested].coords[0],snakes[reciever].coords[i])){
-                            to_kill.push([tested, reciever]);
-                        }
+                if (reciever !== tested) {
+                    if (comparePos(snakes[tested].coords[0], snakes[reciever].coords)){
+                        to_kill.push([tested, reciever]);
                     }
                 }
             }
@@ -117,44 +112,44 @@ function Controller (options){
     }
 
     function checkBonus() {
-        for (var i in snakes){
+        /*for (var i in snakes){
             for (var j in bonus){
-                if(bonus[j] != null) {
+                if(bonus[j] !== null) {
                     if (comparePos(snakes[i].coords[0],bonus[j])){
                         that.eatBonus(j,i);
                     }
                 }
             }
-        }
+        }*/
     }
     
-    function validateMove(id_snake, new_direction) {
-        var theSnake = snakes[id_snake];
-        
-        if (typeof(theSnake) === "undefined"){
+    function validateMove(orientation, new_direction) {
+        if (orientation === new_direction){
             return false;
         }
-        
-        var theCoords = theSnake.coords ;
-        
-        var orientation;
-        
-        if((theCoords[0][0] == theCoords[1][0]) && (theCoords[0][1] == theCoords[1][1] + 1)) //going down
-            orientation="d";
-        else if((theCoords[0][0] == theCoords[1][0]) && (theCoords[0][1] == theCoords[1][1] - 1))//going up
-            orientation="u";
-        else if((theCoords[0][0] == theCoords[1][0] - 1) && (theCoords[0][1] == theCoords[1][1]))//going left
-            orientation="l";
-        else if((theCoords[0][0] == theCoords[1][0] + 1) && (theCoords[0][1] == theCoords[1][1]))//going right
-            orientation="r";
-            
         return !((orientation == "u" && new_direction == "d") ||(orientation == "d" && new_direction == "u")||(orientation == "l" && new_direction == "r")||(orientation == "r" && new_direction == "l"));
     }
     
     function comparePos(p1, p2) {
-        if((typeof p1 == "undefined") || (typeof p2 == "undefined"))
-            return false;
-        return (p1[0] == p2[0]) && (p1[1] == p2[1]);
+        for (var i in p2){
+            i = parseInt(i, 10);
+            if (typeof p2[i+1] !== "undefined"){
+                if (p1[0] == p2[i][0]){
+                    console.log("EQUAL");
+                    if ((p1[1] <= Math.max(p2[i][1], p2[i+1][1])) && (p1[1] >= Math.min(p2[i][1], p2[i+1][1]))){
+                        console.log("TROU");
+                        return true;
+                    }
+                } else if (p1[1] == p2[i][1]){
+                    console.log("EQUAL");
+                    if ((p1[0] <= Math.max(p2[i][0], p2[i+1][0])) && (p1[0] >= Math.min(p2[i][0], p2[i+1][0]))){
+                        console.log("TROU");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     this.load = function(s, b) {
@@ -176,7 +171,6 @@ function Controller (options){
         if ((typeof callback === "undefined") || (callback === true)){
             update_callback(snakes, bonus);
         }
-
     };
     
     this.getCounter = function () {
