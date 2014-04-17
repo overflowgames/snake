@@ -114,7 +114,7 @@ function Controller (options){
     function checkBonus() {
         for (var i in snakes){
             for (var j in bonus){
-                if(bonus[j] !== null) {
+                if((bonus[j] !== null) && (typeof bonus[j] !== "undefined")) {
                     if ((snakes[i].coords[0][0] === bonus[j][0]) && (snakes[i].coords[0][1] === bonus[j][1])){
                         that.eatBonus(j,i);
                     }
