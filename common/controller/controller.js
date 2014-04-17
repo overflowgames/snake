@@ -112,15 +112,15 @@ function Controller (options){
     }
 
     function checkBonus() {
-        /*for (var i in snakes){
+        for (var i in snakes){
             for (var j in bonus){
                 if(bonus[j] !== null) {
-                    if (comparePos(snakes[i].coords[0],bonus[j])){
+                    if ((snakes[i].coords[0][0] === bonus[j][0]) && (snakes[i].coords[0][1] === bonus[j][1])){
                         that.eatBonus(j,i);
                     }
                 }
             }
-        }*/
+        }
     }
     
     function validateMove(orientation, new_direction) {
@@ -135,15 +135,11 @@ function Controller (options){
             i = parseInt(i, 10);
             if (typeof p2[i+1] !== "undefined"){
                 if (p1[0] == p2[i][0]){
-                    console.log("EQUAL");
                     if ((p1[1] <= Math.max(p2[i][1], p2[i+1][1])) && (p1[1] >= Math.min(p2[i][1], p2[i+1][1]))){
-                        console.log("TROU");
                         return true;
                     }
                 } else if (p1[1] == p2[i][1]){
-                    console.log("EQUAL");
                     if ((p1[0] <= Math.max(p2[i][0], p2[i+1][0])) && (p1[0] >= Math.min(p2[i][0], p2[i+1][0]))){
-                        console.log("TROU");
                         return true;
                     }
                 }

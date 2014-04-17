@@ -38,7 +38,7 @@ function genBonusCoords (){
     probability_matrix = [];
     for(var i in game.snakes) {
         var currentSnake = game.snakes[i];
-        if(currentSnake.coords == undefined) {
+        if(typeof currentSnake.coords === "undefined") {
             console.log("yolo");
         } else {
             console.log("yea");
@@ -78,8 +78,8 @@ function genBonusCoords (){
         if(ecc >= r) {
             while (ecc < sum) {
                 var coord = [];
-                coord [0] = probx[index];
-                coord [1] = proby[index];
+                coord [0] = parseInt(probx[index], 10);
+                coord [1] = parseInt(proby[index], 10);
                 
                 if(!surunserpent(coord)) {
                 console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
