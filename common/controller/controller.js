@@ -77,10 +77,6 @@ function Controller (options){
     
     function updatePosition (){
         for (var i in snakes){
-            /*if (snakes[i].size <= snakes[i].coords.length){
-                snakes[i].coords.pop();
-            }*/
-            
             switch (snakes[i].direction) {
                 case "u" :
                     snakes[i].coords[0][1] -= 1;
@@ -95,6 +91,13 @@ function Controller (options){
                     snakes[i].coords[0][0] += 1;
                 break;
                 default:
+            }
+            if (snakes[i].size <= snakeSize(snakes[i])){
+                snakes[i].coords[snakes[i].coords.length-1][0] -= (snakes[i].coords[snakes[i].coords.length-1][0]-snakes[i].coords[snakes[i].coords.length-2][0])/Math.max(1,Math.abs(snakes[i].coords[snakes[i].coords.length-1][0]-snakes[i].coords[snakes[i].coords.length-2][0]));
+                snakes[i].coords[snakes[i].coords.length-1][1] -= (snakes[i].coords[snakes[i].coords.length-1][1]-snakes[i].coords[snakes[i].coords.length-2][1])/Math.max(1,Math.abs(snakes[i].coords[snakes[i].coords.length-1][1]-snakes[i].coords[snakes[i].coords.length-2][1]));
+                if ((snakes[i].coords[snakes[i].coords.length-1][0] === snakes[i].coords[snakes[i].coords.length-2][0]) && (snakes[i].coords[snakes[i].coords.length-1][1] === snakes[i].coords[snakes[i].coords.length-2][1])){
+                    snakes[i].coords.pop();
+                }
             }
         }
     }
@@ -151,6 +154,18 @@ function Controller (options){
             }
         }
         return false;
+    }
+    
+    function snakeSize(snake){
+        var cum = 0;
+        for (var i in snake.coords){
+            i = parseInt(i, 10);
+            if (typeof snake.coords[i+1] !== "undefined"){
+                cum += Math.abs(snake.coords[i][0] - snake.coords[i+1][0]);
+                cum += Math.abs(snake.coords[i][1] - snake.coords[i+1][1]);
+            }
+        }
+        return cum;
     }
     
     this.load = function(s, b) {
