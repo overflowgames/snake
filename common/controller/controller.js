@@ -106,6 +106,8 @@ function Controller (options){
                     if (comparePos(snakes[tested].coords[0], snakes[reciever].coords)){
                         to_kill.push([tested, reciever]);
                     }
+                } else if (comparePos(snakes[tested].coords[0], snakes[reciever].coords, true)){
+                    to_kill.push([tested, reciever]);
                 }
             }
         }
@@ -130,17 +132,20 @@ function Controller (options){
         return !((orientation == "u" && new_direction == "d") ||(orientation == "d" && new_direction == "u")||(orientation == "l" && new_direction == "r")||(orientation == "r" && new_direction == "l"));
     }
     
-    function comparePos(p1, p2) {
+    function comparePos(p1, p2, idem) {
         for (var i in p2){
             i = parseInt(i, 10);
+            if ((idem) && (p1[1] === p2[i][1]) && (p1[0] === p2[i][0])) {
+                continue;
+            }
             if (typeof p2[i+1] !== "undefined"){
                 if (p1[0] == p2[i][0]){
                     if ((p1[1] <= Math.max(p2[i][1], p2[i+1][1])) && (p1[1] >= Math.min(p2[i][1], p2[i+1][1]))){
-                        return true;
+                        return i+1;
                     }
                 } else if (p1[1] == p2[i][1]){
                     if ((p1[0] <= Math.max(p2[i][0], p2[i+1][0])) && (p1[0] >= Math.min(p2[i][0], p2[i+1][0]))){
-                        return true;
+                        return i+1;
                     }
                 }
             }
