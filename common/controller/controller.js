@@ -40,11 +40,17 @@ function Controller (options){
         }
     };
     
-    this.changeDirection = function (id, direction) {
+    this.changeDirection = function (id, direction, coords) {
         if(validateMove(snakes[id].direction, direction)) {
             snakes[id].direction = direction;
-            snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
-            change_direction_callback(id, direction);
+            if ((typeof coords !== "undefined") && (typeof coords[0] !== "undefined") && (typeof coords[1] !== "undefined")){
+                snakes[id].coords[0] = [coords[0], coords[1]];
+                snakes[id].coords.unshift([coords[0], coords[1]]);
+                change_direction_callback(id, direction, [coords[0], coords[1]]);
+            } else {
+                snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+                change_direction_callback(id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+            }
         }
     };
     

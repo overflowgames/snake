@@ -165,7 +165,7 @@ var controller = new Controller({
         update: function (snakes, bonus) {
             game.snakes = snakes;
             game.bonus = bonus;
-            io.sockets.emit("u");
+            //io.sockets.emit("u");
             
     
             if (controller.getNumSnakes() > 0){
@@ -208,8 +208,8 @@ var controller = new Controller({
             io.sockets.emit("-", [id, by]);
             dbcontroller.push_score(secrets[id], score);
         },
-        change_direction: function (id, direction, counter) {
-            io.sockets.emit("c", [id, direction, counter]);
+        change_direction: function (id, direction, pos) {
+            io.sockets.emit("c", [id, direction, pos]);
         }
     },
     points_bonnus: 10,
@@ -279,6 +279,6 @@ setInterval(function(){
     io.sockets.emit("up", {game: game}, function(){
         
     });
-}, 10000);     // Sends the whole game state to all the clients every 10 seconds
+}, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
 //log.info("All started");

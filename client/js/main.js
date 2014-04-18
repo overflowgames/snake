@@ -394,7 +394,7 @@ socket.emit("login", {secret : secret}, function(data){
             change_direction: function (id, direction) { }
         },
         points_bonnus: 10,
-        disable_update: true,
+        disable_update: false,
         update_rate: 10
     });
     document.getElementById("spawndiv").className = 'show';
@@ -408,11 +408,11 @@ socket.on("+", function(data){
 
 socket.on("+b", function(data){
         controller.addBonus(data[0],data[1]);
-})
+});
 
 socket.on("-b", function(data){
         controller.eatBonus(data[0],data[1]);
-})
+});
 
 socket.on("-", function(data){
         controller.killSnake(data[0], data[1]);
@@ -425,12 +425,6 @@ socket.on("up", function(data){
 socket.on("c", function(data){
     controller.changeDirection(data[0],data[1], data[2]);
 });
-
-socket.on("u", function(data){
-    if(controller != undefined)
-        controller.update();
-});
-
 
 document.getElementById('daniel').onkeyup = function (e) {
     if (e.keyCode === 13) {
@@ -459,7 +453,6 @@ function spawn_snake() {
        
         if (pos === "ko"){
             spawned = false;
-            console.log("Y'a une couille avec le secret !!!");
             return;
         }
         console.log(pos)
