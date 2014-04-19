@@ -42,14 +42,18 @@ function Controller (options){
     
     this.changeDirection = function (id, direction, coords) {
         if ((typeof snakes[id] !== "undefined") && (validateMove(snakes[id].direction, direction))) {
-            snakes[id].direction = direction;
-            if ((typeof coords !== "undefined") && (typeof coords[0] !== "undefined") && (typeof coords[1] !== "undefined")){
-                snakes[id].coords[0] = [coords[0], coords[1]];
-                snakes[id].coords.unshift([coords[0], coords[1]]);
-                change_direction_callback(id, direction, [coords[0], coords[1]]);
+            if (validateMove(snakes[id].last_update_direction, direction)){
+                snakes[id].direction = direction;
+                if ((typeof coords !== "undefined") && (typeof coords[0] !== "undefined") && (typeof coords[1] !== "undefined")){
+                    snakes[id].coords[0] = [coords[0], coords[1]];
+                    snakes[id].coords.unshift([coords[0], coords[1]]);
+                    change_direction_callback(id, direction, [coords[0], coords[1]]);
+                } else {
+                    snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+                    change_direction_callback(id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+                }
             } else {
-                snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
-                change_direction_callback(id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+                snakes[id].next_direction = direction;
             }
         }
     };
@@ -83,6 +87,7 @@ function Controller (options){
     
     function updatePosition (){
         for (var i in snakes){
+            snakes[i].last_update_direction = snakes[i].direction;
             switch (snakes[i].direction) {
                 case "u" :
                     snakes[i].coords[0][1] -= 1;
@@ -104,6 +109,10 @@ function Controller (options){
                 if ((snakes[i].coords[snakes[i].coords.length-1][0] === snakes[i].coords[snakes[i].coords.length-2][0]) && (snakes[i].coords[snakes[i].coords.length-1][1] === snakes[i].coords[snakes[i].coords.length-2][1])){
                     snakes[i].coords.pop();
                 }
+            }
+            if (typeof snakes[i].next_direction !== "undefined"){
+                that.changeDirection(i, snakes[i].next_direction);
+                delete snakes[i].next_direction;
             }
         }
     }
