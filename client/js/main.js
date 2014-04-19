@@ -120,12 +120,6 @@ function draw_hud() {
     context.fillText("connectés: "+nconnectes, 30, 90);
 }
 
-setInterval(function() {
-    if(isLocked() || mobile) 
-        followSnake(my_id);
-},1000/500);
-
-    
 var pattern_ = context.createPattern(pattern, "repeat");
     
 function update_canvas(snakes, bonus) {
@@ -378,7 +372,10 @@ socket.emit("login", {secret : secret}, function(data){
             update: function (snakes, bonus) {
                 last_snakes=snakes;
                 last_bonus=bonus;
-                update_canvas(snakes, bonus);
+                if((isLocked() || mobile) && (typeof snakes[my_id] !== "undefined"))
+                    followSnake(my_id);
+                else
+                    update_canvas(snakes, bonus);
             },
             eaten_bonnus: function (id) { },
             add_points: function (id, score) { },
