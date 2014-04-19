@@ -41,7 +41,7 @@ function Controller (options){
     };
     
     this.changeDirection = function (id, direction, coords) {
-        if(validateMove(snakes[id].direction, direction)) {
+        if ((typeof snakes[id] !== "undefined") && (validateMove(snakes[id].direction, direction))) {
             snakes[id].direction = direction;
             if ((typeof coords !== "undefined") && (typeof coords[0] !== "undefined") && (typeof coords[1] !== "undefined")){
                 snakes[id].coords[0] = [coords[0], coords[1]];
