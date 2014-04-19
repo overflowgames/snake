@@ -170,14 +170,36 @@ function update_canvas(snakes, bonus) {
 function draw_snakes (snakes) {
     // #Draw the snakes
     nconnectes = 0;
+    context.fillStyle = "#00ffff";
+           
     for(var i in snakes) {
         nconnectes++;
-        for(var ii = 0; ii < snakes[i].coords.length;ii++) {
-            var cx = snakes[i].coords[ii][0];
-            var cy = snakes[i].coords[ii][1];
+        for(var ii = 0; ii < snakes[i].coords.length - 1;ii++) {
+            var cxstart = snakes[i].coords[ii][0];
+            var cxend = snakes[i].coords[ii+1][0];
             
-           context.fillStyle = "#00ffff";
-           context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
+            if(cxstart > cxend) {
+                var swap = cxend;
+                cxend = cxstart;
+                cxstart = swap;
+            }
+            
+            var cystart = snakes[i].coords[ii][1];
+            var cyend = snakes[i].coords[ii+1][1];
+            
+            if(cystart > cyend) {
+                var swap = cyend;
+                cyend = cystart;
+                cystart = swap;
+            }
+            
+            for(var ix = cxstart; ix <= cxend; ix++) {
+                for(var iy = cystart; iy <= cyend; iy++) {
+                    context.fillRect(ix*sq_w-position_x+offset_x, iy*sq_w-position_y+offset_y, sq_w, sq_w);
+           
+                }
+            }
+            
            
         }
     }
