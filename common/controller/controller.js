@@ -58,16 +58,18 @@ function Controller (options){
     };
     
     this.eatBonus = function(id, by) {
-        if((typeof by === "undefined") || (by === null)) {
-            eaten_bonus_callback(id, undefined);
+        if (typeof bonus[id] !== "undefined"){
+            if((typeof by === "undefined") || (by === null)) {
+                eaten_bonus_callback(id, undefined);
+                delete bonus[id];
+                return;
+            }
+            console.log(by)
+            snakes[by].size += 3;
+            eaten_bonus_callback(id, by);
+            addPoints(by);
             delete bonus[id];
-            return;
         }
-        console.log(by)
-        snakes[by].size += 3;
-        eaten_bonus_callback(id, by);
-        addPoints(by);
-        delete bonus[id];
     };
     
     function addPoints(id) {
