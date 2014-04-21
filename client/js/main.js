@@ -508,14 +508,14 @@ function followSnake(id) {
         centerOnSnake(id);
         return;
     } else if(px < position_x + paddingx) {
-        position_x = position_x - 3;
+        position_x = position_x - sq_w;
         if(px < position_x + paddingx)
             anim = true;
     } else if(px > position_x + width) {
         centerOnSnake(id);
         return;
     } else if(px > position_x + width - paddingx) {
-        position_x = position_x + 3;
+        position_x = position_x + sq_w;
         if(px > position_x + width - paddingx)
             anim = true;
     }
@@ -524,14 +524,14 @@ function followSnake(id) {
         centerOnSnake(id);
         return;
     } else if(py < position_y + paddingy) {
-        position_y = position_y - 3;
+        position_y = position_y - sq_w;
         if(py < position_y + paddingy)
             anim = true;
     } else if(py > position_y + height) {
         centerOnSnake(id);
         return;
     } else if(py > position_y + height - paddingy) {
-        position_y = position_y + 3;
+        position_y = position_y + sq_w;
         if(py > position_y + height - paddingy)
             anim = true;
     }
