@@ -14,11 +14,11 @@ module.exports = function(grunt) {
         uglify : {
             main: {
                 src: "client/dist.js",
-                dest: "client/dist.min.js",
+                dest: "client/dist.js",
             },
             mobile: {
                 src: "client/mobile.dist.js",
-                dest: "client/mobile.dist.min.js",
+                dest: "client/mobile.dist.js",
             }
         }
     });
