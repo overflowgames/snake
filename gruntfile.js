@@ -33,14 +33,47 @@ module.exports = function(grunt) {
                     'client/mobile.html': ['client/html/mobile.html']
                 }
             }
-        }
+        },
+        htmlmin: { 
+            dist: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true
+                },
+                files: {
+                    'client/index.html': ['client/index.html'],
+                    'client/mobile.html': ['client/mobile.html'],
+                }
+            }
+        },
+        cssmin: {
+            main: {
+                src: 'client/css/main.css',
+                dest: 'client/main.css'
+            },
+            mobile: {
+                src: 'client/css/mobile.main.css',
+                dest: 'client/mobile.main.css'
+            },
+        },
+        copy: {
+            css: {
+                expand: true,
+                cwd: 'client/css',
+                src: '*.css',
+                dest: 'client/',
+            },
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-asset-cachebuster');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster']);
-    grunt.registerTask('dev', ['concat', 'asset_cachebuster']);
+    grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
+    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css']);
     grunt.registerTask('test', ['default']);
 };
