@@ -22,7 +22,8 @@ body {
     text-align: center;
     background-color: black;
     color: white;
-    padding: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     width: 100%;
 }
 
@@ -33,6 +34,9 @@ body {
     -webkit-animation-duration: 1s;
     -webkit-animation-name: slidein;
     -webkit-animation-fill-mode: forwards;
+    -moz-animation-duration: 1s;
+    -moz-animation-name: slidein;
+    -moz-animation-fill-mode: forwards;
 }
 
 .hide {
@@ -42,6 +46,9 @@ body {
     -webkit-animation-duration: 1s;
     -webkit-animation-name: slideout;
     -webkit-animation-fill-mode: forwards;
+    -moz-animation-duration: 1s;
+    -moz-animation-name: slideout;
+    -moz-animation-fill-mode: forwards;
 }
 
 @keyframes slidein {

@@ -64,6 +64,16 @@ module.exports = function(grunt) {
                 dest: 'client/',
             },
         },
+        csslint : {
+            options: {
+                "ids": false,
+                "known-properties": false
+            },
+            src:["client/css/*.css"]
+        },
+        htmllint: {
+            all: ["client/html/*.html"]
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -71,9 +81,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-asset-cachebuster');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-html');
 
     grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
     grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css']);
-    grunt.registerTask('test', ['default']);
+    grunt.registerTask('test', ['csslint', 'htmllint', 'default']);
 };

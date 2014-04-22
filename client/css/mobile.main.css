@@ -1,10 +1,9 @@
 #zoombox {
     position: absolute;
-    right: 0px;
+    right: 0;
     bottom: 10%;
     
     width: 40px;
-    height: 60px;
     padding-bottom: 10px;
     z-index: 100;
     
@@ -39,7 +38,7 @@
 
 #pseudal {
     float: left;
-    padding: 0px;
+    padding: 0;
     text-align: center;
     width: 100%;
 }
