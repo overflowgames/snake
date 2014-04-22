@@ -6,9 +6,10 @@ var sio = require('socket.io'),
     express = require('express');
 
 var app = express();
+var oneDay = 86400000;
 
-app.use(express.static(__dirname + '/../client'));
-app.use('/common', express.static(__dirname + '/../common'));
+app.use(express.static(__dirname + '/../client', { maxAge: oneDay*7 }));
+app.use('/common', express.static(__dirname + '/../common', { maxAge: oneDay*7 }));
 console.log(__dirname + '/../client');
 
 

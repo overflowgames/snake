@@ -20,13 +20,27 @@ module.exports = function(grunt) {
                 src: "client/mobile.dist.js",
                 dest: "client/mobile.dist.js",
             }
+        },
+        asset_cachebuster: {
+            options: {
+                buster: Date.now(),
+                ignore: [],
+                htmlExtension: 'html'
+            },
+            build: {
+                files: {
+                    'client/index.html': ['client/html/index.html'],
+                    'client/mobile.html': ['client/html/mobile.html']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-asset-cachebuster');
 
-    grunt.registerTask('default', ['concat', 'uglify']);
-    grunt.registerTask('dev', ['concat']);
+    grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster']);
+    grunt.registerTask('dev', ['concat', 'asset_cachebuster']);
     grunt.registerTask('test', ['default']);
 };
