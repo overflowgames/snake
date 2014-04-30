@@ -69,6 +69,9 @@ function Controller (options){
     };
     
     this.eatBonus = function(id, by) {
+        if (typeof bonus[id] === "undefined"){
+            return false;
+        }
         if((typeof by === "undefined") || (by === null)) {
             eaten_bonus_callback(id, undefined);
             delete bonus[id];
@@ -103,7 +106,7 @@ function Controller (options){
                 break;
                 default:
             }
-            if (snakes[i].size <= snakeSize(snakes[i])){
+            while (snakes[i].size <= snakeSize(snakes[i])){
                 snakes[i].coords[snakes[i].coords.length-1][0] -= (snakes[i].coords[snakes[i].coords.length-1][0]-snakes[i].coords[snakes[i].coords.length-2][0])/Math.max(1,Math.abs(snakes[i].coords[snakes[i].coords.length-1][0]-snakes[i].coords[snakes[i].coords.length-2][0]));
                 snakes[i].coords[snakes[i].coords.length-1][1] -= (snakes[i].coords[snakes[i].coords.length-1][1]-snakes[i].coords[snakes[i].coords.length-2][1])/Math.max(1,Math.abs(snakes[i].coords[snakes[i].coords.length-1][1]-snakes[i].coords[snakes[i].coords.length-2][1]));
                 if ((snakes[i].coords[snakes[i].coords.length-1][0] === snakes[i].coords[snakes[i].coords.length-2][0]) && (snakes[i].coords[snakes[i].coords.length-1][1] === snakes[i].coords[snakes[i].coords.length-2][1])){
