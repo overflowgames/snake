@@ -408,8 +408,14 @@ socket.emit("login", {secret : secret}, function(data){
             add_snake: function (id, coords, direction, score, size, name) { },
             killed_snake: function (id) {
                 if(id === my_id){
-                    spawned = false;
-                    document.getElementById("spawndiv").className = 'show';
+                    socket.emit("confirm_death", {"id":my_id}, function(res){
+                        if(res === false){
+                            spawned = false;
+                            document.getElementById("spawndiv").className = 'show';
+                        } else {
+                            controller.load(res, last_bonus);
+                        }
+                    });
                 }
                 
             },

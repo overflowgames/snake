@@ -265,6 +265,14 @@ io.sockets.on('connection', function (socket) {
                     //log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                 }
             });
+            
+            socket.on("confirm_death", function(data, ack){
+                if (typeof game.snakes[data.id] === "undefined"){
+                    ack(false);
+                } else {
+                    ack(game.snakes)
+                }
+            });
                 
             socket.on("disconnect", function () {
                 socket.broadcast.emit("-", id);
