@@ -123,7 +123,7 @@ function draw_hud() {
 setInterval(function() {
     if(isLocked() || mobile) 
         followSnake(my_id);
-},1000/500);
+},100);
 
     
 var pattern_ = context.createPattern(pattern, "repeat");
