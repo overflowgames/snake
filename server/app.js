@@ -94,6 +94,7 @@ function genBonusCoords (){
 function surunserpent(coord) {
     for(var i in game.snakes) {
         for(var j in game.snakes[i].coords) {
+            j = parseInt(j, 10)
             if(typeof game.snakes[i].coords[j+1] !== 'undefined') {
                 var sx = game.snakes[i].coords[j][0];
                 var sy = game.snakes[i].coords[j][1];
