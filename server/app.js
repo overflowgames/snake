@@ -78,15 +78,15 @@ function genBonusCoords (){
         if(ecc >= r) {
             while (ecc < sum) {
                 var coord = [];
-                coord [0] = parseInt(probx[index], 10);
-                coord [1] = parseInt(proby[index], 10);
+                coord[0] = parseInt(probx[index], 10);
+                coord[1] = parseInt(proby[index], 10);
                 
                 if(!surunserpent(coord)) {
                 console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
                     return coord;
                 }
                 ecc++;
-            }    
+            }
         }
     }
 }
@@ -94,11 +94,12 @@ function genBonusCoords (){
 function surunserpent(coord) {
     for(var i in game.snakes) {
         for(var j in game.snakes[i].coords) {
-            if(typeof game.snakes[i].coords[j] != 'undefined') {
-                sx = game.snakes[i].coords[j][0];
-                sy = game.snakes[i].coords[j][1];
-                if(sx == coord[0] && sy == coord[1])
+            if(typeof game.snakes[i].coords[j+1] !== 'undefined') {
+                var sx = game.snakes[i].coords[j][0];
+                var sy = game.snakes[i].coords[j][1];
+                if(((coord[0] >= Math.min(sx, game.snakes[i].coords[j+1][0])) && (coord[0] <= Math.max(sx, game.snakes[i].coords[j+1][0])) && (sy == coord[1])) || ((coord[1] >= Math.min(sy, game.snakes[i].coords[j+1][1])) && (coord[1] <= Math.max(sy, game.snakes[i].coords[j+1][1])) && (sx == coord[0]))){
                     return true;
+                }
             }
                 
         }
