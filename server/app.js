@@ -238,6 +238,9 @@ io.sockets.on('connection', function (socket) {
             });
             
             socket.on("spawn", function(data, ack){
+                if (typeof ack !== "function"){
+                    return;
+                }
                 socket.get("login", function(err, login){
                     data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10)];
                     snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
@@ -252,6 +255,9 @@ io.sockets.on('connection', function (socket) {
             });
 
             socket.on("c", function(data, ack) {
+                if (typeof ack !== "function"){
+                    return;
+                }
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {
                         if (data.secret === login.secret){
@@ -269,10 +275,13 @@ io.sockets.on('connection', function (socket) {
             });
             
             socket.on("confirm_death", function(data, ack){
+                if (typeof ack !== "function"){
+                    return;
+                }
                 if (typeof game.snakes[data.id] === "undefined"){
                     ack(false);
                 } else {
-                    ack(game.snakes)
+                    ack(game.snakes);
                 }
             });
                 
