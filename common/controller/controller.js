@@ -4,19 +4,20 @@ function Controller (options){
     
     var killed_snake_callback = options.callbacks.killed_snake;
     var eaten_bonus_callback = options.callbacks.eaten_bonnus;
-    var add_points_callback = options.callbacks.add_points;
     var add_bonus_callback = options.callbacks.add_bonus;
     var add_snake_callback = options.callbacks.add_snake;
     var update_callback = options.callbacks.update;
     var change_direction_callback = options.callbacks.change_direction;
     
-    var points_bonnus = options.points_bonnus;
+    var points_bonus = options.points_bonnus;
     
     var to_kill = [], num_snakes = 0;
     
     var that = this;
+    
+    var speedup_update = true;
 
-    this.addSnake = function (id, coords, direction, score, size, name, cum_score) {
+    this.addSnake = function (id, coords, direction, score, size, name, cum_score, speedup) {
         snakes[id] = {};
         snakes[id].coords = coords;
         snakes[id].direction = direction;
@@ -24,8 +25,9 @@ function Controller (options){
         snakes[id].size = size;
         snakes[id].name = name;
         snakes[id].cum_score = cum_score;
+        snakes[id].speedup = speedup;
         num_snakes++;
-        add_snake_callback(id, coords, direction, score, size, name, cum_score);
+        add_snake_callback(id, coords, direction, score, size, name, cum_score, speedup);
     };
     
     this.killSnake = function (id, by) {
@@ -59,9 +61,9 @@ function Controller (options){
     };
     
     
-    this.addBonus = function (id, coords) {
-        bonus[id] = coords;
-        add_bonus_callback(id, coords);
+    this.addBonus = function (id, coords, type) {
+        bonus[id] = [coords, type];
+        add_bonus_callback(id, coords, type);
     };
     
     this.getNumSnakes = function () {
@@ -75,21 +77,32 @@ function Controller (options){
         if((typeof by === "undefined") || (by === null)) {
             eaten_bonus_callback(id, undefined);
             delete bonus[id];
-            return;
+        } else {
+            
+            switch(bonus[id][1]){
+                case 0 :
+                    snakes[by].size += 3;
+                break;
+                case 1 : 
+                    snakes[by].speedup += 20;
+                break;
+            }
+            
+            eaten_bonus_callback(id, by);
+            snakes[by].score += points_bonus;
+            delete bonus[id];
         }
-        snakes[by].size += 3;
-        eaten_bonus_callback(id, by);
-        addPoints(by);
-        delete bonus[id];
     };
     
-    function addPoints(id) {
-        snakes[id].score += points_bonnus;
-        add_points_callback(id, snakes[id].score);
-    }
-    
-    function updatePosition (){
+    function updatePosition (speedup){
         for (var i in snakes){
+            if (speedup){
+                if (snakes[i].speedup > 0){
+                    snakes[i].speedup --;
+                } else {
+                    continue;
+                }
+            }
             snakes[i].last_update_direction = snakes[i].direction;
             switch (snakes[i].direction) {
                 case "u" :
@@ -137,10 +150,12 @@ function Controller (options){
     function checkBonus() {
         for (var i in snakes){
             for (var j in bonus){
-                if((bonus[j] !== null) && (typeof bonus[j] !== "undefined")) {
-                    if ((snakes[i].coords[0][0] === bonus[j][0]) && (snakes[i].coords[0][1] === bonus[j][1])){
+                if((typeof bonus[j] === "object") && (typeof bonus[j][0] !== "undefined")) {
+                    if ((snakes[i].coords[0][0] === bonus[j][0][0]) && (snakes[i].coords[0][1] === bonus[j][0][1])){
                         that.eatBonus(j,i);
                     }
+                } else {
+                    console.log(bonus[j]);
                 }
             }
         }
@@ -193,7 +208,7 @@ function Controller (options){
     
     
     this.update = function (callback) {     // This is where the magic happens
-        updatePosition();
+        updatePosition(speedup_update);
         checkCollision();
         
         while (to_kill.length > 0){
@@ -205,6 +220,7 @@ function Controller (options){
         if ((typeof callback === "undefined") || (callback === true)){
             update_callback(snakes, bonus);
         }
+        speedup_update = !speedup_update;
     };
     
     this.getCounter = function () {
@@ -212,7 +228,7 @@ function Controller (options){
     };
     
     if (!(options.disable_update === true)){
-        setInterval(this.update, (1/options.update_rate)*1000); // Update the game regularly
+        setInterval(this.update, (1/options.update_rate)*(1000/2)); // Update the game regularly
     }
 }
 if (typeof module !== "undefined"){

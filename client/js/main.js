@@ -210,8 +210,8 @@ function draw_bonuses (bonus) {
     // #Draw bonuses
     for(var i in bonus) {
         if(bonus[i] != null) {
-            var cx = bonus[i][0];
-            var cy = bonus[i][1];
+            var cx = bonus[i][0][0];
+            var cy = bonus[i][0][1];
             
             context.fillStyle = "#ffaa00";
             context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
@@ -430,7 +430,7 @@ socket.emit("login", {secret : secret}, function(data){
 
 socket.on("+", function(data){
     if (data[0] != my_id){
-        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6]);
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
     }
 });
 
