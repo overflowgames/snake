@@ -9,6 +9,6 @@ deploy:
   app: boundless-snake
   on:
     repo: overflowgames/snake
-    branch: optimize_snake_memory_representation
+    branch: master
     node : '0.10'
   skip_cleanup: true
