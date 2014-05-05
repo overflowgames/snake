@@ -39,7 +39,7 @@ function genBonusCoords (){
     probability_matrix = [];
     for(var i in game.snakes) {
         var currentSnake = game.snakes[i];
-        if(currentSnake.coords == undefined) {
+        if(typeof currentSnake.coords === "undefined") {
             console.log("yolo");
         } else {
             console.log("yea");
@@ -77,29 +77,27 @@ function genBonusCoords (){
     for(var index in probs) {
         ecc += probs[index];
         if(ecc >= r) {
-            while (ecc < sum) {
-                var coord = [];
-                coord [0] = probx[index];
-                coord [1] = proby[index];
-                
-                if(!surunserpent(coord)) {
+            var coord = [parseInt(probx[index], 10), parseInt(proby[index], 10)];
+
+            if(!surunserpent(coord)) {
                 console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
-                    return coord;
-                }
-                ecc++;
-            }    
+                return coord;
+            }
         }
     }
+    console.log("Les coordonées n'ont pas été trouvées");
 }
 
 function surunserpent(coord) {
     for(var i in game.snakes) {
         for(var j in game.snakes[i].coords) {
-            if(typeof game.snakes[i].coords[j] != 'undefined') {
-                sx = game.snakes[i].coords[j][0];
-                sy = game.snakes[i].coords[j][1];
-                if(sx == coord[0] && sy == coord[1])
+            j = parseInt(j, 10)
+            if(typeof game.snakes[i].coords[j+1] !== 'undefined') {
+                var sx = game.snakes[i].coords[j][0];
+                var sy = game.snakes[i].coords[j][1];
+                if(((coord[0] >= Math.min(sx, game.snakes[i].coords[j+1][0])) && (coord[0] <= Math.max(sx, game.snakes[i].coords[j+1][0])) && (sy == coord[1])) || ((coord[1] >= Math.min(sy, game.snakes[i].coords[j+1][1])) && (coord[1] <= Math.max(sy, game.snakes[i].coords[j+1][1])) && (sx == coord[0]))){
                     return true;
+                }
             }
                 
         }
@@ -166,7 +164,7 @@ var controller = new Controller({
         update: function (snakes, bonus) {
             game.snakes = snakes;
             game.bonus = bonus;
-            io.sockets.emit("u");
+            //io.sockets.emit("u");
             
     
             if (controller.getNumSnakes() > 0){
@@ -174,8 +172,9 @@ var controller = new Controller({
               //  if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                 if(Math.random() < 0.02*controller.getNumSnakes()) {
                     var id = uuid.v4();
-                    controller.addBonus(id, genBonusCoords());
-                    
+                    var type = Math.round(Math.random());
+                    controller.addBonus(id, genBonusCoords(), type);
+
                     bonusTimeoutQueue.push([id, new Date().getTime()]);
                 }
                 
@@ -199,18 +198,18 @@ var controller = new Controller({
         add_points: function (id, score) {
             io.sockets.emit("s", [id, score]);
         },
-        add_bonus: function (id, coords) {
-            io.sockets.emit("+b", [id, coords]);
+        add_bonus: function (id, coords, type) {
+            io.sockets.emit("+b", [id, coords, type]);
         },
-        add_snake: function (id, coords, direction, score, size, name) {
-            io.sockets.emit("+", [id, coords, direction, score, size, name]);
+        add_snake: function (id, coords, direction, score, size, name, cum_score, speedup) {
+            io.sockets.emit("+", [id, coords, direction, score, size, name, cum_score, speedup]);
         },
         killed_snake: function (id, score, by) {
             io.sockets.emit("-", [id, by]);
             dbcontroller.push_score(secrets[id], score);
         },
-        change_direction: function (id, direction, counter) {
-            io.sockets.emit("c", [id, direction, counter]);
+        change_direction: function (id, direction, pos) {
+            io.sockets.emit("c", [id, direction, pos]);
         }
     },
     points_bonnus: 10,
@@ -223,9 +222,10 @@ var controller = new Controller({
 io.sockets.on('connection', function (socket) {
     socket.on("login", function(data, ack) {
         dbcontroller.add_player_if_not_exists(data.secret, function (score) {
-            var snake_coords = [[0,0]];
+            var snake_coords = [[0,0], [0,0]];
             var snake_direction = "u";
             var snake_score = 0;
+            var snake_speedup = 0;
             var snake_cum_score = score;
             var snake_size = 20;
             var id = uuid.v4();
@@ -237,14 +237,16 @@ io.sockets.on('connection', function (socket) {
             });
             
             socket.on("spawn", function(data, ack){
+                if (typeof ack !== "function"){
+                    return;
+                }
                 socket.get("login", function(err, login){
-                    data.pos[0][0] = parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10);
-                    data.pos[0][1] = parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10);
-                    snake_coords = data.pos;
+                    data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10)];
+                    snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
                     snake_direction = "u";
                     if (data.secret === login.secret){
-                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_cum_score);
-                        ack(data.pos);
+                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_cum_score, snake_speedup);
+                        ack(snake_coords);
                     } else {
                         ack("ko");
                     }
@@ -252,6 +254,9 @@ io.sockets.on('connection', function (socket) {
             });
 
             socket.on("c", function(data, ack) {
+                if (typeof ack !== "function"){
+                    return;
+                }
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {
                         if (data.secret === login.secret){
@@ -265,6 +270,17 @@ io.sockets.on('connection', function (socket) {
                 } else {
                     ack("kod");
                     //log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
+                }
+            });
+            
+            socket.on("confirm_death", function(data, ack){
+                if (typeof ack !== "function"){
+                    return;
+                }
+                if (typeof game.snakes[data.id] === "undefined"){
+                    ack(false);
+                } else {
+                    ack(game.snakes);
                 }
             });
                 
@@ -281,6 +297,6 @@ setInterval(function(){
     io.sockets.emit("up", {game: game}, function(){
         
     });
-}, 10000);     // Sends the whole game state to all the clients every 10 seconds
+}, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
 //log.info("All started");
