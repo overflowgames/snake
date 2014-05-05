@@ -167,13 +167,32 @@ function update_canvas(snakes, bonus) {
     draw_hud();
 }
 
+var snake_palette = [];
+snake_palette[0] = "#00ffff";
+snake_palette[1] = "#0A9FBD";
+snake_palette[2] = "#148BC7";
+snake_palette[3] = "#1E77D1";
+snake_palette[4] = "#2863DB";
+snake_palette[5] = "#324FE5";
+
 function draw_snakes (snakes) {
     // #Draw the snakes
     nconnectes = 0;
-    context.fillStyle = "#00ffff";
-           
+    
     for(var i in snakes) {
         nconnectes++;
+        
+        var snake_speedup = snakes[i].speedup;
+        var snake_size = snakes[i].size;
+        var counter = 0;
+        
+        var lvl=0;
+        if(snake_speedup > snake_size) {
+            lvl = Math.floor(snake_speedup / snake_size);
+            console.log("sp: "+snake_speedup + " | sz: "+snake_size + " | lvl: "+lvl);
+            snake_speedup -= snake_size;
+        }
+        
         for(var ii = 0; ii < snakes[i].coords.length - 1;ii++) {
             var cxstart = snakes[i].coords[ii][0];
             var cxend = snakes[i].coords[ii+1][0];
@@ -195,6 +214,16 @@ function draw_snakes (snakes) {
             
             for(var ix = cxstart; ix <= cxend; ix++) {
                 for(var iy = cystart; iy <= cyend; iy++) {
+                    
+                    
+                    
+                    if(snake_speedup > counter) {
+                        context.fillStyle = snake_palette[lvl+1];
+                    } else {
+                        context.fillStyle = snake_palette[lvl];
+                    }
+                    
+                    counter++;
                     context.fillRect(ix*sq_w-position_x+offset_x, iy*sq_w-position_y+offset_y, sq_w, sq_w);
            
                 }
