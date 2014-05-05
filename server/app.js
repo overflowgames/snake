@@ -197,8 +197,8 @@ var controller = new Controller({
         add_points: function (id, score) {
             io.sockets.emit("s", [id, score]);
         },
-        add_bonus: function (id, coords) {
-            io.sockets.emit("+b", [id, coords]);
+        add_bonus: function (id, coords, type) {
+            io.sockets.emit("+b", [id, coords, type]);
         },
         add_snake: function (id, coords, direction, score, size, name, cum_score, speedup) {
             io.sockets.emit("+", [id, coords, direction, score, size, name, cum_score, speedup]);

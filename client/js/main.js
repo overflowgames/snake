@@ -213,7 +213,11 @@ function draw_bonuses (bonus) {
             var cx = bonus[i][0][0];
             var cy = bonus[i][0][1];
             
-            context.fillStyle = "#ffaa00";
+            if(bonus[i][1] == 0)
+                context.fillStyle = "#ffaa00";
+            else if(bonus[i][1] == 1)
+                context.fillStyle = "#ffaaaa";
+                
             context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
         }
     }
@@ -435,7 +439,7 @@ socket.on("+", function(data){
 });
 
 socket.on("+b", function(data){
-        controller.addBonus(data[0],data[1]);
+        controller.addBonus(data[0],data[1],data[2]);
 });
 
 socket.on("-b", function(data){
