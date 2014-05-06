@@ -9,11 +9,11 @@
     </head>
     <body>
         <div id="spawndiv" class="hide">
-            <div id="pseudal"><span>ENTREZ VOTRE PSEUDO: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
+            <div id="pseudal"><span>ENTREZ VOTRE PSEUDO: </span> <input maxlength=42 style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
                 <button onClick="spawn_snake()" >FAIRE APPARAITRE VOTRE SERPENT</button>
             </div>
         </div>
-        <canvas class="dragclass" id="app" width="500" height="500"></canvas>
+        <canvas class="dragclass" id="app" width="500" height="500" moz-opaque></canvas>
         
         <div id="button_lock" onClick="lock()" style="display: none"><img src="assets/lock.png" alt="lock"/></div>
         <div id="button_locked" onClick="unlock()"><img src="assets/locked.png" alt="locked"/></div>

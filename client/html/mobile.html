@@ -12,11 +12,11 @@
     <body>
     
         <div id="spawndiv">
-            <div id="pseudal"><span>Pseudo: </span> <input style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
+            <div id="pseudal"><span>Pseudo: </span> <input maxlength=42 style="text-align: center" type="text" id="daniel" placeholder="Jack Banane" value="" />
             <button onClick="spawn_snake()" >Respawn</button>
             </div>
         </div>
-        <canvas class="dragclass" id="app" width="500" height="500"></canvas>
+        <canvas class="dragclass" id="app" width="500" height="500" moz-opaque></canvas>
         
         <div id="zoombox" class="mobile_only">
             <div class="zoom" onClick="zoomC(-0.1)">+</div>
