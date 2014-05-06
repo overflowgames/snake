@@ -169,11 +169,11 @@ function update_canvas(snakes, bonus) {
 
 var snake_palette = [];
 snake_palette[0] = "#00ffff";
-snake_palette[1] = "#0A9FBD";
-snake_palette[2] = "#148BC7";
-snake_palette[3] = "#1E77D1";
-snake_palette[4] = "#2863DB";
-snake_palette[5] = "#324FE5";
+snake_palette[1] = "#0080ff";
+snake_palette[2] = "#0040ff";
+snake_palette[3] = "#0000ff";
+snake_palette[4] = "#4000ff";
+snake_palette[5] = "#8000ff";
 
 function draw_snakes (snakes) {
     // #Draw the snakes
@@ -196,24 +196,21 @@ function draw_snakes (snakes) {
         for(var ii = 0; ii < snakes[i].coords.length - 1;ii++) {
             var cxstart = snakes[i].coords[ii][0];
             var cxend = snakes[i].coords[ii+1][0];
+            var swap = false, swapy = false;
             
             if(cxstart > cxend) {
-                var swap = cxend;
-                cxend = cxstart;
-                cxstart = swap;
+                swap = true;
             }
             
             var cystart = snakes[i].coords[ii][1];
             var cyend = snakes[i].coords[ii+1][1];
             
             if(cystart > cyend) {
-                var swap = cyend;
-                cyend = cystart;
-                cystart = swap;
+                swapy = true;
             }
             
-            for(var ix = cxstart; ix <= cxend; ix++) {
-                for(var iy = cystart; iy <= cyend; iy++) {
+            for(var ix = cxstart; ((ix <= cxend)&&(!swap)) || ((ix >= cxend)&&(swap)); swap ? ix-- : ix++) {
+                for(var iy = cystart; ((iy <= cyend)&&(!swapy)) || ((iy >= cyend)&&(swapy)); swapy ? iy-- : iy++) {
                     
                     
                     
