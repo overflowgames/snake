@@ -184,7 +184,7 @@ function draw_snakes (snakes) {
         
         var snake_speedup = snakes[i].speedup;
         var snake_size = snakes[i].size;
-        var counter = 0;
+        var counter = snakes[i].size + snakes[i].coords.length - 3;
         
         var lvl=0;
         if(snake_speedup > snake_size) {
@@ -220,7 +220,7 @@ function draw_snakes (snakes) {
                         context.fillStyle = snake_palette[lvl];
                     }
                     
-                    counter++;
+                    counter--;
                     context.fillRect(ix*sq_w-position_x+offset_x, iy*sq_w-position_y+offset_y, sq_w, sq_w);
            
                 }
