@@ -73,6 +73,12 @@ module.exports = function(grunt) {
         },
         htmllint: {
             all: ["client/html/*.html"]
+        },
+        jshint: {
+            all: ['gruntfile.js', 'common/**/*.js']
+        },
+        nodeunit: {
+            all: ['test/test-*.js']
         }
     });
 
@@ -83,9 +89,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-html');
 
     grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
     grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css']);
-    grunt.registerTask('test', ['csslint', 'htmllint', 'default']);
+    grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };
