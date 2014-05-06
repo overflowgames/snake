@@ -120,12 +120,6 @@ function draw_hud() {
     context.fillText("connectés: "+nconnectes, 30, 90);
 }
 
-setInterval(function() {
-    if(isLocked() || mobile) 
-        followSnake(my_id);
-},100);
-
-    
 var pattern_ = context.createPattern(pattern, "repeat");
     
 function update_canvas(snakes, bonus) {
