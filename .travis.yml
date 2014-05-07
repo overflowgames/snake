@@ -11,4 +11,4 @@ deploy:
     repo: overflowgames/snake
     branch: master
     node : '0.10'
-    skip_cleanup: true
+  skip_cleanup: true
