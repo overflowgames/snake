@@ -27,7 +27,7 @@ var queue = async.queue(function (task, cb) {
                 }
             break;
             case "push" :
-                players[task.id].score += parseInt(task.score, 10);
+                players[task.id].score += Math.max(parseInt(task.score, 10), players[task.id].score);
                 fs.writeFile(filename, JSON.stringify(players), function(err){
                     if (err) throw err;
                     cb();
