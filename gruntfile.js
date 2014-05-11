@@ -75,7 +75,7 @@ module.exports = function(grunt) {
             all: ["client/html/*.html"]
         },
         jshint: {
-            all: ['gruntfile.js', 'common/**/*.js', 'server/*.js']
+            all: ['gruntfile.js', 'common/**/*.js', 'server/*.js', 'client/js/*.js']
         },
         nodeunit: {
             all: ['test/test-*.js']

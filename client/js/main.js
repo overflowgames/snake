@@ -3,15 +3,14 @@ var controller;
 
 var zoom = 1;
 
-// set up a pattern, something really elaborate!
 var pattern = document.createElement('canvas');
 pattern.width = 512;
 pattern.height = 512;
 var pctx = pattern.getContext('2d');
 
 var gradient = pctx.createLinearGradient(0,0,pattern.width, pattern.height);
-gradient.addColorStop(0,"#3B5998");    
-gradient.addColorStop(1/4,"#4B7BC9"); 
+gradient.addColorStop(0,"#3B5998");
+gradient.addColorStop(1/4,"#4B7BC9");
 gradient.addColorStop(2/4,"#3B5998");
 gradient.addColorStop(3/4,"#4B7BC9"); 
 gradient.addColorStop(1,"#3B5998");  
@@ -63,8 +62,6 @@ var my_id="";
 var last_snakes, last_bonus;
 
 var spawned = false;
-
-var padding = 150;
 
 var my_score = 0;
 var nconnectes = 0;
@@ -145,7 +142,7 @@ function update_canvas(snakes, bonus) {
     
     // #Draw the grid
     context.strokeStyle = "#ffffff";
-    if(mobile)
+    if(window.mobile)
         context.lineWidth=1;
     else 
         context.lineWidth=0.5;
@@ -229,11 +226,11 @@ function draw_snakes (snakes) {
 function draw_bonuses (bonus) {
     // #Draw bonuses
     for(var i in bonus) {
-        if(bonus[i] != null) {
+        if(bonus[i] !== null) {
             var cx = bonus[i][0][0];
             var cy = bonus[i][0][1];
             
-            if(bonus[i][1] == 0)
+            if(bonus[i][1] === 0)
                 context.fillStyle = "#ffaa00";
             else if(bonus[i][1] == 1)
                 context.fillStyle = "#ffaaaa";
@@ -245,6 +242,7 @@ function draw_bonuses (bonus) {
 
 function draw_names (snakes) {
     // #Draw names
+    var tw = 0;
     for(var i in snakes) {
         if(visible(snakes[i])) {
             var sx, sy;
@@ -255,7 +253,7 @@ function draw_names (snakes) {
             context.fillStyle = "rgba(66, 66, 66, 0.5)";
             context.font = "16px Helvetica";
             
-            var tw = context.measureText(snakes[i].name).width;
+            tw = context.measureText(snakes[i].name).width;
             
             tx = sx*sq_w-position_x+offset_x - tw/2;
             ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
@@ -266,7 +264,7 @@ function draw_names (snakes) {
             context.fillStyle = "#ffffff";
             context.fillText(snakes[i].name, tx, ty);
         } else {
-            dists = getDistanceFromCenter(snakes[i]);
+            var dists = getDistanceFromCenter(snakes[i]);
             var dx = dists[0];
             var dy = dists[1];
             
@@ -281,7 +279,7 @@ function draw_names (snakes) {
                 context.fillStyle = "#ffffff";
                 
                 var dist = Math.round(Math.sqrt(dx*dx + dy*dy));
-                var tw = context.measureText(dist).width;
+                tw = context.measureText(dist).width;
                 
                 if(dx < -canvas.width/(2*sq_w)) {
                     drawx = 10; 
@@ -415,16 +413,16 @@ function visible(snake) {
     
 }
 
-var secret = localStorage.getItem("secret") || uuid.v4();
+var secret = localStorage.getItem("secret") || window.uuid.v4();
 localStorage.setItem("secret", secret);
 socket.emit("login", {secret : secret}, function(data){
     my_id=data;
-    controller = new Controller({
+    controller = new window.Controller({
         callbacks: {
             update: function (snakes, bonus) {
                 last_snakes=snakes;
                 last_bonus=bonus;
-                if((isLocked() || mobile) && (typeof snakes[my_id] !== "undefined"))
+                if((isLocked() || window.mobile) && (typeof snakes[my_id] !== "undefined"))
                     followSnake(my_id);
                 else
                     update_canvas(snakes, bonus);
@@ -498,9 +496,9 @@ function spawn_snake() {
     }
     
     spawned = true;
-    var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]]
+    var c = [[Math.round( (position_x+canvas.width/2)/sq_w), Math.round((position_y+canvas.height/2)/sq_w)]];
     
-	if(pseudo == "") {
+	if(pseudo === "") {
 		pseudo = "Jack Banane";
 	}
 
@@ -510,8 +508,7 @@ function spawn_snake() {
             spawned = false;
             return;
         }
-        console.log(pos)
-        controller.addSnake(my_id,pos, "u",0,20,pseudo);
+        controller.addSnake(my_id,pos, "u",0,20,pseudo,0,0);
         //centerOnSnake(my_id);
         
         document.getElementById("spawndiv").className = 'hide';
@@ -537,9 +534,9 @@ function centerOnSnake(id) {
 }
 
 function followSnake(id) {
-    if(last_snakes == undefined)
+    if(last_snakes === undefined)
         return;
-    if(last_snakes[id] == undefined)
+    if(last_snakes[id] === undefined)
         return;
     
     
@@ -590,7 +587,7 @@ function followSnake(id) {
 }
 
 document.onkeydown = function(event) {
-    event = event || window.event; 
+    event = event || window.event;
     switch (event.keyCode) {
         case 37:// left
             socket.emit("c", {"id":my_id, "secret":secret, "direction": "l"}, function(data){});
@@ -609,67 +606,69 @@ document.onkeydown = function(event) {
     
 };
 
-if  (document.getElementById){
-(function(){
+if (document.getElementById) {
+    (function() {
 
-    //Stop Opera selecting anything whilst dragging.
-    if (window.opera){
-        document.write("<input type='hidden' id='Q' value=' '>");
-    }
-    
-    var n = 500;
-    var dragok = false;
-    var y,x,d,dy,dx;
-    
-    function move(e){
-        if (!e) e = window.event;
-        if (dragok){
-          var lft=dx + e.clientX - x,top=dy + e.clientY - y;
-          offset_x=lft;
-          offset_y=top;
-          update_canvas(last_snakes, last_bonus);
-          return false;
+        //Stop Opera selecting anything whilst dragging.
+        if (window.opera) {
+            document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
         }
-    }
-    
-    function down(e){
-    if (!e) e = window.event;
-    var temp = (typeof e.target != "undefined")?e.target:e.srcElement;
-    if (temp.tagName != "HTML"|"BODY" && temp.className != "dragclass"){
-     temp = (typeof temp.parentNode != "undefined")?temp.parentNode:temp.parentElement;
-     }
-    if (temp.className == "dragclass"){
-     if (window.opera){
-      document.getElementById("Q").focus();
-     }
-     dragok = true;
-     temp.style.zIndex = n++;
-     d = temp;
-     dx = parseInt(temp.style.left+0);
-     dy = parseInt(temp.style.top+0);
-     x = e.clientX;
-     y = e.clientY;
-     document.onmousemove = move;
-     return false;
-     }
-    }
-    
-    function up(){
-        dragok = false;
-        document.onmousemove = null;
-        
-        position_x-=offset_x;
-        position_y-=offset_y;
-        
-        offset_x=0;
-        offset_y=0;
-    }
-    
-    document.onmousedown = down;
-    document.onmouseup = up;
-    
+
+        var n = 500;
+        var dragok = false;
+        var y, x, d, dy, dx;
+
+        function move(e) {
+            if (!e) e = window.event;
+            if (dragok) {
+                var lft = dx + e.clientX - x,
+                    top = dy + e.clientY - y;
+                offset_x = lft;
+                offset_y = top;
+                update_canvas(last_snakes, last_bonus);
+                return false;
+            }
+        }
+
+        function down(e) {
+            if (!e) e = window.event;
+            var temp = (typeof e.target != "undefined") ? e.target : e.srcElement;
+            if (temp.tagName != "HTML" | "BODY" && temp.className != "dragclass") {
+                temp = (typeof temp.parentNode != "undefined") ? temp.parentNode : temp.parentElement;
+            }
+            if (temp.className == "dragclass") {
+                if (window.opera) {
+                    document.getElementById("Q").focus();
+                }
+                dragok = true;
+                temp.style.zIndex = n++;
+                d = temp;
+                dx = parseInt(temp.style.left + 0, 10);
+                dy = parseInt(temp.style.top + 0, 10);
+                x = e.clientX;
+                y = e.clientY;
+                document.onmousemove = move;
+                return false;
+            }
+        }
+
+        function up() {
+            dragok = false;
+            document.onmousemove = null;
+
+            position_x -= offset_x;
+            position_y -= offset_y;
+
+            offset_x = 0;
+            offset_y = 0;
+        }
+
+        document.onmousedown = down;
+        document.onmouseup = up;
+
     })();
-}//End.
+} //End.
+
 if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
     document.getElementById('daniel').value = localStorage.getItem("pseudo");
 }

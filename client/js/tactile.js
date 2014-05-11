@@ -38,7 +38,7 @@ var swipeFunc = {
                             swipeFunc.touches.touchstart.y = swipeFunc.touches.touchmove.y;
                             swipeFunc.touches.last = swipeFunc.touches.direction;
                             
-                            socket.emit("c", {"id":my_id, "secret":secret, "direction": swipeFunc.touches.direction}, function(data){ma_direction=data[1]});
+                            window.socket.emit("c", {"id":window.my_id, "secret":window.secret, "direction": swipeFunc.touches.direction}, function(data){});
                         }
                         break;
                     case 'touchend':
