@@ -180,8 +180,9 @@ var controller = new Controller({
                 
                
             }
-            var continuer = false;
+            var continuer;
             do {    // TODO : A implémenter dans le controlleur, sinon le client veut pas ..."
+                continuer = false;
                 if(bonusTimeoutQueue.length > 0) {
                     var firstBonus = bonusTimeoutQueue[0];
                     if(new Date().getTime()-firstBonus[1] > 15000) {
@@ -255,13 +256,14 @@ io.sockets.on('connection', function (socket) {
 
             socket.on("c", function(data, ack) {
                 if (typeof ack !== "function"){
+                    console.log("No ack provided");
                     return;
                 }
                 if (directions.indexOf(data.direction) !== -1){
                     socket.get("login", function (err, login) {
                         if (data.secret === login.secret){
                             controller.changeDirection(login.id, data.direction);
-                            ack(controller.getCounter()); // TOFIX : Ca plante quand il y a pas de callback
+                            ack("ok");
                         } else {
                             ack("kol");
                            //log.notice("Someone has tried to acces to an id without permission");
