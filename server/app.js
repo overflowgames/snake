@@ -164,12 +164,10 @@ var controller = new Controller({
         update: function (snakes, bonus) {
             game.snakes = snakes;
             game.bonus = bonus;
-            //io.sockets.emit("u");
-            
+
     
             if (controller.getNumSnakes() > 0){
                 
-              //  if (Math.random() < ((-Math.abs(1 / controller.getNumSnakes())) + 1)) {
                 if(Math.random() < 0.02*controller.getNumSnakes()) {
                     var id = uuid.v4();
                     var type = Math.round(Math.random());
@@ -266,12 +264,10 @@ io.sockets.on('connection', function (socket) {
                             ack("ok");
                         } else {
                             ack("kol");
-                           //log.notice("Someone has tried to acces to an id without permission");
                         }
                     });
                 } else {
                     ack("kod");
-                    //log.notice("Someone has tried make the snake move on a bad direction : " + data.direction);
                 }
             });
             
@@ -301,4 +297,3 @@ setInterval(function(){
     });
 }, 5000);     // Sends the whole game state to all the clients every 10 seconds
 
-//log.info("All started");
