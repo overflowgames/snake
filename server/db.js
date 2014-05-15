@@ -45,15 +45,27 @@ var queue = async.queue(function (task, cb) {
 }, 3);
 
 function push_score(id, score, cb) {
+    if (typeof score !== "number" || typeof cb !== "function" || score < 0){
+        return false;
+    }
     queue.push({action: "push", score: score, id: id}, cb);
+    return true;
 }
 
 function add_player_if_not_exists(id, cb){
+    if (typeof cb !== "function"){
+        return false;
+    }
     queue.push({action: "add", id: id}, cb);
+    return true;
 }
 
 function read_score(id, cb){
+    if (typeof cb !== "function"){
+        return false;
+    }
     queue.push({action: "read", id: id}, cb);
+    return true;
 }
 
 module.exports.add_player_if_not_exists = add_player_if_not_exists;
