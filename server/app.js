@@ -79,7 +79,7 @@ function genBonusCoords (){
         if(ecc >= r) {
             var coord = [parseInt(probx[index], 10), parseInt(proby[index], 10)];
 
-            if(!surunserpent(coord)) {
+            if(!surunserpent(coord) && !surunbonus(coord)) {
                 console.log("adding bonus at ["+coord[0]+","+coord[1]+"]");
                 return coord;
             }
@@ -99,7 +99,15 @@ function surunserpent(coord) {
                     return true;
                 }
             }
-                
+        }
+    }
+    return false;
+}
+
+function surunbonus(coord){
+    for(var i in game.bonus){
+        if (game.bonus[i][1][0] == coord[0] && game.bonus[i][1][1] == coord[1]){
+            return true;
         }
     }
     return false;
