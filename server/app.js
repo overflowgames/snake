@@ -295,5 +295,5 @@ setInterval(function(){
     io.sockets.emit("up", {game: game}, function(){
         
     });
-}, 5000);     // Sends the whole game state to all the clients every 10 seconds
+}, 10000);     // Sends the whole game state to all the clients every 10 seconds
 
