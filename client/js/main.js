@@ -1,4 +1,4 @@
-var socket = io.connect();
+var socket = window.io.connect();
 var controller;
 
 var zoom = 1;
@@ -415,6 +415,7 @@ function visible(snake) {
 
 var secret = localStorage.getItem("secret") || window.uuid.v4();
 localStorage.setItem("secret", secret);
+
 socket.emit("login", {secret : secret}, function(data){
     my_id=data;
     controller = new window.Controller({
@@ -454,21 +455,19 @@ socket.emit("login", {secret : secret}, function(data){
 });
 
 socket.on("+", function(data){
-    if (data[0] != my_id){
-        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
-    }
+    controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
 });
 
 socket.on("+b", function(data){
-        controller.addBonus(data[0],data[1],data[2]);
+    controller.addBonus(data[0],data[1],data[2]);
 });
 
 socket.on("-b", function(data){
-        controller.eatBonus(data[0],data[1]);
+    controller.eatBonus(data[0],data[1]);
 });
 
 socket.on("-", function(data){
-        controller.killSnake(data[0], data[1]);
+    controller.killSnake(data[0], data[1]);
 });
 
 socket.on("up", function(data){
@@ -508,9 +507,6 @@ function spawn_snake() {
             spawned = false;
             return;
         }
-        controller.addSnake(my_id,pos, "u",0,20,pseudo,0,0);
-        //centerOnSnake(my_id);
-        
         document.getElementById("spawndiv").className = 'hide';
     });
 }
@@ -523,10 +519,6 @@ function centerOnSnake(id) {
     
     var px = cx * sq_w;
     var py = cy * sq_w;
-    
-    // px = (position_x + position_x + width) / 2
-    // px = position_x + width/2
-    // position_x = px - width/2
     
     position_x = px - width/2;
     position_y = py - height/2;
@@ -609,7 +601,6 @@ document.onkeydown = function(event) {
 if (document.getElementById) {
     (function() {
 
-        //Stop Opera selecting anything whilst dragging.
         if (window.opera) {
             document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
         }
@@ -678,7 +669,7 @@ var locked = true;
 function lock() {
     locked = true;
     document.getElementById('button_locked').style.display = "block";
-    document.getElementById('button_lock').style.display = "nonez";
+    document.getElementById('button_lock').style.display = "none";
     window.update_canvas();
 }
 
