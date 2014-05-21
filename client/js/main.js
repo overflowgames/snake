@@ -498,11 +498,8 @@ function spawn_snake() {
 	socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
        
         if (pos === "ko"){
-            alert("Y'a un problème");
             spawned = false;
             return;
-        } else {
-            alert("ok");
         }
         document.getElementById("spawndiv").className = 'hide';
     });
