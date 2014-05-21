@@ -158,13 +158,7 @@ function update_canvas(snakes, bonus) {
     draw_hud();
 }
 
-var snake_palette = [];
-snake_palette[0] = "#00ffff";
-snake_palette[1] = "#0080ff";
-snake_palette[2] = "#0040ff";
-snake_palette[3] = "#0000ff";
-snake_palette[4] = "#4000ff";
-snake_palette[5] = "#8000ff";
+var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
 
 function draw_snakes (snakes) {
     // #Draw the snakes
@@ -504,8 +498,11 @@ function spawn_snake() {
 	socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
        
         if (pos === "ko"){
+            alert("Y'a un problème");
             spawned = false;
             return;
+        } else {
+            alert("ok");
         }
         document.getElementById("spawndiv").className = 'hide';
     });
