@@ -241,22 +241,22 @@ io.sockets.on('connection', function (socket) {
             
             socket.set("login", {"id": id, "secret" : data.secret}, function () {
                 ack(id);
-            });
             
-            socket.on("spawn", function(data, ack){
-                if (typeof ack !== "function"){
-                    return;
-                }
-                socket.get("login", function(err, login){
-                    data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10)];
-                    snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
-                    snake_direction = "u";
-                    if (data.secret === login.secret){
-                        controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_cum_score, snake_speedup);
-                        ack(snake_coords);
-                    } else {
-                        ack("ko");
+                socket.on("spawn", function(data, ack){
+                    if (typeof ack !== "function"){
+                        return;
                     }
+                    socket.get("login", function(err, login){
+                        data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5)*80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5)*80, 10)];
+                        snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
+                        snake_direction = "u";
+                        if (data.secret === login.secret){
+                            controller.addSnake(data.id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_cum_score, snake_speedup);
+                            ack(snake_coords);
+                        } else {
+                            ack("ko");
+                        }
+                    });
                 });
             });
 
