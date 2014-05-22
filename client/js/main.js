@@ -410,43 +410,40 @@ function visible(snake) {
 var secret = localStorage.getItem("secret") || window.uuid.v4();
 localStorage.setItem("secret", secret);
 
-socket.emit("login", {secret : secret}, function(data){
-    my_id=data;
-    controller = new window.Controller({
-        callbacks: {
-            update: function (snakes, bonus) {
-                last_snakes=snakes;
-                last_bonus=bonus;
-                if((isLocked() || window.mobile) && (typeof snakes[my_id] !== "undefined"))
-                    followSnake(my_id);
-                else
-                    update_canvas(snakes, bonus);
-            },
-            eaten_bonnus: function (id) { },
-            add_points: function (id, score) { },
-            add_bonus: function (id, coords) { },
-            add_snake: function (id, coords, direction, score, size, name) { },
-            killed_snake: function (id) {
-                if(id === my_id){
-                    socket.emit("confirm_death", {"id":my_id}, function(res){
-                        if(res === false){
-                            spawned = false;
-                            document.getElementById("spawndiv").className = 'show';
-                        } else {
-                            controller.load(res, last_bonus);
-                        }
-                    });
-                }
-                
-            },
-            change_direction: function (id, direction) { }
+controller = new window.Controller({
+    callbacks: {
+        update: function (snakes, bonus) {
+            last_snakes=snakes;
+            last_bonus=bonus;
+            if((isLocked() || window.mobile) && (typeof snakes[my_id] !== "undefined"))
+                followSnake(my_id);
+            else
+                update_canvas(snakes, bonus);
         },
-        points_bonnus: 10,
-        disable_update: false,
-        update_rate: 10
-    });
-    document.getElementById("spawndiv").className = 'show';
+        eaten_bonnus: function (id) { },
+        add_points: function (id, score) { },
+        add_bonus: function (id, coords) { },
+        add_snake: function (id, coords, direction, score, size, name) { },
+        killed_snake: function (id) {
+            if(id === my_id){
+                socket.emit("confirm_death", {"id":my_id}, function(res){
+                    if(res === false){
+                        spawned = false;
+                        document.getElementById("spawndiv").className = 'show';
+                    } else {
+                        controller.load(res, last_bonus);
+                    }
+                });
+            }
+            
+        },
+        change_direction: function (id, direction) { }
+    },
+    points_bonnus: 10,
+    disable_update: false,
+    update_rate: 10
 });
+document.getElementById("spawndiv").className = 'show';
 
 socket.on("+", function(data){
     controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
@@ -495,13 +492,13 @@ function spawn_snake() {
 		pseudo = "Jack Banane";
 	}
 
-	socket.emit("spawn", {"id":my_id, "secret":secret, "name": pseudo, "pos":c}, function(pos){
-       
-        if (pos === "ko"){
+	socket.emit("spawn", {"secret":secret, "name": pseudo, "pos":c}, function(data){
+        if (data === "ko"){
             spawned = false;
-            return;
+        } else {
+            document.getElementById("spawndiv").className = 'hide';
+            my_id = data;
         }
-        document.getElementById("spawndiv").className = 'hide';
     });
 }
 
