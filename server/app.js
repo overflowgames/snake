@@ -229,7 +229,7 @@ var controller = new Controller({
 io.sockets.on('connection', function (socket) {
 
     socket.on("spawn", function(data, ack){
-        if (typeof ack !== "function"){
+        if (typeof ack !== "function" || data.secret === undefined || data.pos === undefined){
             return;
         }
         dbcontroller.add_player_if_not_exists(data.secret, function (score) {
@@ -257,8 +257,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on("c", function(data, ack) {
-        if (typeof ack !== "function"){
-            console.log("No ack provided");
+        if (typeof ack !== "function" || data.direction === undefined || data.secret === undefined){
             return;
         }
         if (directions.indexOf(data.direction) !== -1){
@@ -276,7 +275,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on("confirm_death", function(data, ack){
-        if (typeof ack !== "function"){
+        if (typeof ack !== "function" || data.id === undefined){
             return;
         }
         if (typeof game.snakes[data.id] === "undefined"){
@@ -296,7 +295,5 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function(){
-    io.sockets.emit("up", {game: game}, function(){
-        
-    });
+    io.sockets.emit("up", {game: game}, function(){});
 }, 10000);     // Sends the whole game state to all the clients every 10 seconds
