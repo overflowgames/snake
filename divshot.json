@@ -1,3 +1,7 @@
 {
-    "root" : "client"
+  "name": "snake",
+  "root": "client",
+  "clean_urls": true,
+  "cache_control": {},
+  "routes": {}
 }
