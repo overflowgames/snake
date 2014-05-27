@@ -79,7 +79,24 @@ module.exports = function(grunt) {
         },
         nodeunit: {
             all: ['test/test-*.js']
+        },
+        replace: {
+            dist: {
+                options: {
+                    patterns: [{
+                        match: 'URL_SOCKETIO_SERVER',
+                        replacement: 'https://boundless-snake.herokuapp.com'
+                    }]
+                },
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['client/*.js'],
+                    dest: 'client'
+                }]
+            }
         }
+
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -92,8 +109,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-html');
+    grunt.loadNpmTasks('grunt-replace');
 
-    grunt.registerTask('default', ['concat', 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
+    grunt.registerTask('default', ['concat', "replace", 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
     grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css']);
     grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };

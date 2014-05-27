@@ -1,4 +1,4 @@
-var socket = window.io.connect();
+var socket = window.io.connect("@@URL_SOCKETIO_SERVER");
 var controller;
 
 var zoom = 1;

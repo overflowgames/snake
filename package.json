@@ -35,6 +35,7 @@
     "grunt-contrib-csslint": "~0.2.0",
     "grunt-html": "~1.2.0",
     "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-nodeunit": "~0.3.3"
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-replace": "~0.7.7"
   }
 }
