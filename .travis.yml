@@ -1,14 +1,23 @@
 language: node_js
 node_js:
-  - '0.11'
-  - '0.10'
+- '0.11'
+- '0.10'
 deploy:
-  provider: heroku
-  api_key:
-    secure: VJIV3fBb/EAUsJMQVrUuOrpUv6H/42SekAUbLPTHfPvj9ATr5HP+4tPB0ayKSemzq+WwG/gusXw6ljpGHoT5BFlOC6Bhv9cssClOHSAEycxAG3qVB1fN4IoPmZ4UlqTJfa/60Txm/2PqOs4I9fMiz/u61GUJKXQtT2o28l2jTI8=
-  app: boundless-snake
-  on:
-    repo: overflowgames/snake
-    branch: master
-    node : '0.10'
-  skip_cleanup: true
+  matrix:
+  - provider: heroku
+    api_key:
+      secure: VJIV3fBb/EAUsJMQVrUuOrpUv6H/42SekAUbLPTHfPvj9ATr5HP+4tPB0ayKSemzq+WwG/gusXw6ljpGHoT5BFlOC6Bhv9cssClOHSAEycxAG3qVB1fN4IoPmZ4UlqTJfa/60Txm/2PqOs4I9fMiz/u61GUJKXQtT2o28l2jTI8=
+    app: boundless-snake
+    on:
+      repo: overflowgames/snake
+      branch: master
+      node: '0.10'
+    skip_cleanup: true
+  - provider: divshot
+    skip_cleanup: true
+    on:
+      repo: overflowgames/snake
+      branch: master
+      node: '0.10'
+    api_key:
+      secure: SHxmEuhY/kev3RbwhJjAu+N/ImIkvzH5NBbw5lVaOnmbS4PLPrinzN3OiCQ3CwOCLOrbia8LL/glDI/kNK+VNTAD9yEE4S5zw19u2dI35KzJcL0GL0/f4EqBSIjDbDhj43/OfE8/Tp0DCfkZBvcMbN8keodv7kFG7P0TsVrTvsA=
