@@ -254,46 +254,49 @@ io.sockets.on('connection', function (socket) {
                 }
             });
         });
-    });
 
-    socket.on("c", function(data, ack) {
-        if (typeof ack !== "function" || data.direction === undefined || data.secret === undefined){
-            return;
-        }
-        if (directions.indexOf(data.direction) !== -1){
-            socket.get("login", function (err, login) {
-                if (data.secret === login.secret){
-                    controller.changeDirection(login.id, data.direction);
-                    ack("ok");
-                } else {
-                    ack("kol");
-                }
-            });
-        } else {
-            ack("kod");
-        }
-    });
-    
-    socket.on("confirm_death", function(data, ack){
-        if (typeof ack !== "function" || data.id === undefined){
-            return;
-        }
-        if (typeof game.snakes[data.id] === "undefined"){
-            ack(false);
-        } else {
-            ack(game.snakes);
-        }
-    });
-        
-    socket.on("disconnect", function () {
-        socket.get("login", function (err, login) {
-            socket.broadcast.emit("-", login.id);
-            controller.killSnake(login.id);
+        socket.on("c", function(data, ack) {
+            if (typeof ack !== "function" || data.direction === undefined || data.secret === undefined){
+                return;
+            }
+            if (directions.indexOf(data.direction) !== -1){
+                socket.get("login", function (err, login) {
+                    if (data.secret === login.secret){
+                        controller.changeDirection(login.id, data.direction);
+                        ack("ok");
+                    } else {
+                        ack("kol");
+                    }
+                });
+            } else {
+                ack("kod");
+            }
         });
-
+        
+        socket.on("confirm_death", function(data, ack){
+            if (typeof ack !== "function" || data.id === undefined){
+                return;
+            }
+            if (typeof game.snakes[data.id] === "undefined"){
+                ack(false);
+            } else {
+                ack(game.snakes);
+            }
+        });
+            
+        socket.on("disconnect", function () {
+            socket.get("login", function (err, login) {
+                
+                socket.broadcast.emit("-", login.id);
+                controller.killSnake(login.id);
+            });
+    
+        });
     });
 });
 
 setInterval(function(){
     io.sockets.emit("up", {game: game}, function(){});
 }, 10000);     // Sends the whole game state to all the clients every 10 seconds
+
+    });
