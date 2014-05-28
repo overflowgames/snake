@@ -19,6 +19,7 @@ server.listen(parseInt(process.env.PORT || 1337, 10));
 
 var io = sio.listen(server);
 io.set('log level', 1);
+io.disable("browser client");
 
 var secrets = [];
 
