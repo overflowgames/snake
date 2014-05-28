@@ -36,7 +36,7 @@ function Controller(options) {
         snakes[id].speedup = speedup;
         snakes[id].last_update_direction = direction;
         num_snakes += 1;
-        add_snake_callback(id, coords, direction, score, size, name, cum_score, speedup);
+        add_snake_callback.call(this, id, coords, direction, score, size, name, cum_score, speedup);
         
         return true;
     };
@@ -47,7 +47,7 @@ function Controller(options) {
                 snakes[by].size += snakes[id].size / 2;
                 snakes[by].score += snakes[id].score / 2;
             }
-            killed_snake_callback(id, snakes[id].score, by);
+            killed_snake_callback.call(this, id, snakes[id].score, by);
             delete snakes[id];
             num_snakes -= 1;
             return true;
@@ -68,11 +68,11 @@ function Controller(options) {
                 if ((coords !== undefined) && (coords[0] !== undefined) && (coords[1] !== undefined)) {
                     snakes[id].coords[0] = [coords[0], coords[1]];
                     snakes[id].coords.unshift([coords[0], coords[1]]);
-                    change_direction_callback(id, direction, [coords[0], coords[1]]);
+                    change_direction_callback.call(this, id, direction, [coords[0], coords[1]]);
                     return true;
                 } else {
                     snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
-                    change_direction_callback(id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
+                    change_direction_callback.call(this, id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
                     return true;
                 }
             } else {
@@ -95,7 +95,7 @@ function Controller(options) {
             return false;
         }
         bonus[id] = [coords, type];
-        add_bonus_callback(id, coords, type);
+        add_bonus_callback.call(this, id, coords, type);
         return true;
     };
 
@@ -108,7 +108,7 @@ function Controller(options) {
             return false;
         }
         if ((by === undefined) || (by === null)) {
-            eaten_bonus_callback(id, undefined);
+            eaten_bonus_callback.call(this, id, undefined);
             delete bonus[id];
             return true;
         } else {
@@ -122,7 +122,7 @@ function Controller(options) {
                 break;
             }
 
-            eaten_bonus_callback(id, by);
+            eaten_bonus_callback.call(this, id, by);
             snakes[by].score += points_bonus;
             delete bonus[id];
             return true;
@@ -254,7 +254,7 @@ function Controller(options) {
 
         checkBonus();
         if ((callback === undefined) || (callback === true)) {
-            update_callback(snakes, bonus);
+            update_callback.call(this, snakes, bonus);
         }
         speedup_update = !speedup_update;
     };
