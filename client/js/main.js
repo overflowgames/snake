@@ -415,7 +415,7 @@ controller = new window.Controller({
         update: function (snakes, bonus) {
             last_snakes=snakes;
             last_bonus=bonus;
-            if((isLocked() || window.mobile) && (typeof snakes[my_id] !== "undefined"))
+            if((isLocked() || window.mobile) && (snakes[my_id] !== undefined))
                 followSnake(my_id);
             else
                 update_canvas(snakes, bonus);
@@ -513,7 +513,6 @@ function centerOnSnake(id) {
     
     position_x = px - width/2;
     position_y = py - height/2;
-    update_canvas(last_snakes, last_bonus);
 }
 
 function followSnake(id) {
@@ -661,14 +660,12 @@ function lock() {
     locked = true;
     document.getElementById('button_locked').style.display = "block";
     document.getElementById('button_lock').style.display = "none";
-    window.update_canvas();
 }
 
 function unlock() {
     locked = false;
     document.getElementById('button_locked').style.display = "none";
     document.getElementById('button_lock').style.display = "block";
-    window.update_canvas();
 }
 
 window.onscroll = function() {
