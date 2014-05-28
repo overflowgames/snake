@@ -85,7 +85,7 @@ module.exports = function(grunt) {
                 options: {
                     patterns: [{
                         match: 'URL_SOCKETIO_SERVER',
-                        replacement: 'https://boundless-snake.herokuapp.com'
+                        replacement: process.env.SOCKETIO_SERVER || ''
                     }]
                 },
                 files: [{
