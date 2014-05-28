@@ -117,9 +117,10 @@ function draw_hud() {
     context.fillText("connectés: "+nconnectes, 30, 90);
 }
 
-var pattern_ = context.createPattern(pattern, "repeat");
     
 function update_canvas(snakes, bonus) {
+    var pattern_ = context.createPattern(pattern, "repeat");
+    
     // #Get the viewport dimensions
     update_dimensions();
 
@@ -158,9 +159,9 @@ function update_canvas(snakes, bonus) {
     draw_hud();
 }
 
-var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
 
 function draw_snakes (snakes) {
+    var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
     // #Draw the snakes
     nconnectes = 0;
     

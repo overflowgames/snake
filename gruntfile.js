@@ -112,6 +112,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-replace');
 
     grunt.registerTask('default', ['concat', "replace", 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
-    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css']);
+    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css', 'replace']);
     grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };
