@@ -43,8 +43,8 @@ var context = canvas.getContext('2d');
 if(!context) {
     alert("Impossible de récupérer le context du canvas");
 }
- 
- 
+
+
 var position_x=-145;
 var position_y=-145; 
 
@@ -384,7 +384,6 @@ function getDistanceFromCenter(snake) {
     return [distx, disty];
 }
 
-
 function visible(snake) {
     var sx = snake.coords[0][0];
     var sy = snake.coords[0][1];
@@ -567,87 +566,6 @@ function followSnake(id) {
     update_canvas(last_snakes, last_bonus);
 }
 
-document.onkeydown = function(event) {
-    event = event || window.event;
-    switch (event.keyCode) {
-        case 37:// left
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "l"}, function(data){});
-            break;
-        case 38://up
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "u"}, function(data){});
-            break;
-        case 39://right
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "r"}, function(data){});
-            break;
-        case 40://down
-            socket.emit("c", {"id":my_id, "secret":secret, "direction": "d"}, function(data){});
-            break;
-    }
-    
-    
-};
-
-if (document.getElementById) {
-    (function() {
-
-        if (window.opera) {
-            document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
-        }
-
-        var n = 500;
-        var dragok = false;
-        var y, x, d, dy, dx;
-
-        function move(e) {
-            if (!e) e = window.event;
-            if (dragok) {
-                var lft = dx + e.clientX - x,
-                    top = dy + e.clientY - y;
-                offset_x = lft;
-                offset_y = top;
-                update_canvas(last_snakes, last_bonus);
-                return false;
-            }
-        }
-
-        function down(e) {
-            if (!e) e = window.event;
-            var temp = (typeof e.target != "undefined") ? e.target : e.srcElement;
-            if (temp.tagName != "HTML" | "BODY" && temp.className != "dragclass") {
-                temp = (typeof temp.parentNode != "undefined") ? temp.parentNode : temp.parentElement;
-            }
-            if (temp.className == "dragclass") {
-                if (window.opera) {
-                    document.getElementById("Q").focus();
-                }
-                dragok = true;
-                temp.style.zIndex = n++;
-                d = temp;
-                dx = parseInt(temp.style.left + 0, 10);
-                dy = parseInt(temp.style.top + 0, 10);
-                x = e.clientX;
-                y = e.clientY;
-                document.onmousemove = move;
-                return false;
-            }
-        }
-
-        function up() {
-            dragok = false;
-            document.onmousemove = null;
-
-            position_x -= offset_x;
-            position_y -= offset_y;
-
-            offset_x = 0;
-            offset_y = 0;
-        }
-
-        document.onmousedown = down;
-        document.onmouseup = up;
-
-    })();
-} //End.
 
 if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
     document.getElementById('daniel').value = localStorage.getItem("pseudo");
