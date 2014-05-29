@@ -253,15 +253,11 @@ function Controller(options) {
         }
 
         checkBonus();
-        if ((callback === undefined) || (callback === true)) {
-            update_callback.call(this, snakes, bonus);
-        }
+        update_callback.call(this, snakes, bonus);
         speedup_update = !speedup_update;
     };
 
-    if (!options.disable_update) {
-        setInterval(this.update, (1 / options.update_rate) * (1000 / 2)); // Update the game regularly
-    }
+    setInterval(this.update, (1 / options.update_rate) * (1000 / 2)); // Update the game regularly
 }
 
 if (typeof module !== "undefined") {

@@ -22,7 +22,7 @@ var triangle_canvas = document.createElement('canvas');
 triangle_canvas.width = 20;
 triangle_canvas.height = 20;
 var tctx = triangle_canvas.getContext('2d');
-tctx.fillStyle="rgba(255,127,10,0.95)";
+tctx.fillStyle="rgb(255,127,10)";
 tctx.beginPath();
 
 tctx.moveTo(10,0); 
@@ -105,7 +105,6 @@ controller = new window.Controller({
         change_direction: function (id, direction) { }
     },
     points_bonnus: 10,
-    disable_update: false,
     update_rate: 10
 });
 document.getElementById("spawndiv").className = 'show';
@@ -195,7 +194,9 @@ function draw_hud() {
     context.fillText("y: "+cy, 30, 50);
     context.fillText("score: "+my_score, 30, 70);
     context.fillText("connectés: "+nconnectes, 30, 90);
+
 }
+
 
 function update_canvas(snakes, bonus) {
     var pattern_ = context.createPattern(pattern, "repeat");
@@ -323,13 +324,13 @@ function draw_names (snakes) {
             sx = snakes[i].coords[0][0];
             sy = snakes[i].coords[0][1];
             
-            context.fillStyle = "rgba(66, 66, 66, 0.5)";
+            context.fillStyle = "rgb(66, 66, 66)";
             context.font = "16px Helvetica";
             
             tw = context.measureText(snakes[i].name).width;
             
-            tx = sx*sq_w-position_x+offset_x - tw/2;
-            ty = sy*sq_w-position_y+offset_y - sq_w*1.5;
+            tx = Math.round(sx*sq_w-position_x+offset_x - tw/2);
+            ty = Math.round(sy*sq_w-position_y+offset_y - sq_w*1.5);
             
             
             context.fillRect(tx-2, ty-16, tw + 4, 20);
@@ -445,7 +446,7 @@ function draw_names (snakes) {
                 context.restore(); 
                 
                 
-                context.fillText(dist, drawx + ofsx, drawy + ofsy);
+                context.fillText(dist, Math.round(drawx + ofsx), Math.round(drawy + ofsy));
             }
         }
     }
