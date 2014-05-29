@@ -117,7 +117,6 @@ function draw_hud() {
     context.fillText("connectés: "+nconnectes, 30, 90);
 }
 
-    
 function update_canvas(snakes, bonus) {
     var pattern_ = context.createPattern(pattern, "repeat");
     
@@ -158,7 +157,6 @@ function update_canvas(snakes, bonus) {
     // #Draw the HUD
     draw_hud();
 }
-
 
 function draw_snakes (snakes) {
     var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
