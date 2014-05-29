@@ -36,7 +36,8 @@
     "grunt-html": "~1.2.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-nodeunit": "~0.3.3",
-    "grunt-replace": "~0.7.7"
+    "grunt-replace": "~0.7.7",
+    "grunt-exec": "~0.4.5"
   },
   "engines": {
     "node": "0.10.x"

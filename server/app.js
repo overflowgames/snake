@@ -9,9 +9,6 @@ var app = express();
 var oneDay = 86400000;
 
 app.use(express.static(__dirname + '/../client', { maxAge: oneDay*7 }));
-app.use('/common', express.static(__dirname + '/../common', { maxAge: oneDay*7 }));
-console.log(__dirname + '/../client');
-
 
 var server = http.createServer(app);
 

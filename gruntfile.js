@@ -95,6 +95,11 @@ module.exports = function(grunt) {
                     dest: 'client'
                 }]
             }
+        },
+        exec: {
+            server : {
+                command: "node server/app.js"
+            }
         }
 
     });
@@ -110,8 +115,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-html');
     grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-exec');
 
+    
     grunt.registerTask('default', ['concat', "replace", 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
-    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css', 'replace']);
+    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css', 'replace', 'exec']);
     grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };
