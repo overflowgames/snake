@@ -3,14 +3,34 @@ var sio = require('socket.io'),
     Controller = require('../common/controller/controller.js').Controller,
     dbcontroller = require("./db.js"),
     http = require('http'),
-    express = require('express');
+    fs = require('fs'),
+    ua = require('mobile-agent');
 
-var app = express();
 var oneDay = 86400000;
 
-app.use(express.static(__dirname + '/../client', { maxAge: oneDay*7 }));
-
-var server = http.createServer(app);
+var server = http.createServer(function(request, response) {
+    var filename = "index.html";
+    
+    if (request.headers["user-agent"] !== undefined){
+        if (ua(request.headers["user-agent"]).Mobile){
+            filename = "mobile.html";
+        }
+    }
+    
+    if (request.url == '/') {
+        fs.readFile(__dirname + '/../client/' + filename, 'utf-8', function(error, data) {
+            response.writeHead(200, {
+                'Content-Type': 'text/html',
+                'Cache-Control': 'max-age='+ oneDay*7
+            });
+            response.end(data);
+        });
+    }
+    else {
+        response.writeHead(404);
+        response.end();
+    }
+});
 
 server.listen(parseInt(process.env.PORT || 1337, 10));
 

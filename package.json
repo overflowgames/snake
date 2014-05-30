@@ -5,10 +5,10 @@
   "dependencies": {
     "socket.io": "0.9.14",
     "node-uuid": "1.4.1",
-    "express": "3.5.1",
     "async": "0.2.8",
     "jquery": "~2.1.0",
-    "socket.io-client": "~0.9.16"
+    "socket.io-client": "~0.9.16",
+    "mobile-agent": "0.0.8"
   },
   "scripts": {
     "start": "node server/app.js",
