@@ -1,52 +1,117 @@
-var socket = window.io.connect("@@URL_SOCKETIO_SERVER");
-var controller;
-
+var controller, socket;
 var zoom = 1;
-
-var pattern = document.createElement('canvas');
-pattern.width = 512;
-pattern.height = 512;
-var pctx = pattern.getContext('2d');
-
-var gradient = pctx.createLinearGradient(0,0,pattern.width, pattern.height);
-gradient.addColorStop(0,"#3B5998");
-gradient.addColorStop(1/4,"#4B7BC9");
-gradient.addColorStop(2/4,"#3B5998");
-gradient.addColorStop(3/4,"#4B7BC9"); 
-gradient.addColorStop(1,"#3B5998");  
-pctx.fillStyle = gradient; 
-pctx.fillRect(0, 0, pattern.width, pattern.height);
-
-
-var triangle_canvas = document.createElement('canvas');
-triangle_canvas.width = 20;
-triangle_canvas.height = 20;
-var tctx = triangle_canvas.getContext('2d');
-tctx.fillStyle="rgb(255,127,10)";
-tctx.beginPath();
-
-tctx.moveTo(10,0); 
-tctx.lineTo(20,20);
-tctx.lineTo(0,20);
-tctx.closePath();
-tctx.fill();
-
-var canvas = document.getElementById('app');
-if(!canvas) {
-    alert("Impossible de récupérer le canvas");
-}
-
-canvas.width = 500;
-canvas.height = 500;
-
-var context = canvas.getContext('2d');
-if(!context) {
-    alert("Impossible de récupérer le context du canvas");
-}
-
-if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
-    document.getElementById('daniel').value = localStorage.getItem("pseudo");
-}
+var context,canvas,secret,pattern;
+window.onload = function () {
+    socket = window.io.connect("@@URL_SOCKETIO_SERVER");
+    
+    
+    pattern = document.createElement('canvas');
+    pattern.width = 512;
+    pattern.height = 512;
+    var pctx = pattern.getContext('2d');
+    
+    var gradient = pctx.createLinearGradient(0,0,pattern.width, pattern.height);
+    gradient.addColorStop(0,"#3B5998");
+    gradient.addColorStop(1/4,"#4B7BC9");
+    gradient.addColorStop(2/4,"#3B5998");
+    gradient.addColorStop(3/4,"#4B7BC9"); 
+    gradient.addColorStop(1,"#3B5998");  
+    pctx.fillStyle = gradient; 
+    pctx.fillRect(0, 0, pattern.width, pattern.height);
+    
+    
+    var triangle_canvas = document.createElement('canvas');
+    triangle_canvas.width = 20;
+    triangle_canvas.height = 20;
+    var tctx = triangle_canvas.getContext('2d');
+    tctx.fillStyle="rgb(255,127,10)";
+    tctx.beginPath();
+    
+    tctx.moveTo(10,0); 
+    tctx.lineTo(20,20);
+    tctx.lineTo(0,20);
+    tctx.closePath();
+    tctx.fill();
+    
+    canvas = document.getElementById('app');
+    if(!canvas) {
+        alert("Impossible de récupérer le canvas");
+    }
+    
+    canvas.width = 500;
+    canvas.height = 500;
+    
+    context = canvas.getContext('2d');
+    if(!context) {
+        alert("Impossible de récupérer le context du canvas");
+    }
+    
+    if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
+        document.getElementById('daniel').value = localStorage.getItem("pseudo");
+    }
+    controller = new window.Controller({
+        callbacks: {
+            update: function (snakes, bonus) {
+                last_snakes=snakes;
+                last_bonus=bonus;
+                if((isLocked() || window.mobile) && (snakes[my_id] !== undefined))
+                    followSnake(my_id);
+                else
+                    update_canvas(snakes, bonus);
+            },
+            eaten_bonnus: function (id) { },
+            add_points: function (id, score) { },
+            add_bonus: function (id, coords) { },
+            add_snake: function (id, coords, direction, score, size, name) { },
+            killed_snake: function (id) {
+                socket.emit("confirm_death", {"id":my_id}, function(res){
+                    if(res === false && id === my_id){
+                        spawned = false;
+                        document.getElementById("spawndiv").className = 'show';
+                    } else {
+                        controller.load(res, last_bonus);
+                    }
+                });
+            },
+            change_direction: function (id, direction) { }
+        },
+        points_bonnus: 10,
+        update_rate: 10
+    });
+    document.getElementById("spawndiv").className = 'show';
+    
+    socket.on("+", function(data){
+        controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
+    });
+    
+    socket.on("+b", function(data){
+        controller.addBonus(data[0],data[1],data[2]);
+    });
+    
+    socket.on("-b", function(data){
+        controller.eatBonus(data[0],data[1]);
+    });
+    
+    socket.on("-", function(data){
+        controller.killSnake(data[0], data[1]);
+    });
+    
+    socket.on("up", function(data){
+        controller.load(data.game.snakes, data.game.bonus);
+    });
+    
+    socket.on("c", function(data){
+        controller.changeDirection(data[0],data[1], data[2]);
+    });
+    
+    document.getElementById('daniel').onkeyup = function (e) {
+        if (e.keyCode === 13) {
+           spawn_snake();
+        }
+    };
+    secret = localStorage.getItem("secret") || window.uuid.v4();
+    localStorage.setItem("secret", secret);
+};
 
 
 var position_x=-145;
@@ -72,71 +137,6 @@ var nconnectes = 0;
 
 var locked = true;
 
-var secret = localStorage.getItem("secret") || window.uuid.v4();
-localStorage.setItem("secret", secret);
-
-controller = new window.Controller({
-    callbacks: {
-        update: function (snakes, bonus) {
-            last_snakes=snakes;
-            last_bonus=bonus;
-            if((isLocked() || window.mobile) && (snakes[my_id] !== undefined))
-                followSnake(my_id);
-            else
-                update_canvas(snakes, bonus);
-        },
-        eaten_bonnus: function (id) { },
-        add_points: function (id, score) { },
-        add_bonus: function (id, coords) { },
-        add_snake: function (id, coords, direction, score, size, name) { },
-        killed_snake: function (id) {
-            socket.emit("confirm_death", {"id":my_id}, function(res){
-                if(res === false && id === my_id){
-                    spawned = false;
-                    document.getElementById("spawndiv").className = 'show';
-                } else {
-                    controller.load(res, last_bonus);
-                }
-            });
-        },
-        change_direction: function (id, direction) { }
-    },
-    points_bonnus: 10,
-    update_rate: 10
-});
-document.getElementById("spawndiv").className = 'show';
-
-
-
-socket.on("+", function(data){
-    controller.addSnake(data[0],data[1], data[2],data[3],data[4],data[5], data[6], data[7]);
-});
-
-socket.on("+b", function(data){
-    controller.addBonus(data[0],data[1],data[2]);
-});
-
-socket.on("-b", function(data){
-    controller.eatBonus(data[0],data[1]);
-});
-
-socket.on("-", function(data){
-    controller.killSnake(data[0], data[1]);
-});
-
-socket.on("up", function(data){
-    controller.load(data.game.snakes, data.game.bonus);
-});
-
-socket.on("c", function(data){
-    controller.changeDirection(data[0],data[1], data[2]);
-});
-
-document.getElementById('daniel').onkeyup = function (e) {
-    if (e.keyCode === 13) {
-       spawn_snake();
-    }
-};
 
 window.onscroll = function() {
     window.scrollTo(0, 0);

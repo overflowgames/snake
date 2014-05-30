@@ -41,8 +41,8 @@ module.exports = function(grunt) {
                     collapseWhitespace: true
                 },
                 files: {
-                    'client/index.html': ['client/index.html'],
-                    'client/mobile.html': ['client/mobile.html'],
+                    'client/index.html': ['client/html/index.html'],
+                    'client/mobile.html': ['client/html/mobile.html'],
                 }
             }
         },
@@ -100,6 +100,14 @@ module.exports = function(grunt) {
             server : {
                 command: "node server/app.js"
             }
+        },
+        inline: {
+            desktop: {
+                src: ['client/index.html'],
+            },
+            mobile: {
+                src: ['client/mobile.html'],
+            }
         }
 
     });
@@ -116,9 +124,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-html');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-inline');
 
     
-    grunt.registerTask('default', ['concat', "replace", 'uglify', 'asset_cachebuster', "htmlmin", "cssmin"]);
+    grunt.registerTask('default', ['concat', "replace", 'uglify', "htmlmin", "cssmin", "inline"]);
     grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css', 'replace', 'exec']);
     grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };
