@@ -35,14 +35,12 @@ var server = http.createServer(function(request, response) {
     }
     
     if (request.url == '/') {
-        fs.readFile(__dirname + '/../client/' + filename, 'utf-8', function(error, data) {
-            response.writeHead(200, {
-                'Content-Type': 'text/html',
-                'Cache-Control': 'max-age='+ oneDay*7,
-                'content-encoding': encoding
-            });
-            raw.pipe(response);
+        response.writeHead(200, {
+            'Content-Type': 'text/html',
+            'Cache-Control': 'max-age='+ oneDay*7,
+            'content-encoding': encoding
         });
+        raw.pipe(response);
     }
     else {
         response.writeHead(404);
