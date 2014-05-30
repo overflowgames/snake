@@ -90,17 +90,14 @@ controller = new window.Controller({
         add_bonus: function (id, coords) { },
         add_snake: function (id, coords, direction, score, size, name) { },
         killed_snake: function (id) {
-            if(id === my_id){
-                socket.emit("confirm_death", {"id":my_id}, function(res){
-                    if(res === false){
-                        spawned = false;
-                        document.getElementById("spawndiv").className = 'show';
-                    } else {
-                        controller.load(res, last_bonus);
-                    }
-                });
-            }
-            
+            socket.emit("confirm_death", {"id":my_id}, function(res){
+                if(res === false && id === my_id){
+                    spawned = false;
+                    document.getElementById("spawndiv").className = 'show';
+                } else {
+                    controller.load(res, last_bonus);
+                }
+            });
         },
         change_direction: function (id, direction) { }
     },
