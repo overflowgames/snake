@@ -4,7 +4,6 @@
     bottom: 10%;
     
     width: 40px;
-    padding-bottom: 10px;
     z-index: 100;
     
     background-color: black;
@@ -17,7 +16,7 @@
     color: white;
     text-align: center;
     
-    height: 30px;
+    height: 48px;
     font-size: 2em;
     font-weight: bold;
     vertical-align: middle;
