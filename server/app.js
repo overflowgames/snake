@@ -4,12 +4,15 @@ var sio = require('socket.io'),
     dbcontroller = require("./db.js"),
     http = require('http'),
     fs = require('fs'),
+    zlib = require("zlib"),
     ua = require('mobile-agent');
 
 var oneDay = 86400000;
 
 var server = http.createServer(function(request, response) {
     var filename = "index.html";
+    var encoding = "identity";
+    var acceptEncoding = request.headers['accept-encoding'];
     
     if (request.headers["user-agent"] !== undefined){
         if (ua(request.headers["user-agent"]).Mobile){
@@ -17,13 +20,28 @@ var server = http.createServer(function(request, response) {
         }
     }
     
+    var raw = fs.createReadStream(__dirname + '/../client/' + filename);
+    
+    if (!acceptEncoding) {
+        acceptEncoding = '';
+    }
+    
+    if (acceptEncoding.match(/\bgzip\b/)) {
+        encoding =  'gzip';
+        raw = raw.pipe(zlib.createGzip());
+    } else if (acceptEncoding.match(/\bdeflate\b/)) {
+        encoding = "deflate";
+        raw = raw.pipe(zlib.createDeflate());
+    }
+    
     if (request.url == '/') {
         fs.readFile(__dirname + '/../client/' + filename, 'utf-8', function(error, data) {
             response.writeHead(200, {
                 'Content-Type': 'text/html',
-                'Cache-Control': 'max-age='+ oneDay*7
+                'Cache-Control': 'max-age='+ oneDay*7,
+                'content-encoding': encoding
             });
-            response.end(data);
+            raw.pipe(response);
         });
     }
     else {
