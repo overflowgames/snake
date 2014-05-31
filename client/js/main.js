@@ -1,6 +1,30 @@
 var controller, socket;
 var zoom = 1;
-var context,canvas,secret,pattern;
+var context, canvas, secret, pattern, triangle_canvas;
+
+var position_x=-145;
+var position_y=-145; 
+
+var offset_x=0;
+var offset_y=0; 
+
+var height = 500;
+var width = 500;
+
+var sq_w=10;
+var anim;
+
+var my_id="";
+
+var last_snakes, last_bonus;
+
+var spawned = false;
+
+var my_score = 0;
+var nconnectes = 0;
+
+var locked = true;
+
 window.onload = function () {
     socket = window.io.connect("@@URL_SOCKETIO_SERVER");
     
@@ -20,7 +44,7 @@ window.onload = function () {
     pctx.fillRect(0, 0, pattern.width, pattern.height);
     
     
-    var triangle_canvas = document.createElement('canvas');
+    triangle_canvas = document.createElement('canvas');
     triangle_canvas.width = 20;
     triangle_canvas.height = 20;
     var tctx = triangle_canvas.getContext('2d');
@@ -54,10 +78,11 @@ window.onload = function () {
             update: function (snakes, bonus) {
                 last_snakes=snakes;
                 last_bonus=bonus;
-                if((isLocked() || window.mobile) && (snakes[my_id] !== undefined))
+                if((isLocked() || window.mobile) && (snakes[my_id] !== undefined)){
                     followSnake(my_id);
-                else
+                } else {
                     update_canvas(snakes, bonus);
+                }
             },
             eaten_bonnus: function (id) { },
             add_points: function (id, score) { },
@@ -114,29 +139,6 @@ window.onload = function () {
 };
 
 
-var position_x=-145;
-var position_y=-145; 
-
-var offset_x=0;
-var offset_y=0; 
-
-var height = 500;
-var width = 500;
-
-var sq_w=10;
-var anim;
-
-var my_id="";
-
-var last_snakes, last_bonus;
-
-var spawned = false;
-
-var my_score = 0;
-var nconnectes = 0;
-
-var locked = true;
-
 
 window.onscroll = function() {
     window.scrollTo(0, 0);
@@ -171,8 +173,9 @@ function update_dimensions(){
     win_x *= zoom;
     win_y *= zoom;
 
-    if(height == win_y && width  == win_x)
-	return;    
+    if(height == win_y && width  == win_x){
+        return;
+    }
     height = win_y;
     width = win_x;
     
@@ -181,7 +184,7 @@ function update_dimensions(){
 }
 
 function draw_hud() {
-    context.font = "18px Helvetica";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
+    context.font = "18px Helvetica"; // On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
     context.fillStyle = "#ffffff";
     
     var cx = Math.round((position_x-offset_x+canvas.width/2)/sq_w);
@@ -220,10 +223,11 @@ function update_canvas(snakes, bonus) {
     
     // #Draw the grid
     context.strokeStyle = "#ffffff";
-    if(window.mobile)
+    if(window.mobile){
         context.lineWidth=1;
-    else 
+    } else { 
         context.lineWidth=0.5;
+    }
     draw_grid();
     
     draw_names(snakes);
@@ -301,10 +305,11 @@ function draw_bonuses (bonus) {
             var cx = bonus[i][0][0];
             var cy = bonus[i][0][1];
             
-            if(bonus[i][1] === 0)
+            if(bonus[i][1] === 0) {
                 context.fillStyle = "#ffaa00";
-            else if(bonus[i][1] == 1)
+            } else if(bonus[i][1] == 1) {
                 context.fillStyle = "#ffaaaa";
+            }
                 
             context.fillRect(cx*sq_w-position_x+offset_x, cy*sq_w-position_y+offset_y, sq_w, sq_w);
         }
@@ -521,11 +526,9 @@ function centerOnSnake(id) {
 }
 
 function followSnake(id) {
-    if(last_snakes === undefined)
+    if(last_snakes === undefined || last_snakes[id] === undefined){
         return;
-    if(last_snakes[id] === undefined)
-        return;
-    
+    }
     
     var cx = last_snakes[id].coords[0][0];
     var cy = last_snakes[id].coords[0][1];
