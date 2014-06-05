@@ -506,7 +506,6 @@ function spawn_snake() {
 
 	socket.emit("spawn", {"secret":secret, "name": pseudo, "pos":c}, function(data){
         if (data === "ko"){
-            console.log("ko")
             spawned = false;
         } else {
             document.getElementById("spawndiv").className = 'hide';
