@@ -1,36 +1,39 @@
-
-document.onkeydown = function(event) {
+document.onkeydown = function (event) {
+    'use strict';
     event = event || window.event;
     switch (event.keyCode) {
-        case 37:// left
-            window.socket.emit("c", {"id":window.my_id, "secret":window.secret, "direction": "l"}, function(data){});
-            break;
-        case 38://up
-            window.socket.emit("c", {"id":window.my_id, "secret":window.secret, "direction": "u"}, function(data){});
-            break;
-        case 39://right
-            window.socket.emit("c", {"id":window.my_id, "secret":window.secret, "direction": "r"}, function(data){});
-            break;
-        case 40://down
-            window.socket.emit("c", {"id":window.my_id, "secret":window.secret, "direction": "d"}, function(data){});
-            break;
+    case 37:// left
+        window.socket.emit("c", {"id": window.my_id, "secret": window.secret, "direction": "l"});
+        break;
+    case 38://up
+        window.socket.emit("c", {"id": window.my_id, "secret": window.secret, "direction": "u"});
+        break;
+    case 39://right
+        window.socket.emit("c", {"id": window.my_id, "secret": window.secret, "direction": "r"});
+        break;
+    case 40://down
+        window.socket.emit("c", {"id": window.my_id, "secret": window.secret, "direction": "d"});
+        break;
     }
-    
+
 };
 
 if (document.getElementById) {
-    (function() {
-
+    (function () {
+        'use strict';
         if (window.opera) {
             document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
         }
 
-        var n = 500;
-        var dragok = false;
-        var y, x, d, dy, dx;
+        var n = 500,
+            dragok = false,
+            y,
+            x,
+            dy,
+            dx;
 
         function move(e) {
-            if (!e) e = window.event;
+            e = e || window.event;
             if (dragok) {
                 var lft = dx + e.clientX - x,
                     top = dy + e.clientY - y;
@@ -42,20 +45,22 @@ if (document.getElementById) {
         }
 
         function down(e) {
-            if (!e) e = window.event;
-            var temp = (typeof e.target != "undefined") ? e.target : e.srcElement;
-            if (temp.tagName != "HTML" | "BODY" && temp.className != "dragclass") {
-                temp = (typeof temp.parentNode != "undefined") ? temp.parentNode : temp.parentElement;
+            var temp = (e.target !== undefined) ? e.target : e.srcElement;
+
+            e = e || window.event;
+
+            if (temp.tagName !== "HTML" | "BODY" && temp.className !== "dragclass") {
+                temp = (temp.parentNode !== undefined) ? temp.parentNode : temp.parentElement;
             }
-            if (temp.className == "dragclass") {
+            if (temp.className === "dragclass") {
                 if (window.opera) {
                     document.getElementById("Q").focus();
                 }
                 dragok = true;
-                temp.style.zIndex = n++;
-                d = temp;
-                dx = parseInt(temp.style.left + 0, 10);
-                dy = parseInt(temp.style.top + 0, 10);
+                n += 1;
+                temp.style.zIndex = n;
+                dx = parseInt(temp.style.left, 10);
+                dy = parseInt(temp.style.top, 10);
                 x = e.clientX;
                 y = e.clientY;
                 document.onmousemove = move;

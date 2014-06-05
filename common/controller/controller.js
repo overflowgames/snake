@@ -23,7 +23,7 @@ function Controller(options) {
         if (!Array.isArray(coords) || typeof direction !== "string" || typeof score !== "number" || typeof size !== "number" || typeof name !== "string" || typeof cum_score !== "number" || typeof speedup !== "number") {
             return false;
         }
-        if (["u","l","r","d"].indexOf(direction) === -1 || score < 0 || size < 0 || cum_score < 0 || speedup < 0) {
+        if (["u", "l", "r", "d"].indexOf(direction) === -1 || score < 0 || size < 0 || cum_score < 0 || speedup < 0) {
             return false;
         }
         snakes[id] = {};
@@ -37,7 +37,7 @@ function Controller(options) {
         snakes[id].last_update_direction = direction;
         num_snakes += 1;
         add_snake_callback.call(this, id, coords, direction, score, size, name, cum_score, speedup);
-        
+
         return true;
     };
 
@@ -51,7 +51,8 @@ function Controller(options) {
             delete snakes[id];
             num_snakes -= 1;
             return true;
-        } else return false;
+        }
+        return false;
     };
 
     function validateMove(orientation, new_direction) {
@@ -69,29 +70,26 @@ function Controller(options) {
                     snakes[id].coords[0] = [coords[0], coords[1]];
                     snakes[id].coords.unshift([coords[0], coords[1]]);
                     change_direction_callback.call(this, id, direction, [coords[0], coords[1]]);
-                    return true;
                 } else {
                     snakes[id].coords.unshift([snakes[id].coords[0][0], snakes[id].coords[0][1]]);
                     change_direction_callback.call(this, id, direction, [snakes[id].coords[0][0], snakes[id].coords[0][1]]);
-                    return true;
                 }
             } else {
                 snakes[id].next_direction = direction;
-                return true;
             }
-        } else {
-            return false;
+            return true;
         }
+        return false;
     };
 
     this.addBonus = function (id, coords, type) {
-        if (typeof type !== "number" || typeof id !== "string" || !Array.isArray(coords)){
+        if (typeof type !== "number" || typeof id !== "string" || !Array.isArray(coords)) {
             return false;
         }
         if (type < 0 || coords.length > 2) {
             return false;
         }
-        if (bonus[id] !== undefined){
+        if (bonus[id] !== undefined) {
             return false;
         }
         bonus[id] = [coords, type];
@@ -110,7 +108,6 @@ function Controller(options) {
         if ((by === undefined) || (by === null)) {
             eaten_bonus_callback.call(this, id, undefined);
             delete bonus[id];
-            return true;
         } else {
 
             switch (bonus[id][1]) {
@@ -125,8 +122,8 @@ function Controller(options) {
             eaten_bonus_callback.call(this, id, by);
             snakes[by].score += points_bonus;
             delete bonus[id];
-            return true;
         }
+        return true;
     };
 
     function snakeSize(snake) {
@@ -243,7 +240,7 @@ function Controller(options) {
         bonus = b;
     };
 
-    this.update = function (callback) {     // This is where the magic happens
+    this.update = function () {     // This is where the magic happens
         var tokill;
         updatePosition(speedup_update);
         checkCollision();
@@ -260,6 +257,6 @@ function Controller(options) {
     setInterval(this.update, (1 / options.update_rate) * (1000 / 2)); // Update the game regularly
 }
 
-if (typeof module !== "undefined") {
+try {
     module.exports.Controller = Controller;
-}
+} catch (ignore) {}

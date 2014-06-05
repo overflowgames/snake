@@ -232,7 +232,7 @@ function update_canvas(snakes, bonus) {
     
     draw_names(snakes);
     
-    if(typeof snakes[my_id] != 'undefined') {
+    if(typeof snakes[my_id] !== 'undefined') {
         my_score = snakes[my_id].score;
     }
     
@@ -506,6 +506,7 @@ function spawn_snake() {
 
 	socket.emit("spawn", {"secret":secret, "name": pseudo, "pos":c}, function(data){
         if (data === "ko"){
+            console.log("ko")
             spawned = false;
         } else {
             document.getElementById("spawndiv").className = 'hide';

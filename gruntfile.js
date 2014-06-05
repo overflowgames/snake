@@ -1,4 +1,5 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+    'use strict';
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -14,11 +15,11 @@ module.exports = function(grunt) {
         uglify : {
             main: {
                 src: "client/dist.js",
-                dest: "client/dist.js",
+                dest: "client/dist.js"
             },
             mobile: {
                 src: "client/mobile.dist.js",
-                dest: "client/mobile.dist.js",
+                dest: "client/mobile.dist.js"
             }
         },
         asset_cachebuster: {
@@ -34,7 +35,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        htmlmin: { 
+        htmlmin: {
             dist: {
                 options: {
                     removeComments: true,
@@ -42,7 +43,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'client/index.html': ['client/html/index.html'],
-                    'client/mobile.html': ['client/html/mobile.html'],
+                    'client/mobile.html': ['client/html/mobile.html']
                 }
             }
         },
@@ -54,22 +55,22 @@ module.exports = function(grunt) {
             mobile: {
                 src: 'client/css/mobile.main.css',
                 dest: 'client/mobile.main.css'
-            },
+            }
         },
         copy: {
             css: {
                 expand: true,
                 cwd: 'client/css',
                 src: '*.css',
-                dest: 'client/',
-            },
+                dest: 'client/'
+            }
         },
         csslint : {
             options: {
                 "ids": false,
                 "known-properties": false
             },
-            src:["client/css/*.css"]
+            src: ["client/css/*.css"]
         },
         htmllint: {
             all: ["client/html/*.html"]
@@ -103,10 +104,10 @@ module.exports = function(grunt) {
         },
         inline: {
             desktop: {
-                src: ['client/index.html'],
+                src: ['client/index.html']
             },
             mobile: {
-                src: ['client/mobile.html'],
+                src: ['client/mobile.html']
             }
         }
 
@@ -126,8 +127,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-inline');
 
-    
+
     grunt.registerTask('default', ['concat', "replace", 'uglify', "htmlmin", "cssmin", "inline"]);
-    grunt.registerTask('dev', ['concat', 'asset_cachebuster', 'copy:css', 'replace', 'exec']);
+    grunt.registerTask('dev', ['concat', 'copy:css', 'replace', 'inline', 'exec']);
     grunt.registerTask('test', ['csslint', 'htmllint', 'jshint', 'nodeunit', 'default']);
 };
