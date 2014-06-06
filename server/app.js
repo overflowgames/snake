@@ -1,3 +1,4 @@
+/*jslint node: true*/
 var sio = require('socket.io'),
     uuid = require('node-uuid'),
     Controller = require('../common/controller/controller.js').Controller,
@@ -333,18 +334,18 @@ io.sockets.on('connection', function (socket) {
                     if (!err) {
                         if (data.secret === login.secret) {
                             controller.changeDirection(login.id, data.direction);
-                            if (typeof ack === "function" ){
+                            if (typeof ack === "function") {
                                 ack("ok");
                             }
                         } else {
-                            if (typeof ack === "function" ){
+                            if (typeof ack === "function") {
                                 ack("kol");
                             }
                         }
                     }
                 });
             } else {
-                if (typeof ack === "function" ){
+                if (typeof ack === "function") {
                     ack("kod");
                 }
             }

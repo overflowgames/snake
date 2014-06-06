@@ -1,3 +1,4 @@
+/*jslint browser: true */
 document.onkeydown = function (event) {
     'use strict';
     event = event || window.event;
@@ -21,16 +22,16 @@ document.onkeydown = function (event) {
 if (document.getElementById) {
     (function () {
         'use strict';
-        if (window.opera) {
-            document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
-        }
-
         var n = 500,
             dragok = false,
             y,
             x,
             dy,
             dx;
+
+        if (window.opera) {
+            document.getElementsByTagName("span").innerHTML += "<input type='hidden' id='Q' value=' '>";
+        }
 
         function move(e) {
             e = e || window.event;
@@ -49,7 +50,7 @@ if (document.getElementById) {
 
             e = e || window.event;
 
-            if (temp.tagName !== "HTML" | "BODY" && temp.className !== "dragclass") {
+            if ((temp.tagName !== "HTML" || temp.tagName !== "BODY") && temp.className !== "dragclass") {
                 temp = (temp.parentNode !== undefined) ? temp.parentNode : temp.parentElement;
             }
             if (temp.className === "dragclass") {
@@ -82,5 +83,5 @@ if (document.getElementById) {
         document.onmousedown = down;
         document.onmouseup = up;
 
-    })();
+    }());
 } //End.

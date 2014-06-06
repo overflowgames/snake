@@ -1,3 +1,4 @@
+/*jslint browser: true */
 /* ******************** Gestion tactile ********************
  *  https://gist.githubusercontent.com/localpcguy/1373518/raw/24b15a23cc323f4f453888283452908c1a870036/swipeFunc.js
  * ********************************************************* */

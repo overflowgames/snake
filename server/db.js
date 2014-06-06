@@ -1,3 +1,4 @@
+/*jslint node: true */
 var async = require("async"),
     fs = require("fs");
 
@@ -14,13 +15,18 @@ fs.exists(filename, function (exists) {
 var queue = async.queue(function (task, cb) {
     'use strict';
     fs.readFile(filename, function (err, data) {
+        if (err) {
+            return false;
+        }
         var players = JSON.parse(data);
         switch (task.action) {
         case "add":
             if (players[task.id] === undefined) {
                 players[task.id] = {score: 0};
                 fs.writeFile(filename, JSON.stringify(players), function (err) {
-                    cb(0);
+                    if (!err) {
+                        cb(0);
+                    }
                 });
             } else {
                 cb(players[task.id].score);
@@ -29,6 +35,9 @@ var queue = async.queue(function (task, cb) {
         case "push":
             players[task.id].score = Math.max(parseInt(task.score, 10), players[task.id].score);
             fs.writeFile(filename, JSON.stringify(players), function (err) {
+                if (!err) {
+                    return false;
+                }
                 cb(players[task.id].score);
             });
             break;
