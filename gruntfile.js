@@ -110,6 +110,9 @@ module.exports = function (grunt) {
             mobile: {
                 src: ['client/mobile.html']
             }
+        },
+        clean: {
+            dist: ["client/*.css", "client/*.js"]    
         }
 
     });
@@ -127,9 +130,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-inline');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
-
-    grunt.registerTask('default', ['concat', "replace", 'uglify', "htmlmin", "cssmin", "inline"]);
-    grunt.registerTask('dev', ['concat', 'copy:css', 'replace', 'inline', 'exec']);
+    grunt.registerTask('default', ['concat', "replace", 'uglify', "htmlmin", "cssmin", "inline", "clean"]);
+    grunt.registerTask('dev', ['concat', 'copy:css', 'replace', 'inline', 'clean', 'exec']);
     grunt.registerTask('test', ['jslint', 'csslint', 'htmllint', 'nodeunit', 'default']);
 };
