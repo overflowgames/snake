@@ -112,7 +112,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            dist: ["client/*.css", "client/*.js"] 
+            dist: ["client/*.css", "client/*.js"]
         }
 
     });
