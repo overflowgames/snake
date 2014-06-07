@@ -16,7 +16,7 @@ var server = http.createServer(function (request, response) {
     var filename = "index.html",
         encoding = "identity",
         acceptEncoding = request.headers['accept-encoding'],
-        raw = fs.createReadStream(__dirname + '/../client/' + filename);
+        raw;
     /*jslint nomen: false */
 
     if (request.headers["user-agent"] !== undefined) {
@@ -25,10 +25,11 @@ var server = http.createServer(function (request, response) {
         }
     }
 
-
     if (!acceptEncoding) {
         acceptEncoding = '';
     }
+
+    raw = fs.createReadStream(__dirname + '/../client/' + filename);
 
     if (acceptEncoding.match(/\bgzip\b/)) {
         encoding =  'gzip';
