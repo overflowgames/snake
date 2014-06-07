@@ -12,12 +12,10 @@ var oneDay = 86400000;
 
 var server = http.createServer(function (request, response) {
     'use strict';
-    /*jslint nomen: true */
     var filename = "index.html",
         encoding = "identity",
         acceptEncoding = request.headers['accept-encoding'],
         raw;
-    /*jslint nomen: false */
 
     if (request.headers["user-agent"] !== undefined) {
         if (ua(request.headers["user-agent"]).Mobile) {
@@ -29,7 +27,9 @@ var server = http.createServer(function (request, response) {
         acceptEncoding = '';
     }
 
+    /*jslint nomen: true */
     raw = fs.createReadStream(__dirname + '/../client/' + filename);
+    /*jslint nomen: false */
 
     if (acceptEncoding.match(/\bgzip\b/)) {
         encoding =  'gzip';
