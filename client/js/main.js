@@ -204,9 +204,9 @@ function draw_names(snakes) {
         sy,
         tx,
         ty,
-        dists = getDistanceFromCenter(snakes[i]),
-        dx = dists[0],
-        dy = dists[1],
+        dists,
+        dx,
+        dy,
         drawx,
         drawy,
         flagx,
@@ -217,6 +217,9 @@ function draw_names(snakes) {
 
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
+            dists = getDistanceFromCenter(snakes[i]);
+            dx = dists[0];
+            dy = dists[1];
             if (visible(snakes[i])) {
                 sx = snakes[i].coords[0][0];
                 sy = snakes[i].coords[0][1];

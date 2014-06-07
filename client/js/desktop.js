@@ -50,7 +50,7 @@ if (document.getElementById) {
 
             e = e || window.event;
 
-            if ((temp.tagName !== "HTML" || temp.tagName !== "BODY") && temp.className !== "dragclass") {
+            if (temp.tagName !== "HTML" && temp.tagName !== "BODY" && temp.className !== "dragclass") {
                 temp = (temp.parentNode !== undefined) ? temp.parentNode : temp.parentElement;
             }
             if (temp.className === "dragclass") {
