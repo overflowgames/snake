@@ -1,17 +1,20 @@
 /*jslint browser: true */
 /* ******************** Gestion zoom ******************** */
 
-var args = window.location.hash.split("#"),
-    i;
-if (localStorage.getItem("mobile-zoom") !== null) {
-    window.zoom = parseFloat(localStorage.getItem("mobile-zoom"));
-}
-
-for (i = 1; i < args.length; i += 1) {
-    if (args[i].split("=")[0] === "zoom") {
-        window.zoom = parseFloat(args[i].split("=")[1]);
+window.onload = function () {
+    var args = window.location.hash.split("#"),
+        i;
+    
+    if (localStorage.getItem("mobile-zoom") !== null) {
+        window.zoom = parseFloat(localStorage.getItem("mobile-zoom"));
     }
-}
+    
+    for (i = 1; i < args.length; i += 1) {
+        if (args[i].split("=")[0] === "zoom") {
+            window.zoom = parseFloat(args[i].split("=")[1]);
+        }
+    }
+};
 
 function zoomC(change) {
     'use strict';

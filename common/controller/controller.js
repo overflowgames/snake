@@ -11,7 +11,7 @@ function Controller(options) {
         update_callback = options.callbacks.update,
         change_direction_callback = options.callbacks.change_direction,
 
-        points_bonus = options.points_bonnus,
+        points_bonus = options.points_bonus,
 
         to_kill = [], num_snakes = 0,
 

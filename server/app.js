@@ -288,7 +288,7 @@ var controller = new Controller({
             io.sockets.emit("c", [id, direction, pos]);
         }
     },
-    points_bonnus: 10,
+    points_bonus: 10,
     update_rate: 10
 });
 

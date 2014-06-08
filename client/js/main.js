@@ -1,6 +1,5 @@
 /*jslint browser: true */
 var controller,
-    socket,
     zoom = 1,
     context,
     canvas,
@@ -14,13 +13,10 @@ var controller,
     height = 500,
     width = 500,
     sq_w = 10,
-    anim,
     my_id = "",
     last_snakes,
     last_bonus,
     spawned = false,
-    my_score = 0,
-    nconnectes = 0,
     locked = true;
 
 function draw_grid() {
@@ -63,7 +59,7 @@ function update_dimensions() {
     canvas.width = win_x;
 }
 
-function draw_hud() {
+function draw_hud(snakes, id) {
     'use strict';
     context.font = "18px Helvetica"; // On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
     context.fillStyle = "#ffffff";
@@ -73,8 +69,8 @@ function draw_hud() {
 
     context.fillText("x: " + cx, 30, 30);
     context.fillText("y: " + cy, 30, 50);
-    context.fillText("score: " + my_score, 30, 70);
-    context.fillText("connectés: " + nconnectes, 30, 90);
+    context.fillText("Score: " + (snakes[id].score || 0), 30, 70);
+    context.fillText("Connectés: " + Object.keys(snakes).length, 30, 90);
 }
 
 
@@ -98,11 +94,8 @@ function draw_snakes(snakes) {
         lvl = 0;
 
     // #Draw the snakes
-    nconnectes = 0;
-
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
-            nconnectes += 1;
 
             snake_speedup = snakes[i].speedup;
             snake_size = controller.snakeSize(i);
@@ -334,7 +327,7 @@ function draw_names(snakes) {
     }
 }
 
-function spawn_snake() {
+function spawn_snake(socket) {
     'use strict';
     var pseudo = document.getElementById('daniel').value,
         c = [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
@@ -404,16 +397,13 @@ function update_canvas(snakes, bonus) {
 
     draw_names(snakes);
 
-    if (snakes[my_id] !== undefined) {
-        my_score = snakes[my_id].score;
-    }
-
     // #Draw the HUD
-    draw_hud();
+    draw_hud(snakes, my_id);
 }
 
 function followSnake(id) {
     'use strict';
+    var anim;
     if (last_snakes[id] === undefined) {
         return;
     }
@@ -494,15 +484,17 @@ function isLocked() {
 
 window.onload = function () {
     'use strict';
+    var pctx = pattern.getContext('2d'),
+        gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height),
+        tctx,
+        socket;
+
     socket = window.io.connect("@@URL_SOCKETIO_SERVER");
 
 
     pattern = document.createElement('canvas');
     pattern.width = 512;
     pattern.height = 512;
-    var pctx = pattern.getContext('2d'),
-        gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height),
-        tctx;
 
     gradient.addColorStop(0, "#3B5998");
     gradient.addColorStop(1 / 4, "#4B7BC9");
@@ -559,7 +551,7 @@ window.onload = function () {
                 });
             }
         },
-        points_bonnus: 10,
+        points_bonus: 10,
         update_rate: 10
     });
     document.getElementById("spawndiv").className = 'show';
@@ -590,7 +582,7 @@ window.onload = function () {
 
     document.getElementById('daniel').onkeyup = function (e) {
         if (e.keyCode === 13) {
-            spawn_snake();
+            spawn_snake(socket);
         }
     };
     secret = localStorage.getItem("secret") || window.uuid.v4();
