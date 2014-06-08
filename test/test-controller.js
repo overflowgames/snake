@@ -11,7 +11,7 @@ function get_controller(update_cb) {
             killed_snake: function(id) {},
             change_direction: function(id, direction) {}
         },
-        points_bonnus: 10,
+        points_bonus: 10,
         disable_update: true,
         update_rate: 10
     });
