@@ -60,7 +60,7 @@ io.disable("browser client");
 
 var secrets = [];
 
-var game = {}, directions = ["u", "d", "l", "r"];
+var game = {};
 var probability_matrix;
 
 var void_radius = 2;
@@ -188,7 +188,7 @@ function genBonusCoords() {
     }
 
     /*
-     * Préparation du traitement des probabilités. 
+     * Préparation du traitement des probabilités.
      */
 
 
@@ -330,26 +330,19 @@ io.sockets.on('connection', function (socket) {
             if (data.direction === undefined || data.secret === undefined) {
                 return;
             }
-            if (directions.indexOf(data.direction) !== -1) {
-                socket.get("login", function (err, login) {
-                    if (!err) {
-                        if (data.secret === login.secret) {
-                            controller.changeDirection(login.id, data.direction);
-                            if (typeof ack === "function") {
-                                ack("ok");
-                            }
-                        } else {
-                            if (typeof ack === "function") {
-                                ack("kol");
-                            }
+            socket.get("login", function (err, login) {
+                if (!err) {
+                    if (data.secret === login.secret) {
+                        if (controller.changeDirection(login.id, data.direction) && typeof ack === "function") {
+                            ack("ok");
+                        }
+                    } else {
+                        if (typeof ack === "function") {
+                            ack("ko");
                         }
                     }
-                });
-            } else {
-                if (typeof ack === "function") {
-                    ack("kod");
                 }
-            }
+            });
         });
 
         socket.on("confirm_death", function (data, ack) {

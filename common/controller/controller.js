@@ -67,7 +67,8 @@ function Controller(options) {
     }
 
     this.changeDirection = function (id, direction, coords) {
-        if ((snakes[id] !== undefined) && (validateMove(snakes[id].direction, direction))) {
+        var directions = ["u", "d", "l", "r"];
+        if ((snakes[id] !== undefined) && (validateMove(snakes[id].direction, direction)) && (directions.indexOf(direction) !== -1)) {
             if (validateMove(snakes[id].last_update_direction, direction)) {
                 snakes[id].direction = direction;
                 if ((coords !== undefined) && (coords[0] !== undefined) && (coords[1] !== undefined)) {
