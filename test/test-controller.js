@@ -288,7 +288,7 @@ exports.change_direction_basic = function(test){
         game = {bonuses : bonuses, snakes : snakes};
     });
 
-    test.expect(5);
+    test.expect(6);
 
     controller.addSnake("ID", [[0, 0], [0, 0]], "u", 0, 20, "Name", 0, 0);
 
@@ -299,6 +299,7 @@ exports.change_direction_basic = function(test){
     test.equal(controller.changeDirection("DAN", "l"), false);
     test.equal(controller.changeDirection("ID", "u"), false);
     test.equal(controller.changeDirection("ID", "d"), false);
+    test.equal(controller.changeDirection("ID", "z"), false);
     test.ok(controller.changeDirection("ID", "l"));
 
     for (i = 0 ;  i < 10; i += 1){
