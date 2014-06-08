@@ -142,8 +142,8 @@ function Controller(options) {
         return true;
     };
 
-    function snakeSize(snake) {
-        var cum = 0, i;
+    this.snakeSize = function(id) {
+        var cum = 0, i, snake = snakes[id];
         for (i = 0; i < snake.coords.length; i += 1) {
             if (snake.coords[i + 1] !== undefined) {
                 cum += Math.abs(snake.coords[i][0] - snake.coords[i + 1][0]);
@@ -151,7 +151,7 @@ function Controller(options) {
             }
         }
         return cum;
-    }
+    };
 
     function updatePosition(speedup) {
         var i;
@@ -173,7 +173,7 @@ function Controller(options) {
                         snakes[i].coords[0][0] += 1;
                         break;
                     }
-                    while (snakes[i].size <= snakeSize(snakes[i])) {
+                    while (snakes[i].size <= that.snakeSize(i)) {
                         snakes[i].coords[snakes[i].coords.length - 1][0] -= (snakes[i].coords[snakes[i].coords.length - 1][0] - snakes[i].coords[snakes[i].coords.length - 2][0]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][0] - snakes[i].coords[snakes[i].coords.length - 2][0]));
                         snakes[i].coords[snakes[i].coords.length - 1][1] -= (snakes[i].coords[snakes[i].coords.length - 1][1] - snakes[i].coords[snakes[i].coords.length - 2][1]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][1] - snakes[i].coords[snakes[i].coords.length - 2][1]));
                         if ((snakes[i].coords[snakes[i].coords.length - 1][0] === snakes[i].coords[snakes[i].coords.length - 2][0]) && (snakes[i].coords[snakes[i].coords.length - 1][1] === snakes[i].coords[snakes[i].coords.length - 2][1])) {

@@ -241,7 +241,6 @@ var controller = new Controller({
             var continuer, firstBonus, id, type;
 
             if (controller.getNumSnakes() > 0) {
-
                 if (Math.random() < 0.02 * controller.getNumSnakes()) {
                     id = uuid.v4();
                     type = Math.round(Math.random());
@@ -249,9 +248,8 @@ var controller = new Controller({
 
                     bonusTimeoutQueue.push([id, new Date().getTime()]);
                 }
-
-
             }
+
             do {    // A implémenter dans le controlleur, sinon le client veut pas ..."
                 continuer = false;
                 if (bonusTimeoutQueue.length > 0) {

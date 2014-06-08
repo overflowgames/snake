@@ -105,7 +105,7 @@ function draw_snakes(snakes) {
             nconnectes += 1;
 
             snake_speedup = snakes[i].speedup;
-            snake_size = snakes[i].size;
+            snake_size = controller.snakeSize(i);
             counter = snakes[i].size + snakes[i].coords.length - 3;
 
             if (snake_speedup > snake_size) {
