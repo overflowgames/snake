@@ -403,8 +403,7 @@ function update_canvas(snakes, bonus) {
 
 function followSnake(id) {
     'use strict';
-    var anim,
-        cx = last_snakes[id].coords[0][0],
+    var cx = last_snakes[id].coords[0][0],
         cy = last_snakes[id].coords[0][1],
         px = cx * sq_w,
         py = cy * sq_w,
@@ -414,8 +413,6 @@ function followSnake(id) {
     if (last_snakes[id] === undefined) {
         return;
     }
-
-    anim = false;
 
     if (px < position_x) {
         centerOnSnake(id);
@@ -429,14 +426,8 @@ function followSnake(id) {
 
     if (px < position_x + paddingx) {
         position_x = position_x - sq_w;
-        if (px < position_x + paddingx) {
-            anim = true;
-        }
     } else if (px > position_x + width - paddingx) {
         position_x = position_x + sq_w;
-        if (px > position_x + width - paddingx) {
-            anim = true;
-        }
     }
 
     if (py < position_y) {
@@ -451,14 +442,8 @@ function followSnake(id) {
 
     if (py < position_y + paddingy) {
         position_y = position_y - sq_w;
-        if (py < position_y + paddingy) {
-            anim = true;
-        }
     } else if (py > position_y + height - paddingy) {
         position_y = position_y + sq_w;
-        if (py > position_y + height - paddingy) {
-            anim = true;
-        }
     }
     update_canvas(last_snakes, last_bonus);
 }
