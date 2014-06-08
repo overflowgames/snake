@@ -8,8 +8,6 @@ var sio = require('socket.io'),
     zlib = require("zlib"),
     ua = require('mobile-agent');
 
-var oneDay = 86400000;
-
 var server = http.createServer(function (request, response) {
     'use strict';
     var filename = "index.html",
@@ -42,7 +40,7 @@ var server = http.createServer(function (request, response) {
     if (request.url === '/') {
         response.writeHead(200, {
             'Content-Type': 'text/html',
-            'Cache-Control': 'max-age=' + oneDay * 7,
+            'Cache-Control': 'max-age=' + 86400000 * 7,
             'content-encoding': encoding
         });
         raw.pipe(response);
@@ -58,15 +56,9 @@ var io = sio.listen(server);
 io.set('log level', 1);
 io.disable("browser client");
 
-var secrets = [];
-
-var game = {};
-var probability_matrix;
-
-var void_radius = 2;
-var max_val     = 5;
-
-var bonusTimeoutQueue = [];
+var secrets = [],
+    game = {},
+    bonusTimeoutQueue = [];
 
 function surunserpent(coord) {
     'use strict';
@@ -101,10 +93,11 @@ function surunbonus(coord) {
 }
 
 /// Calcule la probabilité pour le point (x,y) à partir d'un snake (px,py)
-function matrix_pos(x, y, px, py) {
+function matrix_pos(x, y, px, py, probability_matrix) {
     'use strict';
 
-    var delta_total = Math.abs(x - px) + Math.abs(y - py);
+    var delta_total = Math.abs(x - px) + Math.abs(y - py),
+        max_val = 5;
 
     if (delta_total > max_val) {
         delta_total = 2 * max_val - delta_total;
@@ -121,21 +114,26 @@ function matrix_pos(x, y, px, py) {
 
         probability_matrix[px][py] += delta_total;
     }
+    return probability_matrix;
 }
 /// Met à jour la matrice des probabilités pour un snake positionné en (x,y) et dirigé vers direction.
-function update_probs(x, y, direction) {
+function update_probs(x, y, direction, probability_matrix) {
     'use strict';
-    var px, py;
+    var void_radius = 2,
+        max_val = 5,
+        px,
+        py;
+
     if (direction === "u" || direction === "d") {
         for (px = x - max_val * 2 + 1 - void_radius + 1; px <= x + max_val * 2 - 1 + void_radius - 1; px += 1) {
             if (px <= x - void_radius || px >= x + void_radius) {
                 if (direction === "u") {
                     for (py = y - max_val * 2 + 1; py <= y; py += 1) {
-                        matrix_pos(x, y, px, py);
+                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
                     }
                 } else {
                     for (py = y; py <= y + max_val * 2 - 1; py += 1) {
-                        matrix_pos(x, y, px, py);
+                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
                     }
                 }
             }
@@ -145,22 +143,24 @@ function update_probs(x, y, direction) {
             if (py <= y - void_radius || px >= y + void_radius) {
                 if (direction === "l") {
                     for (px = x - max_val * 2 + 1; px <= x; px += 1) {
-                        matrix_pos(x, y, px, py);
+                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
                     }
                 } else {
                     for (px = x; px <= x + max_val * 2 - 1; px += 1) {
-                        matrix_pos(x, y, px, py);
+                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
                     }
                 }
             }
         }
     }
+    return probability_matrix;
 }
 
 function genBonusCoords() {
     'use strict';
-    probability_matrix = [];
-    var i, currentSnake,
+    var i,
+        currentSnake,
+        probability_matrix = [],
         sum = 0, // Somme des probabilités
         probs = [], // Probabilité à l'index i
         probx = [], // Position x de la probabilité à l'index i
@@ -182,7 +182,7 @@ function genBonusCoords() {
                 console.log("yolo");
             } else {
                 console.log("yea");
-                update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], currentSnake.direction);
+                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], currentSnake.direction, probability_matrix);
             }
         }
     }
