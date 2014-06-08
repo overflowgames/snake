@@ -142,7 +142,7 @@ function Controller(options) {
         return true;
     };
 
-    this.snakeSize = function(id) {
+    this.snakeSize = function (id) {
         var cum = 0, i, snake = snakes[id];
         for (i = 0; i < snake.coords.length; i += 1) {
             if (snake.coords[i + 1] !== undefined) {
