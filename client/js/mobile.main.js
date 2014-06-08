@@ -2,13 +2,14 @@
 /* ******************** Gestion zoom ******************** */
 
 window.onload = function () {
+    'use strict';
     var args = window.location.hash.split("#"),
         i;
-    
+
     if (localStorage.getItem("mobile-zoom") !== null) {
         window.zoom = parseFloat(localStorage.getItem("mobile-zoom"));
     }
-    
+
     for (i = 1; i < args.length; i += 1) {
         if (args[i].split("=")[0] === "zoom") {
             window.zoom = parseFloat(args[i].split("=")[1]);

@@ -403,17 +403,17 @@ function update_canvas(snakes, bonus) {
 
 function followSnake(id) {
     'use strict';
-    var anim;
-    if (last_snakes[id] === undefined) {
-        return;
-    }
-
-    var cx = last_snakes[id].coords[0][0],
+    var anim,
+        cx = last_snakes[id].coords[0][0],
         cy = last_snakes[id].coords[0][1],
         px = cx * sq_w,
         py = cy * sq_w,
         paddingx = width / 5 - 20,
         paddingy = height / 5 - 20;
+
+    if (last_snakes[id] === undefined) {
+        return;
+    }
 
     anim = false;
 
