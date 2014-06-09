@@ -64,6 +64,13 @@ module.exports = function (grunt) {
                 cwd: 'client/css',
                 src: '*.css',
                 dest: 'client/'
+            },
+            html: {
+                expand: true,
+                cwd: 'client/html',
+                src: '*.html',
+                dest: 'client/'
+
             }
         },
         csslint : {
@@ -132,6 +139,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default', ['concat', "replace", 'uglify', "htmlmin", "cssmin", "inline", "clean"]);
-    grunt.registerTask('dev', ['concat', 'copy:css', 'replace', 'inline', 'clean', 'exec']);
+    grunt.registerTask('dev', ['concat', 'copy', 'replace', 'inline', 'clean', 'exec']);
     grunt.registerTask('test', ['jslint', 'csslint', 'htmllint', 'nodeunit', 'default']);
 };

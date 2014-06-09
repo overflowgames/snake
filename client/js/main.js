@@ -17,7 +17,8 @@ var controller,
     last_snakes,
     last_bonus,
     spawned = false,
-    locked = true;
+    locked = true,
+    socket;
 
 function draw_grid() {
     'use strict';
@@ -69,7 +70,9 @@ function draw_hud(snakes, id) {
 
     context.fillText("x: " + cx, 30, 30);
     context.fillText("y: " + cy, 30, 50);
-    context.fillText("Score: " + (snakes[id].score || 0), 30, 70);
+    if (snakes[id] !== undefined) {
+        context.fillText("Score: " + snakes[id].score, 30, 70);
+    }
     context.fillText("Connectés: " + Object.keys(snakes).length, 30, 90);
 }
 
@@ -327,7 +330,7 @@ function draw_names(snakes) {
     }
 }
 
-function spawn_snake(socket) {
+function spawn_snake() {
     'use strict';
     var pseudo = document.getElementById('daniel').value,
         c = [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
@@ -469,10 +472,9 @@ function isLocked() {
 
 window.onload = function () {
     'use strict';
-    var pctx = pattern.getContext('2d'),
-        gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height),
-        tctx,
-        socket;
+    var pctx,
+        gradient,
+        tctx;
 
     socket = window.io.connect("@@URL_SOCKETIO_SERVER");
 
@@ -481,6 +483,9 @@ window.onload = function () {
     pattern.width = 512;
     pattern.height = 512;
 
+
+    pctx = pattern.getContext('2d');
+    gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height);
     gradient.addColorStop(0, "#3B5998");
     gradient.addColorStop(1 / 4, "#4B7BC9");
     gradient.addColorStop(2 / 4, "#3B5998");
@@ -488,7 +493,6 @@ window.onload = function () {
     gradient.addColorStop(1, "#3B5998");
     pctx.fillStyle = gradient;
     pctx.fillRect(0, 0, pattern.width, pattern.height);
-
 
     triangle_canvas = document.createElement('canvas');
     triangle_canvas.width = 20;
