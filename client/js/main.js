@@ -62,7 +62,7 @@ function update_dimensions() {
 
 function draw_hud(snakes, id) {
     'use strict';
-    context.font = "18px Helvetica"; // On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
+    context.font = "18px Helvetica";
     context.fillStyle = "#ffffff";
 
     var cx = Math.round((position_x - offset_x + canvas.width / 2) / sq_w),
@@ -451,18 +451,11 @@ function followSnake(id) {
     update_canvas(last_snakes, last_bonus);
 }
 
-function lock() {
+function toogle_lock() {
     'use strict';
-    locked = true;
-    document.getElementById('button_locked').style.display = "block";
-    document.getElementById('button_lock').style.display = "none";
-}
-
-function unlock() {
-    'use strict';
-    locked = false;
-    document.getElementById('button_locked').style.display = "none";
-    document.getElementById('button_lock').style.display = "block";
+    locked = !locked;
+    document.getElementById('button_locked').style.display = locked ? "block" : "none";
+    document.getElementById('button_lock').style.display = locked ? "none" : "block";
 }
 
 function isLocked() {
@@ -470,7 +463,7 @@ function isLocked() {
     return locked;
 }
 
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", function () {
     'use strict';
     var pctx,
         gradient,
@@ -576,7 +569,7 @@ window.onload = function () {
     };
     secret = localStorage.getItem("secret") || window.uuid.v4();
     localStorage.setItem("secret", secret);
-};
+}, false);
 
 
 

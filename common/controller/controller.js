@@ -197,18 +197,11 @@ function Controller(options) {
         for (i = 0; i < p2.length; i += 1) {
             if (!(idem && (p1[1] === p2[i][1]) && (p1[0] === p2[i][0]))) {
                 if (p2[i + 1] !== undefined) {
-                    if (p1[0] === p2[i][0]) {
-                        if ((p1[1] <= Math.max(p2[i][1], p2[i + 1][1])) && (p1[1] >= Math.min(p2[i][1], p2[i + 1][1]))) {
-                            return i + 1;
-                        }
-                    } else if (p1[1] === p2[i][1]) {
-                        if ((p1[0] <= Math.max(p2[i][0], p2[i + 1][0])) && (p1[0] >= Math.min(p2[i][0], p2[i + 1][0]))) {
-                            return i + 1;
-                        }
+                    if ((p1[0] <= Math.max(p2[i][0], p2[i + 1][0])) && (p1[0] >= Math.min(p2[i][0], p2[i + 1][0])) && (p1[1] <= Math.max(p2[i][1], p2[i + 1][1])) && (p1[1] >= Math.min(p2[i][1], p2[i + 1][1]))) {
+                        return i + 1;
                     }
                 }
             }
-
         }
         return false;
     }

@@ -1,7 +1,7 @@
 /*jslint browser: true */
 /* ******************** Gestion zoom ******************** */
 
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", function () {
     'use strict';
     var args = window.location.hash.split("#"),
         i;
@@ -15,7 +15,7 @@ window.onload = function () {
             window.zoom = parseFloat(args[i].split("=")[1]);
         }
     }
-};
+}, false);
 
 function zoomC(change) {
     'use strict';
