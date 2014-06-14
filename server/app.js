@@ -363,6 +363,7 @@ io.sockets.on('connection', function (socket) {
             });
         });
     });
+    socket.emit("up", {game: game});
 });
 
 setInterval(function () {
