@@ -26,7 +26,7 @@ deploy:
     password:
       secure: XJxRO+7GQKvFoq+ssvg1/cifWxZdkXk1bjcWXw5eUlwjW9qciY3cMRIBlj4lXBvzAbyqhfQeKlPtSah+Y1XAkIQNAsJzu2ejY3VgR3/2TzWUCLdDJmD7Sl352k4T0ynwM4L76KjHSB9hcrsA3iDXehjQ7SDPAFMpC+prFK++dsQ=
     app: snake
-    domain: ''
+    domain: 'konfiot'
     on:
       repo: overflowgames/snake
       branch: master
