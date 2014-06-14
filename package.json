@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "A boundless snake",
   "dependencies": {
-    "socket.io": "0.9.14",
-    "node-uuid": "1.4.1",
-    "async": "0.2.8",
+    "socket.io": "~0.9.14",
+    "node-uuid": "~1.4.1",
+    "async": "~0.2.8",
     "jquery": "~2.1.0",
     "socket.io-client": "~0.9.16",
-    "mobile-agent": "0.0.8"
+    "mobile-agent": "~0.0.8"
   },
   "scripts": {
     "start": "node server/app.js",
