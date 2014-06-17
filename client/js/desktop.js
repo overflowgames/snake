@@ -1,4 +1,19 @@
 /*jslint browser: true */
+
+var i,
+    locked,
+    elems = document.getElementsByClassName("lock");
+
+
+for (i = 0;  i < elems.length; i += 1) {
+    elems[i].onclick = function () {
+        'use strict';
+        locked = !locked;
+        document.getElementById('button_locked').style.display = locked ? "block" : "none";
+        document.getElementById('button_lock').style.display = locked ? "none" : "block";
+    };
+}
+
 document.onkeydown = function (event) {
     'use strict';
     event = event || window.event;

@@ -451,18 +451,6 @@ function followSnake(id) {
     update_canvas(last_snakes, last_bonus);
 }
 
-function toogle_lock() {
-    'use strict';
-    locked = !locked;
-    document.getElementById('button_locked').style.display = locked ? "block" : "none";
-    document.getElementById('button_lock').style.display = locked ? "none" : "block";
-}
-
-function isLocked() {
-    'use strict';
-    return locked;
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     'use strict';
     var pctx,
@@ -516,7 +504,7 @@ document.addEventListener("DOMContentLoaded", function () {
             update: function (snakes, bonus) {
                 last_snakes = snakes;
                 last_bonus = bonus;
-                if ((isLocked() || window.mobile) && (snakes[my_id] !== undefined)) {
+                if (window.locked && (snakes[my_id] !== undefined)) {
                     followSnake(my_id);
                 } else {
                     update_canvas(snakes, bonus);
