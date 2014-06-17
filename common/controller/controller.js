@@ -174,7 +174,7 @@ function Controller(options) {
                         break;
                     }
                     while (snakes[i].size <= that.snakeSize(i)) {
-                        for (j = 0; j < snakes[i].coords[snakes[i].coords.length - 1].length; j += 1){
+                        for (j = 0; j < snakes[i].coords[snakes[i].coords.length - 1].length; j += 1) {
                             snakes[i].coords[snakes[i].coords.length - 1][j] -= (snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]));
                         }
                         if ((snakes[i].coords[snakes[i].coords.length - 1][0] === snakes[i].coords[snakes[i].coords.length - 2][0]) && (snakes[i].coords[snakes[i].coords.length - 1][1] === snakes[i].coords[snakes[i].coords.length - 2][1])) {
