@@ -39,14 +39,9 @@ function surunbonus(coord, bonus) {
 function matrix_pos(x, y, px, py, probability_matrix) {
     'use strict';
 
-    var delta_total = Math.abs(x - px) + Math.abs(y - py),
-        max_val = 5;
+    var delta_total = Math.abs(x - px) + Math.abs(y - py);
 
-    if (delta_total > max_val) {
-        delta_total = 2 * max_val - delta_total;
-    }
-
-    if ((delta_total > 0) && (delta_total <= max_val)) {
+    if (delta_total > 0) {
         if (probability_matrix[px] === undefined) {
             probability_matrix[px] = [];
         }
@@ -87,11 +82,9 @@ function genBonusCoords(snakes, bonus) {
     'use strict';
     var i,
         currentSnake,
-        probability_matrix = [],
+        probability_matrix,
         sum = 0, // Somme des probabilites
         probs = [], // Probabilite a l'index i
-        probx = [], // Position x de la probabilite a l'index i
-        proby = [], // Position y de la probabilite a l'index i
         x,
         y,
         r,
@@ -99,21 +92,17 @@ function genBonusCoords(snakes, bonus) {
         index,
         coord;
 
-    /*
-     * Generation du tableau des probabilites.
-     */
+    // Generation du tableau des probabilites.
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             currentSnake = snakes[i];
             if (currentSnake.coords !== undefined) {
-                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], probability_matrix);
+                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], []);
             }
         }
     }
 
-    /*
-     * Preparation du traitement des probabilites.
-     */
+    // Preparation du traitement des probabilites.
 
 
     for (x in probability_matrix) {
@@ -121,24 +110,20 @@ function genBonusCoords(snakes, bonus) {
             for (y in probability_matrix[x]) {
                 if (probability_matrix[x].hasOwnProperty(y)) {
                     sum += probability_matrix[x][y];
-                    probs.push(probability_matrix[x][y]);
-                    probx.push(x);
-                    proby.push(y);
+                    probs.push([probability_matrix[x][y], x, y]);
                 }
             }
         }
     }
 
-    /*
-     * Sélection d'une coordonnee aleatoire selon les probabilites.
-     */
+    // Selection d'une coordonnee aleatoire selon les probabilites.
 
     r = Math.ceil(Math.random() * sum);
 
     for (index = 0; index < probs.length; index += 1) {
-        ecc += probs[index];
+        ecc += probs[0][index];
         if (ecc >= r) {
-            coord = [parseInt(probx[index], 10), parseInt(proby[index], 10)];
+            coord = [parseInt(probs[1][index], 10), parseInt(probs[2][index], 10)];
 
             if (!surunserpent(coord, snakes) && !surunbonus(coord, bonus)) {
                 return coord;
