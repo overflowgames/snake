@@ -35,7 +35,7 @@ function surunbonus(coord, bonus) {
     return false;
 }
 
-/// Calcule la probabilite pour le point (x,y) à partir d'un snake (px,py)
+/// Calcule la probabilite pour le point (x,y) a partir d'un snake (px,py)
 function matrix_pos(x, y, px, py, probability_matrix) {
     'use strict';
 
@@ -65,7 +65,7 @@ function distance(x, y, px, py) {
     return Math.abs(x - px) + Math.abs(y - py);
 }
 
-/// Met à jour la matrice des probabilites pour un snake positionne en (x,y) et dirige vers direction.
+/// Met a jour la matrice des probabilites pour un snake positionne en (x,y) et dirige vers direction.
 function update_probs(x, y, probability_matrix) {
     'use strict';
     var void_radius = 2,
@@ -89,9 +89,9 @@ function genBonusCoords(snakes, bonus) {
         currentSnake,
         probability_matrix = [],
         sum = 0, // Somme des probabilites
-        probs = [], // Probabilite à l'index i
-        probx = [], // Position x de la probabilite à l'index i
-        proby = [], // Position y de la probabilite à l'index i
+        probs = [], // Probabilite a l'index i
+        probx = [], // Position x de la probabilite a l'index i
+        proby = [], // Position y de la probabilite a l'index i
         x,
         y,
         r,
