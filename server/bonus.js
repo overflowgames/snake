@@ -12,7 +12,7 @@ function surunserpent(coord, snakes) {
                             acc += 1;
                         }
                     }
-                    if (acc === snakes[i].coords[j].length) {
+                    if (acc === (snakes[i].coords[j].length - 1)) {
                         return true;
                     }
                 }
