@@ -2,14 +2,17 @@
 
 function surunserpent(coord, snakes) {
     'use strict';
-    var i, j, sx, sy;
+    var i, j, k, acc = 0;
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             for (j = 0; j < snakes[i].coords.length; j += 1) {
                 if (snakes[i].coords[j + 1] !== undefined) {
-                    sx = snakes[i].coords[j][0];
-                    sy = snakes[i].coords[j][1];
-                    if (((coord[0] >= Math.min(sx, snakes[i].coords[j + 1][0])) && (coord[0] <= Math.max(sx, snakes[i].coords[j + 1][0])) && (sy === coord[1])) || ((coord[1] >= Math.min(sy, snakes[i].coords[j + 1][1])) && (coord[1] <= Math.max(sy, snakes[i].coords[j + 1][1])) && (sx === coord[0]))) {
+                    for (k = 0; k < snakes[i].coords[j].length; k += 1) {
+                        if (((coord[k] >= Math.min(snakes[i].coords[j][k], snakes[i].coords[j + 1][k])) && (coord[k] <= Math.max(snakes[i].coords[j][k], snakes[i].coords[j + 1][k])))) {
+                            acc += 1;
+                        }
+                    }
+                    if (acc === snakes[i].coords[j].length) {
                         return true;
                     }
                 }
