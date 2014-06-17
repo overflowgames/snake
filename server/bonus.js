@@ -56,40 +56,24 @@ function matrix_pos(x, y, px, py, probability_matrix) {
     }
     return probability_matrix;
 }
+
+function distance(x, y, px, py) {
+    'use strict';
+    return Math.abs(x - px) + Math.abs(y - py);
+}
+
 /// Met à jour la matrice des probabilités pour un snake positionné en (x,y) et dirigé vers direction.
-function update_probs(x, y, direction, probability_matrix) {
+function update_probs(x, y, probability_matrix) {
     'use strict';
     var void_radius = 2,
-        max_val = 5,
+        radius = 5,
         px,
         py;
 
-    if (direction === "u" || direction === "d") {
-        for (px = x - max_val * 2 + 1 - void_radius + 1; px <= x + max_val * 2 - 1 + void_radius - 1; px += 1) {
-            if (px <= x - void_radius || px >= x + void_radius) {
-                if (direction === "u") {
-                    for (py = y - max_val * 2 + 1; py <= y; py += 1) {
-                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
-                    }
-                } else {
-                    for (py = y; py <= y + max_val * 2 - 1; py += 1) {
-                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
-                    }
-                }
-            }
-        }
-    } else {
-        for (py = y - max_val * 2 + 1 - void_radius + 1; py <= y + max_val * 2 - 1 + void_radius - 1; py += 1) {
-            if (py <= y - void_radius || px >= y + void_radius) {
-                if (direction === "l") {
-                    for (px = x - max_val * 2 + 1; px <= x; px += 1) {
-                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
-                    }
-                } else {
-                    for (px = x; px <= x + max_val * 2 - 1; px += 1) {
-                        probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
-                    }
-                }
+    for (px = x - radius; px < x + radius; px += 1) {
+        for (py = y - radius; py < y + radius; py += 1) {
+            if (distance(x, y, px, py) <= radius && distance(x, y, px, py) >= void_radius) {
+                probability_matrix = matrix_pos(x, y, px, py, probability_matrix);
             }
         }
     }
@@ -119,7 +103,7 @@ function genBonusCoords(snakes, bonus) {
         if (snakes.hasOwnProperty(i)) {
             currentSnake = snakes[i];
             if (currentSnake.coords !== undefined) {
-                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], currentSnake.direction, probability_matrix);
+                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], probability_matrix);
             }
         }
     }
