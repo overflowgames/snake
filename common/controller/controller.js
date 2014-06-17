@@ -154,7 +154,7 @@ function Controller(options) {
     };
 
     function updatePosition(speedup) {
-        var i;
+        var i, j;
         for (i in snakes) {
             if (snakes.hasOwnProperty(i)) {
                 if ((speedup && snakes[i].speedup > 0) || (!speedup)) {
@@ -174,8 +174,9 @@ function Controller(options) {
                         break;
                     }
                     while (snakes[i].size <= that.snakeSize(i)) {
-                        snakes[i].coords[snakes[i].coords.length - 1][0] -= (snakes[i].coords[snakes[i].coords.length - 1][0] - snakes[i].coords[snakes[i].coords.length - 2][0]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][0] - snakes[i].coords[snakes[i].coords.length - 2][0]));
-                        snakes[i].coords[snakes[i].coords.length - 1][1] -= (snakes[i].coords[snakes[i].coords.length - 1][1] - snakes[i].coords[snakes[i].coords.length - 2][1]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][1] - snakes[i].coords[snakes[i].coords.length - 2][1]));
+                        for (j = 0; j < snakes[i].coords[snakes[i].coords.length - 1].length; j += 1){
+                            snakes[i].coords[snakes[i].coords.length - 1][j] -= (snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]));
+                        }
                         if ((snakes[i].coords[snakes[i].coords.length - 1][0] === snakes[i].coords[snakes[i].coords.length - 2][0]) && (snakes[i].coords[snakes[i].coords.length - 1][1] === snakes[i].coords[snakes[i].coords.length - 2][1])) {
                             snakes[i].coords.pop();
                         }
