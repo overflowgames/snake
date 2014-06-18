@@ -206,9 +206,7 @@ function draw_names(snakes) {
         sy,
         tx,
         ty,
-        dists,
-        draw = [0, 0],
-        dist;
+        dists;
 
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
@@ -232,26 +230,38 @@ function draw_names(snakes) {
                 context.fillText(snakes[i].name, tx, ty);
             } else {
                 if ((Math.abs(dists[0]) < 600) && (Math.abs(dists[1]) < 600)) {
-                    context.font = "18px Helvetica";
-                    context.fillStyle = "#ffffff";
-
-                    dist = Math.round(Math.sqrt(dists[0] * dists[0] + dists[1] * dists[1]));
-
-                    draw = [(canvas.width / 2) * (Math.cos(getAngleFromCenter(snakes[i])) + 1), (canvas.height / 2) * (1 - Math.sin(getAngleFromCenter(snakes[i])))];
-
-                    context.save();
-                    context.translate.apply(context, draw);
-
-                    context.rotate(-getAngleFromCenter(snakes[i]) + (Math.PI / 2));
-
-                    context.drawImage(triangle_canvas, 0, 0);
-                    context.restore();
-
-                    context.fillText(dist, draw[0] - 35 * Math.cos(getAngleFromCenter(snakes[i])) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(getAngleFromCenter(snakes[i])));
+                    draw_arrow(snakes[i]);
                 }
             }
         }
     }
+}
+
+function draw_arrow(snake) {
+    
+    var draw = [0, 0],
+        dist,
+        dists;
+
+    dists = getDistanceFromCenter(snake);
+
+    context.font = "18px Helvetica";
+    context.fillStyle = "#ffffff";
+
+    dist = Math.round(Math.sqrt(dists[0] * dists[0] + dists[1] * dists[1]));
+
+    draw = [(canvas.width / 2) * (Math.cos(getAngleFromCenter(snake)) + 1), (canvas.height / 2) * (1 - Math.sin(getAngleFromCenter(snake)))];
+
+    context.save();
+    context.translate.apply(context, draw);
+
+    context.rotate(-getAngleFromCenter(snake) + (Math.PI / 2));
+
+    context.drawImage(triangle_canvas, 0, 0);
+    context.restore();
+
+    context.fillText(dist, draw[0] - 35 * Math.cos(getAngleFromCenter(snake)) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(getAngleFromCenter(snake)));
+
 }
 
 function spawn_snake() {
