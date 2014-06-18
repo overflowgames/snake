@@ -249,7 +249,7 @@ function draw_arrow(snake) {
     context.font = "18px Helvetica";
     context.fillStyle = "#ffffff";
 
-    dist = Math.round(Math.sqrt(dists[0] * dists[0] + dists[1] * dists[1]));
+    dist = Math.round(Math.hypot.apply(Math, dists));
 
     draw = [(canvas.width / 2) * (Math.cos(angle) + 1), (canvas.height / 2) * (1 - Math.sin(angle))];
 
