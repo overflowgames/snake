@@ -192,6 +192,33 @@ function getAngleFromCenter(snake) {
     return -Math.sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
 }
 
+function draw_arrow(snake) {
+    var draw = [0, 0],
+        dist,
+        angle,
+        dists;
+
+    dists = getDistanceFromCenter(snake);
+    angle = getAngleFromCenter(snake);
+    context.font = "18px Helvetica";
+    context.fillStyle = "#ffffff";
+
+    dist = Math.round(Math.hypot.apply(Math, dists));
+
+    draw = [(canvas.width / 2) * (Math.cos(angle) + 1), (canvas.height / 2) * (1 - Math.sin(angle))];
+
+    context.save();
+    context.translate.apply(context, draw);
+
+    context.rotate(-angle + (Math.PI / 2));
+
+    context.drawImage(triangle_canvas, 0, 0);
+    context.restore();
+
+    context.fillText(dist, draw[0] - 35 * Math.cos(angle) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(angle));
+
+}
+
 function draw_names(snakes) {
     'use strict';
     // #Draw names
@@ -230,34 +257,6 @@ function draw_names(snakes) {
             }
         }
     }
-}
-
-function draw_arrow(snake) {
-    
-    var draw = [0, 0],
-        dist,
-        angle,
-        dists;
-
-    dists = getDistanceFromCenter(snake);
-    angle = getAngleFromCenter(snake);
-    context.font = "18px Helvetica";
-    context.fillStyle = "#ffffff";
-
-    dist = Math.round(Math.hypot.apply(Math, dists));
-
-    draw = [(canvas.width / 2) * (Math.cos(angle) + 1), (canvas.height / 2) * (1 - Math.sin(angle))];
-
-    context.save();
-    context.translate.apply(context, draw);
-
-    context.rotate(-angle + (Math.PI / 2));
-
-    context.drawImage(triangle_canvas, 0, 0);
-    context.restore();
-
-    context.fillText(dist, draw[0] - 35 * Math.cos(angle) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(angle));
-
 }
 
 function spawn_snake() {
