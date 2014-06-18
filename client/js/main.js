@@ -191,6 +191,12 @@ function visible(snake) {
     return (distx < 0 && disty < 0);
 }
 
+function getAngleFromCenter(snake) {
+    'use strict';
+    var dists = getDistanceFromCenter(snake);
+    return -Math.sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
+}
+
 function draw_names(snakes) {
     'use strict';
     // #Draw names
@@ -201,21 +207,12 @@ function draw_names(snakes) {
         tx,
         ty,
         dists,
-        dx,
-        dy,
-        drawx,
-        drawy,
-        flagx,
-        flagy,
-        ofsx,
-        ofsy,
+        draw = [0, 0],
         dist;
 
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             dists = getDistanceFromCenter(snakes[i]);
-            dx = dists[0];
-            dy = dists[1];
             if (visible(snakes[i])) {
                 sx = snakes[i].coords[0][0];
                 sy = snakes[i].coords[0][1];
@@ -234,96 +231,23 @@ function draw_names(snakes) {
                 context.fillStyle = "#ffffff";
                 context.fillText(snakes[i].name, tx, ty);
             } else {
-                if ((Math.abs(dx) < 600) && (Math.abs(dy) < 600)) {
+                if ((Math.abs(dists[0]) < 600) && (Math.abs(dists[1]) < 600)) {
                     context.font = "18px Helvetica";
                     context.fillStyle = "#ffffff";
 
-                    dist = Math.round(Math.sqrt(dx * dx + dy * dy));
-                    tw = context.measureText(dist).width;
+                    dist = Math.round(Math.sqrt(dists[0] * dists[0] + dists[1] * dists[1]));
 
-                    if (dx < -canvas.width / (2 * sq_w)) {
-                        drawx = 10;
-                        flagx = -1;
-                    } else if (dx > canvas.width / (2 * sq_w)) {
-                        drawx = canvas.width - 20;
-                        flagx = 1;
-                    } else {
-                        drawx = canvas.width / 2 + dx * sq_w;
-                        flagx = 0;
-                    }
-
-                    if (dy < -canvas.height / (2 * sq_w)) {
-                        drawy = 10;
-                        flagy = -1;
-                    } else if (dy > canvas.height / (2 * sq_w)) {
-                        drawy = canvas.height - 30;
-                        flagy = 1;
-                    } else {
-                        drawy = canvas.height / 2 + dy * sq_w;
-                        flagy = 0;
-                    }
+                    draw = [(canvas.width / 2) * (Math.cos(getAngleFromCenter(snakes[i])) + 1), (canvas.height / 2) * (1 - Math.sin(getAngleFromCenter(snakes[i])))];
 
                     context.save();
-                    context.translate(drawx, drawy);
+                    context.translate.apply(context, draw);
 
-                    switch (flagx) {
-                    case -1:
-                        switch (flagy) {
-                        case -1: // haut gauche
-                            context.rotate(-Math.PI / 4);
-                            ofsx = 25;
-                            ofsy = 40;
-                            break;
-                        case 0: // gauche
-                            context.rotate(-Math.PI / 2);
-                            ofsx = 25;
-                            ofsy = -5;
-                            break;
-                        case 1: // bas gauche
-                            context.rotate(-3 * Math.PI / 4);
-                            ofsx = 25;
-                            ofsy = -25;
-                            break;
-                        }
-                        break;
-                    case 0:
-                        switch (flagy) {
-                        case -1: // haut
-                            ofsx = 10 - tw / 2;
-                            ofsy = 40;
-                            break;
-                        case 1: // bas
-                            context.rotate(Math.PI);
-                            ofsx = -10 - tw / 2;
-                            ofsy = -25;
-                            break;
-                        }
-                        break;
-                    case 1:
-                        switch (flagy) {
-                        case -1: // haut droite
-                            context.rotate(Math.PI / 4);
-                            ofsx = -30 - tw;
-                            ofsy = 40;
-                            break;
-                        case 0: // droite  
-                            context.rotate(Math.PI / 2);
-                            ofsx = -30 - tw;
-                            ofsy = 15;
-                            break;
-                        case 1: // bas droite
-                            context.rotate(3 * Math.PI / 4);
-                            ofsx = -30 - tw;
-                            ofsy = -25;
-                            break;
-                        }
-                        break;
-                    }
+                    context.rotate(-getAngleFromCenter(snakes[i]) + (Math.PI / 2));
 
                     context.drawImage(triangle_canvas, 0, 0);
                     context.restore();
 
-                    context.fillText(dist, Math.round(drawx + ofsx), Math.round(drawy + ofsy));
+                    context.fillText(dist, draw[0] - 35 * Math.cos(getAngleFromCenter(snakes[i])) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(getAngleFromCenter(snakes[i])));
                 }
             }
         }
@@ -451,18 +375,6 @@ function followSnake(id) {
     update_canvas(last_snakes, last_bonus);
 }
 
-function toogle_lock() {
-    'use strict';
-    locked = !locked;
-    document.getElementById('button_locked').style.display = locked ? "block" : "none";
-    document.getElementById('button_lock').style.display = locked ? "none" : "block";
-}
-
-function isLocked() {
-    'use strict';
-    return locked;
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     'use strict';
     var pctx,
@@ -516,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
             update: function (snakes, bonus) {
                 last_snakes = snakes;
                 last_bonus = bonus;
-                if ((isLocked() || window.mobile) && (snakes[my_id] !== undefined)) {
+                if (window.locked && (snakes[my_id] !== undefined)) {
                     followSnake(my_id);
                 } else {
                     update_canvas(snakes, bonus);

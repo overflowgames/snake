@@ -1,4 +1,20 @@
 /*jslint browser: true */
+
+var i,
+    locked,
+    elems = document.getElementsByClassName("lock");
+
+function toogle_lock() {
+    'use strict';
+    locked = !locked;
+    document.getElementById('button_locked').style.display = locked ? "block" : "none";
+    document.getElementById('button_lock').style.display = locked ? "none" : "block";
+}
+
+for (i = 0;  i < elems.length; i += 1) {
+    elems[i].onclick = toogle_lock;
+}
+
 document.onkeydown = function (event) {
     'use strict';
     event = event || window.event;
