@@ -241,26 +241,27 @@ function draw_arrow(snake) {
     
     var draw = [0, 0],
         dist,
+        angle,
         dists;
 
     dists = getDistanceFromCenter(snake);
-
+    angle = getAngleFromCenter(snake);
     context.font = "18px Helvetica";
     context.fillStyle = "#ffffff";
 
     dist = Math.round(Math.sqrt(dists[0] * dists[0] + dists[1] * dists[1]));
 
-    draw = [(canvas.width / 2) * (Math.cos(getAngleFromCenter(snake)) + 1), (canvas.height / 2) * (1 - Math.sin(getAngleFromCenter(snake)))];
+    draw = [(canvas.width / 2) * (Math.cos(angle) + 1), (canvas.height / 2) * (1 - Math.sin(angle))];
 
     context.save();
     context.translate.apply(context, draw);
 
-    context.rotate(-getAngleFromCenter(snake) + (Math.PI / 2));
+    context.rotate(-angle + (Math.PI / 2));
 
     context.drawImage(triangle_canvas, 0, 0);
     context.restore();
 
-    context.fillText(dist, draw[0] - 35 * Math.cos(getAngleFromCenter(snake)) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(getAngleFromCenter(snake)));
+    context.fillText(dist, draw[0] - 35 * Math.cos(angle) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(angle));
 
 }
 
