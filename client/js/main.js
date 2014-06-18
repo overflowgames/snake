@@ -65,15 +65,10 @@ function draw_hud(snakes, id) {
     context.font = "18px Helvetica";
     context.fillStyle = "#ffffff";
 
-    var cx = Math.round((position_x - offset_x + canvas.width / 2) / sq_w),
-        cy = Math.round((position_y - offset_y + canvas.height / 2) / sq_w);
-
-    context.fillText("x: " + cx, 30, 30);
-    context.fillText("y: " + cy, 30, 50);
     if (snakes[id] !== undefined) {
-        context.fillText("Score: " + snakes[id].score, 30, 70);
+        context.fillText("Score: " + snakes[id].score, 30, 50);
     }
-    context.fillText("Connectés: " + Object.keys(snakes).length, 30, 90);
+    context.fillText("Connectés: " + Object.keys(snakes).length, 30, 30);
 }
 
 
