@@ -1,268 +1,17 @@
-/*jslint browser: true */
+/*jslint browser: true*/
+/*global GameView: false*/
+
 var controller,
-    zoom = 1,
-    context,
-    canvas,
     secret,
-    pattern,
-    triangle_canvas,
-    position_x = -145,
-    position_y = -145,
-    offset_x = 0,
-    offset_y = 0,
-    height = 500,
-    width = 500,
-    sq_w = 10,
     my_id = "",
-    last_snakes,
-    last_bonus,
     spawned = false,
+    socket,
     locked = true,
-    socket;
+    view = new GameView({});
 
-function draw_grid() {
+function spawn_snake(center) {
     'use strict';
-    var x,
-        y;
-
-    for (x = (-position_x + offset_x) % sq_w; x <= width; x += sq_w) {
-        context.moveTo(x, 0);
-        context.lineTo(x, height);
-    }
-
-    for (y = (-position_y + offset_y) % sq_w; y <= height; y += sq_w) {
-        context.moveTo(0, y);
-        context.lineTo(width, y);
-    }
-    context.stroke();
-}
-
-function update_dimensions() {
-    'use strict';
-    var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        win_x = w.innerWidth || e.clientWidth || g.clientWidth,
-        win_y = w.innerHeight || e.clientHeight || g.clientHeight;
-
-    win_x *= zoom;
-    win_y *= zoom;
-
-    if (height === win_y && width === win_x) {
-        return;
-    }
-
-    height = win_y;
-    width = win_x;
-
-    canvas.height = win_y;
-    canvas.width = win_x;
-}
-
-function draw_hud(snakes, id) {
-    'use strict';
-    context.font = "18px Helvetica";
-    context.fillStyle = "#ffffff";
-
-    if (snakes[id] !== undefined) {
-        context.fillText("Score: " + snakes[id].score, 30, 50);
-    }
-    context.fillText("Connectés: " + Object.keys(snakes).length, 30, 30);
-}
-
-
-
-function draw_snakes(snakes) {
-    'use strict';
-    var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"],
-        i,
-        ii,
-        ix,
-        iy,
-        snake_speedup,
-        snake_size,
-        counter,
-        cxstart,
-        cxend,
-        cystart,
-        cyend,
-        swap,
-        swapy,
-        lvl = 0;
-
-    // #Draw the snakes
-    for (i in snakes) {
-        if (snakes.hasOwnProperty(i)) {
-
-            snake_speedup = snakes[i].speedup;
-            snake_size = controller.snakeSize(i);
-            counter = snakes[i].size + snakes[i].coords.length - 3;
-
-            if (snake_speedup > snake_size) {
-                lvl = Math.floor(snake_speedup / snake_size);
-                snake_speedup -= snake_size;
-            }
-
-            for (ii = 0; ii < snakes[i].coords.length - 1; ii += 1) {
-                cxstart = snakes[i].coords[ii][0];
-                cxend = snakes[i].coords[ii + 1][0];
-                swap = false;
-                swapy = false;
-
-                if (cxstart > cxend) {
-                    swap = true;
-                }
-
-                cystart = snakes[i].coords[ii][1];
-                cyend = snakes[i].coords[ii + 1][1];
-
-                if (cystart > cyend) {
-                    swapy = true;
-                }
-
-                for (ix = cxstart; ((ix <= cxend) && (!swap)) || ((ix >= cxend) && swap); ix += (swap ? -1 : 1)) {
-                    for (iy = cystart; ((iy <= cyend) && (!swapy)) || ((iy >= cyend) && swapy); iy += (swapy ? -1 : 1)) {
-                        if (snake_speedup > counter) {
-                            context.fillStyle = snake_palette[lvl + 1];
-                        } else {
-                            context.fillStyle = snake_palette[lvl];
-                        }
-
-                        counter -= 1;
-                        context.fillRect(ix * sq_w - position_x + offset_x, iy * sq_w - position_y + offset_y, sq_w, sq_w);
-                    }
-                }
-            }
-        }
-    }
-}
-
-function draw_bonuses(bonus) {
-    'use strict';
-    var i,
-        cx,
-        cy;
-
-    // #Draw bonuses
-    for (i in bonus) {
-        if (bonus[i] !== null) {
-            cx = bonus[i][0][0];
-            cy = bonus[i][0][1];
-
-            if (bonus[i][1] === 0) {
-                context.fillStyle = "#ffaa00";
-            } else if (bonus[i][1] === 1) {
-                context.fillStyle = "#ffaaaa";
-            }
-
-            context.fillRect(cx * sq_w - position_x + offset_x, cy * sq_w - position_y + offset_y, sq_w, sq_w);
-        }
-    }
-}
-
-function getDistanceFromCenter(snake) {
-    'use strict';
-    var sx = snake.coords[0][0],
-        sy = snake.coords[0][1],
-        cx = Math.round((position_x - offset_x + canvas.width / 2) / sq_w),
-        cy = Math.round((position_y - offset_y + canvas.height / 2) / sq_w);
-
-    return [sx - cx, sy - cy];
-}
-
-function visible(snake) {
-    'use strict';
-    var sx = snake.coords[0][0],
-        sy = snake.coords[0][1],
-        cx = Math.round((position_x - offset_x + canvas.width / 2) / sq_w),
-        cy = Math.round((position_y - offset_y + canvas.height / 2) / sq_w),
-        distx = Math.abs(cx - sx),
-        disty = Math.abs(cy - sy);
-
-    distx -= canvas.width / (2 * sq_w);
-    disty -= canvas.height / (2 * sq_w);
-
-    return (distx < 0 && disty < 0);
-}
-
-function getAngleFromCenter(snake) {
-    'use strict';
-    var dists = getDistanceFromCenter(snake);
-    return -Math.sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
-}
-
-function draw_arrow(snake) {
-    var draw = [0, 0],
-        dist,
-        angle,
-        dists;
-
-    dists = getDistanceFromCenter(snake);
-    angle = getAngleFromCenter(snake);
-    context.font = "18px Helvetica";
-    context.fillStyle = "#ffffff";
-
-    dist = Math.round(Math.hypot.apply(Math, dists));
-
-    draw = [(canvas.width / 2) * (Math.cos(angle) + 1), (canvas.height / 2) * (1 - Math.sin(angle))];
-
-    context.save();
-    context.translate.apply(context, draw);
-
-    context.rotate(-angle + (Math.PI / 2));
-
-    context.drawImage(triangle_canvas, 0, 0);
-    context.restore();
-
-    context.fillText(dist, draw[0] - 35 * Math.cos(angle) - context.measureText(dist).width / 2, draw[1] + 35 * Math.sin(angle));
-
-}
-
-function draw_names(snakes) {
-    'use strict';
-    // #Draw names
-    var tw = 0,
-        i,
-        sx,
-        sy,
-        tx,
-        ty,
-        dists;
-
-    for (i in snakes) {
-        if (snakes.hasOwnProperty(i)) {
-            dists = getDistanceFromCenter(snakes[i]);
-            if (visible(snakes[i])) {
-                sx = snakes[i].coords[0][0];
-                sy = snakes[i].coords[0][1];
-
-                context.fillStyle = "rgb(66, 66, 66)";
-                context.font = "16px Helvetica";
-
-                tw = context.measureText(snakes[i].name).width;
-
-                tx = Math.round(sx * sq_w - position_x + offset_x - tw / 2);
-                ty = Math.round(sy * sq_w - position_y + offset_y - sq_w * 1.5);
-
-
-                context.fillRect(tx - 2, ty - 16, tw + 4, 20);
-
-                context.fillStyle = "#ffffff";
-                context.fillText(snakes[i].name, tx, ty);
-            } else {
-                if ((Math.abs(dists[0]) < 600) && (Math.abs(dists[1]) < 600)) {
-                    draw_arrow(snakes[i]);
-                }
-            }
-        }
-    }
-}
-
-function spawn_snake() {
-    'use strict';
-    var pseudo = document.getElementById('daniel').value,
-        c = [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
+    var pseudo = document.getElementById('daniel').value;
 
     localStorage.setItem("pseudo", pseudo);
 
@@ -276,7 +25,7 @@ function spawn_snake() {
         pseudo = "Jack Banane";
     }
 
-    socket.emit("spawn", {"secret": secret, "name": pseudo, "pos": c}, function (data) {
+    socket.emit("spawn", {"secret": secret, "name": pseudo, "pos": center}, function (data) {
         if (data === "ko") {
             spawned = false;
         } else {
@@ -286,144 +35,11 @@ function spawn_snake() {
     });
 }
 
-function centerOnSnake(id) {
-    'use strict';
-    var cx = last_snakes[id].coords[0][0],
-        cy = last_snakes[id].coords[0][1],
-        px = cx * sq_w,
-        py = cy * sq_w;
-
-    position_x = px - width / 2;
-    position_y = py - height / 2;
-}
-
-function update_canvas(snakes, bonus) {
-    'use strict';
-    var pattern_local = context.createPattern(pattern, "repeat"),
-        offx = offset_x - position_x,
-        offy = offset_y - position_y;
-
-    update_dimensions();
-
-    context.beginPath();
-
-    context.fillStyle = pattern_local;
-
-    context.translate(offx, offy);
-    context.fillRect(-offx, -offy, canvas.width, canvas.height);
-    context.translate(-offx, -offy);
-
-
-    draw_snakes(snakes);
-    draw_bonuses(bonus);
-
-    // #Draw the grid
-    context.strokeStyle = "#ffffff";
-
-    if (window.mobile) {
-        context.lineWidth = 1;
-    } else {
-        context.lineWidth = 0.5;
-    }
-    draw_grid();
-
-    draw_names(snakes);
-
-    // #Draw the HUD
-    draw_hud(snakes, my_id);
-}
-
-function followSnake(id) {
-    'use strict';
-    var cx = last_snakes[id].coords[0][0],
-        cy = last_snakes[id].coords[0][1],
-        px = cx * sq_w,
-        py = cy * sq_w,
-        paddingx = width / 5 - 20,
-        paddingy = height / 5 - 20;
-
-    if (last_snakes[id] === undefined) {
-        return;
-    }
-
-    if (px < position_x) {
-        centerOnSnake(id);
-        return;
-    }
-
-    if (px > position_x + width) {
-        centerOnSnake(id);
-        return;
-    }
-
-    if (px < position_x + paddingx) {
-        position_x = position_x - sq_w;
-    } else if (px > position_x + width - paddingx) {
-        position_x = position_x + sq_w;
-    }
-
-    if (py < position_y) {
-        centerOnSnake(id);
-        return;
-    }
-
-    if (py > position_y + height) {
-        centerOnSnake(id);
-        return;
-    }
-
-    if (py < position_y + paddingy) {
-        position_y = position_y - sq_w;
-    } else if (py > position_y + height - paddingy) {
-        position_y = position_y + sq_w;
-    }
-    update_canvas(last_snakes, last_bonus);
-}
 
 document.addEventListener("DOMContentLoaded", function () {
     'use strict';
-    var pctx,
-        gradient,
-        tctx;
 
     socket = window.io.connect("@@URL_SOCKETIO_SERVER");
-
-
-    pattern = document.createElement('canvas');
-    pattern.width = 512;
-    pattern.height = 512;
-
-
-    pctx = pattern.getContext('2d');
-    gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height);
-    gradient.addColorStop(0, "#3B5998");
-    gradient.addColorStop(1 / 4, "#4B7BC9");
-    gradient.addColorStop(2 / 4, "#3B5998");
-    gradient.addColorStop(3 / 4, "#4B7BC9");
-    gradient.addColorStop(1, "#3B5998");
-    pctx.fillStyle = gradient;
-    pctx.fillRect(0, 0, pattern.width, pattern.height);
-
-    triangle_canvas = document.createElement('canvas');
-    triangle_canvas.width = 20;
-    triangle_canvas.height = 20;
-
-    tctx = triangle_canvas.getContext('2d');
-    tctx.fillStyle = "rgb(255,127,10)";
-    tctx.beginPath();
-
-    tctx.moveTo(10, 0);
-    tctx.lineTo(20, 20);
-    tctx.lineTo(0, 20);
-    tctx.closePath();
-    tctx.fill();
-
-    canvas = document.getElementById('app');
-
-    canvas.width = 500;
-    canvas.height = 500;
-
-    context = canvas.getContext('2d');
 
     if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
         document.getElementById('daniel').value = localStorage.getItem("pseudo");
@@ -431,13 +47,10 @@ document.addEventListener("DOMContentLoaded", function () {
     controller = new window.Controller({
         callbacks: {
             update: function (snakes, bonus) {
-                last_snakes = snakes;
-                last_bonus = bonus;
-                if (window.locked && (snakes[my_id] !== undefined)) {
-                    followSnake(my_id);
-                } else {
-                    update_canvas(snakes, bonus);
+                if (locked && (snakes[my_id] !== undefined)) {
+                    view.followSnake(snakes[my_id]);
                 }
+                view.update_canvas(snakes, bonus, my_id);
             },
             killed_snake: function (id) {
                 socket.emit("confirm_death", {"id": my_id}, function (res) {
@@ -445,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         spawned = false;
                         document.getElementById("spawndiv").className = 'show';
                     } else {
-                        controller.load(res, last_bonus);
+                        controller.load(res);
                     }
                 });
             }
@@ -484,6 +97,10 @@ document.addEventListener("DOMContentLoaded", function () {
             spawn_snake(socket);
         }
     };
+    document.getElementById("spawn").onclick = function () {
+        spawn_snake(view.getCenter());
+    };
+
     secret = localStorage.getItem("secret") || window.uuid.v4();
     localStorage.setItem("secret", secret);
 }, false);

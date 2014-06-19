@@ -246,8 +246,8 @@ function Controller(options) {
     }
 
     this.load = function (s, b) {
-        snakes = s;
-        bonus = b;
+        snakes = s || snakes;
+        bonus = b || bonus;
     };
 
     this.update = function () {     // This is where the magic happens
