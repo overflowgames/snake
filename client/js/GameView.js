@@ -151,6 +151,7 @@ function GameView(options) {
             snake_size,
             dist,
             dists,
+            breakpoint,
             lvl;
 
         function add(a, b) { return Math.abs(a + b); }
@@ -178,10 +179,11 @@ function GameView(options) {
                         context.strokeStyle = snake_palette[lvl];
 
                         if (((snake_speedup / dist) <= 1) && ((snake_speedup / dist) > 0)) {
-                            context.lineTo(x - (Math.sign(dists[0]) * snake_speedup * sq_w), y - (Math.sign(dists[1]) * snake_speedup * sq_w));
+                            breakpoint = [x - (Math.sign(dists[0]) * snake_speedup * sq_w), y - (Math.sign(dists[1]) * snake_speedup * sq_w)];
+                            context.lineTo.apply(context, breakpoint);
                             context.stroke();
                             context.beginPath();
-                            context.moveTo(x - (Math.sign(dists[0]) * snake_speedup * sq_w), y - (Math.sign(dists[1]) * snake_speedup * sq_w));
+                            context.moveTo.apply(context, breakpoint);
                             lvl -= 1;
                             context.strokeStyle = snake_palette[lvl];
                         }
