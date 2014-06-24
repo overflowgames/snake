@@ -131,14 +131,14 @@ function GameView(options) {
         canvas.width = win_x;
     }
 
-    function draw_hud(snake) {
+    function draw_hud(snakes, id) {
         context.font = "18px Helvetica";
         context.fillStyle = "#ffffff";
 
-        if (snake !== undefined) {
-            context.fillText("Score: " + snake.score, 30, 50);
+        if (snakes[id] !== undefined) {
+            context.fillText("Score: " + snakes[id].score, 30, 50);
         }
-        context.fillText("Connectés: " + Object.keys(snake).length, 30, 30);
+        context.fillText("Connectés: " + Object.keys(snakes).length, 30, 30);
     }
 
     function draw_snakes(snakes) {
@@ -317,7 +317,7 @@ function GameView(options) {
         draw_names(snakes);
 
         // #Draw the HUD
-        draw_hud(snakes[id]);
+        draw_hud(snakes, id);
     };
 
     this.followSnake = function (snake) {
