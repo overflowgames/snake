@@ -4,6 +4,8 @@ function GameView(options) {
     'use strict';
     var context,
         canvas,
+        back,
+        back_context,
         triangle_canvas,
         position_x = options.position_x || -145,
         position_y = options.position_y || -145,
@@ -34,7 +36,13 @@ function GameView(options) {
     canvas.width = 500;
     canvas.height = 500;
 
+    back = document.getElementById('background');
+
+    back.width = 500;
+    back.height = 500;
+
     context = canvas.getContext('2d');
+    back_context = back.getContext('2d');
 
     function sign(a) {
         return (a === 0) ? 0 : a / Math.abs(a);
@@ -77,16 +85,24 @@ function GameView(options) {
         var x,
             y;
 
-        for (x = (-position_x + offset_x) % sq_w; x <= canvas.width; x += sq_w) {
-            context.moveTo(x, 0);
-            context.lineTo(x, canvas.height);
+        back_context.strokeStyle = "#ffffff";
+
+        if (window.mobile) {
+            back_context.lineWidth = 1;
+        } else {
+            back_context.lineWidth = 0.5;
         }
 
-        for (y = (-position_y + offset_y) % sq_w; y <= canvas.height; y += sq_w) {
-            context.moveTo(0, y);
-            context.lineTo(canvas.width, y);
+        for (x = (-position_x + offset_x) % sq_w; x <= back.width; x += sq_w) {
+            back_context.moveTo(x, 0);
+            back_context.lineTo(x, back.height);
         }
-        context.stroke();
+
+        for (y = (-position_y + offset_y) % sq_w; y <= back.height; y += sq_w) {
+            back_context.moveTo(0, y);
+            back_context.lineTo(back.width, y);
+        }
+        back_context.stroke();
     }
 
     function update_dimensions() {
@@ -96,6 +112,7 @@ function GameView(options) {
 
         canvas.height = win_y;
         canvas.width = win_x;
+
     }
 
     function draw_hud(snakes, id) {
@@ -281,14 +298,7 @@ function GameView(options) {
         draw_bonuses(bonus);
 
         // #Draw the grid
-        context.strokeStyle = "#ffffff";
-
-        if (window.mobile) {
-            context.lineWidth = 1;
-        } else {
-            context.lineWidth = 0.5;
-        }
-        draw_grid();
+        //draw_grid();
 
         draw_names(snakes);
 
@@ -325,4 +335,8 @@ function GameView(options) {
     this.getCenter = function () {
         return [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
     };
+
+    back.width = window.innerWidth;
+    back.height = window.innerHeight;
+    draw_grid();
 }

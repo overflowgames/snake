@@ -38,8 +38,7 @@ document.onkeydown = function (event) {
 if (document.getElementById) {
     (function () {
         'use strict';
-        var n = 500,
-            dragok = false,
+        var dragok = false,
             y,
             x,
             dy,
@@ -74,8 +73,6 @@ if (document.getElementById) {
                     document.getElementById("Q").focus();
                 }
                 dragok = true;
-                n += 1;
-                temp.style.zIndex = n;
                 dx = parseInt(temp.style.left, 10);
                 dy = parseInt(temp.style.top, 10);
                 x = e.clientX;
