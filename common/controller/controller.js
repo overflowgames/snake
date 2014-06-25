@@ -116,7 +116,7 @@ function Controller(options) {
         if (bonus[id] === undefined) {
             return false;
         }
-        if ((by === undefined) || (by === null)) {
+        if ((by === undefined) || (by === null) || (snakes[by] === undefined)) {
             if (typeof eaten_bonus_callback === "function") {
                 eaten_bonus_callback.call(this, id, undefined);
             }
