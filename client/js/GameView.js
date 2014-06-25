@@ -2,35 +2,18 @@
 
 function GameView(options) {
     'use strict';
-    var pattern,
-        context,
+    var context,
         canvas,
         triangle_canvas,
-        pctx,
-        gradient,
         position_x = options.position_x || -145,
         position_y = options.position_y || -145,
         offset_x = options.offset_x || 0,
         offset_y = options.offset_y || 0,
         sq_w = options.sq_w || 10,
         zoom = options.zomm || 1,
+        pattern = options.pattern,
         tctx;
 
-
-    pattern = document.createElement('canvas');
-    pattern.width = 512;
-    pattern.height = 512;
-
-
-    pctx = pattern.getContext('2d');
-    gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height);
-    gradient.addColorStop(0, "#3B5998");
-    gradient.addColorStop(1 / 4, "#4B7BC9");
-    gradient.addColorStop(2 / 4, "#3B5998");
-    gradient.addColorStop(3 / 4, "#4B7BC9");
-    gradient.addColorStop(1, "#3B5998");
-    pctx.fillStyle = gradient;
-    pctx.fillRect(0, 0, pattern.width, pattern.height);
 
     triangle_canvas = document.createElement('canvas');
     triangle_canvas.width = 20;

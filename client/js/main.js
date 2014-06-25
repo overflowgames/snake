@@ -6,8 +6,32 @@ var controller,
     my_id = "",
     spawned = false,
     socket,
+    pattern,
+    pctx,
+    gradient,
     locked = true,
-    view = new GameView({});
+    view;
+
+
+pattern = document.createElement('canvas');
+pattern.width = 512;
+pattern.height = 512;
+
+
+pctx = pattern.getContext('2d');
+gradient = pctx.createLinearGradient(0, 0, pattern.width, pattern.height);
+gradient.addColorStop(0, "#3B5998");
+gradient.addColorStop(1 / 4, "#4B7BC9");
+gradient.addColorStop(2 / 4, "#3B5998");
+gradient.addColorStop(3 / 4, "#4B7BC9");
+gradient.addColorStop(1, "#3B5998");
+pctx.fillStyle = gradient;
+pctx.fillRect(0, 0, pattern.width, pattern.height);
+
+view = new GameView({
+    pattern: pattern
+});
+
 
 function spawn_snake(center) {
     'use strict';
