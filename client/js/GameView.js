@@ -121,20 +121,46 @@ function GameView(options) {
         context.fillText("Connectés: " + Object.keys(snakes).length, 30, 30);
     }
 
+    function draw_snake_part(coords, speedup, dists, lvl){
+        function add(a, b) { return Math.abs(a + b); }
+        var dist = dists.reduce(add);
+        if (dist !== 0) {
+            var breakpoint,
+                snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
+                
+            
+            context.beginPath();
+            context.moveTo(coords[0][0], coords[0][1]);
+            context.lineWidth = sq_w;
+            context.lineCap = 'round';
+            context.strokeStyle = snake_palette[lvl];
+    
+            if (((speedup / dist) <= 1) && ((speedup / dist) > 0)) {
+                breakpoint = [coords[0][0] - (Math.sign(dists[0]) * speedup * sq_w), coords[0][1] - (Math.sign(dists[1]) * speedup * sq_w)];
+                context.lineTo.apply(context, breakpoint);
+                context.stroke();
+                context.beginPath();
+                context.moveTo.apply(context, breakpoint);
+                lvl -= 1;
+                context.strokeStyle = snake_palette[lvl];
+            }
+    
+            context.lineTo(coords[1][0], coords[1][1]);
+            context.stroke();
+            speedup = Math.max(speedup - dist, 0);
+        }
+        return [lvl, speedup];
+    }
+    
     function draw_snakes(snakes) {
-        var snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"],
-            i,
+        var i,
             ii,
-            x,
-            y,
             snake_speedup,
             snake_size,
-            dist,
             dists,
-            breakpoint,
+            res,
             lvl;
 
-        function add(a, b) { return Math.abs(a + b); }
         // #Draw the snakes
         for (i in snakes) {
             if (snakes.hasOwnProperty(i)) {
@@ -146,32 +172,16 @@ function GameView(options) {
 
                 for (ii = snakes[i].coords.length - 1; ii > 0; ii -= 1) {
                     dists = [snakes[i].coords[ii][0] - snakes[i].coords[ii - 1][0], snakes[i].coords[ii][1] - snakes[i].coords[ii - 1][1]];
-                    dist = dists.reduce(add);
 
-                    if (dist !== 0) {
-                        x = (snakes[i].coords[ii][0] + 0.5) * sq_w - position_x + offset_x;
-                        y = (snakes[i].coords[ii][1] + 0.5) * sq_w - position_y + offset_y;
-
-                        context.beginPath();
-                        context.moveTo(x, y);
-                        context.lineWidth = sq_w;
-                        context.lineCap = 'round';
-                        context.strokeStyle = snake_palette[lvl];
-
-                        if (((snake_speedup / dist) <= 1) && ((snake_speedup / dist) > 0)) {
-                            breakpoint = [x - (Math.sign(dists[0]) * snake_speedup * sq_w), y - (Math.sign(dists[1]) * snake_speedup * sq_w)];
-                            context.lineTo.apply(context, breakpoint);
-                            context.stroke();
-                            context.beginPath();
-                            context.moveTo.apply(context, breakpoint);
-                            lvl -= 1;
-                            context.strokeStyle = snake_palette[lvl];
-                        }
-
-                        context.lineTo((snakes[i].coords[ii - 1][0] + 0.5) * sq_w - position_x + offset_x, (snakes[i].coords[ii - 1][1] + 0.5) * sq_w - position_y + offset_y);
-                        context.stroke();
-                        snake_speedup = Math.max(snake_speedup - dist, 0);
-                    }
+                    res = draw_snake_part([[(snakes[i].coords[ii][0] + 0.5) * sq_w - position_x + offset_x, 
+                                    (snakes[i].coords[ii][1] + 0.5) * sq_w - position_y + offset_y], 
+                                    [(snakes[i].coords[ii - 1][0] + 0.5) * sq_w - position_x + offset_x,
+                                    (snakes[i].coords[ii - 1][1] + 0.5) * sq_w - position_y + offset_y]],
+                                    snake_speedup,
+                                    dists,
+                                    lvl);
+                    lvl = res[0];
+                    snake_speedup = res[1];
                 }
             }
         }
