@@ -87,7 +87,7 @@ function GameView(options) {
 
     function update_dimensions() {
         var w = window,
-            win_x = w.innerWidth * zoom, 
+            win_x = w.innerWidth * zoom,
             win_y = w.innerHeight * zoom;
 
         canvas.height = win_y;
@@ -104,20 +104,19 @@ function GameView(options) {
         context.fillText("Connectés: " + Object.keys(snakes).length, 30, 30);
     }
 
-    function draw_snake_part(coords, speedup, dists, lvl){
+    function draw_snake_part(coords, speedup, dists, lvl) {
         function add(a, b) { return Math.abs(a + b); }
-        var dist = dists.reduce(add);
+        var dist = dists.reduce(add),
+            snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"],
+            breakpoint;
+
         if (dist !== 0) {
-            var breakpoint,
-                snake_palette = ["#00ffff", "#0080ff", "#0040ff", "#0000ff", "#4000ff", "#8000ff"];
-                
-            
             context.beginPath();
             context.moveTo(coords[0][0], coords[0][1]);
             context.lineWidth = sq_w;
             context.lineCap = 'round';
             context.strokeStyle = snake_palette[lvl];
-    
+
             if (((speedup / dist) <= 1) && ((speedup / dist) > 0)) {
                 breakpoint = [coords[0][0] - (Math.sign(dists[0]) * speedup * sq_w), coords[0][1] - (Math.sign(dists[1]) * speedup * sq_w)];
                 context.lineTo.apply(context, breakpoint);
@@ -127,14 +126,14 @@ function GameView(options) {
                 lvl -= 1;
                 context.strokeStyle = snake_palette[lvl];
             }
-    
+
             context.lineTo(coords[1][0], coords[1][1]);
             context.stroke();
             speedup = Math.max(speedup - dist, 0);
         }
         return [lvl, speedup];
     }
-    
+
     function draw_snakes(snakes) {
         var i,
             ii,
@@ -156,8 +155,8 @@ function GameView(options) {
                 for (ii = snakes[i].coords.length - 1; ii > 0; ii -= 1) {
                     dists = [snakes[i].coords[ii][0] - snakes[i].coords[ii - 1][0], snakes[i].coords[ii][1] - snakes[i].coords[ii - 1][1]];
 
-                    res = draw_snake_part([[(snakes[i].coords[ii][0] + 0.5) * sq_w - position_x + offset_x, 
-                                    (snakes[i].coords[ii][1] + 0.5) * sq_w - position_y + offset_y], 
+                    res = draw_snake_part([[(snakes[i].coords[ii][0] + 0.5) * sq_w - position_x + offset_x,
+                                    (snakes[i].coords[ii][1] + 0.5) * sq_w - position_y + offset_y],
                                     [(snakes[i].coords[ii - 1][0] + 0.5) * sq_w - position_x + offset_x,
                                     (snakes[i].coords[ii - 1][1] + 0.5) * sq_w - position_y + offset_y]],
                                     snake_speedup,
