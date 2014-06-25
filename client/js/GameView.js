@@ -308,36 +308,21 @@ function GameView(options) {
             paddingx = canvas.width / 5 - 20,
             paddingy = canvas.height / 5 - 20;
 
-        if (px < position_x) {
-            centerOnSnake(snake);
-            return;
-        }
-
-        if (px > position_x + canvas.width) {
+        if (px < position_x || px > position_x + canvas.width || py < position_y || py > position_y + canvas.height) {
             centerOnSnake(snake);
             return;
         }
 
         if (px < position_x + paddingx) {
-            position_x = position_x - sq_w;
+            position_x -= sq_w;
         } else if (px > position_x + canvas.width - paddingx) {
-            position_x = position_x + sq_w;
-        }
-
-        if (py < position_y) {
-            centerOnSnake(snake);
-            return;
-        }
-
-        if (py > position_y + canvas.height) {
-            centerOnSnake(snake);
-            return;
+            position_x += sq_w;
         }
 
         if (py < position_y + paddingy) {
-            position_y = position_y - sq_w;
+            position_y -= sq_w;
         } else if (py > position_y + canvas.height - paddingy) {
-            position_y = position_y + sq_w;
+            position_y += sq_w;
         }
     };
 
