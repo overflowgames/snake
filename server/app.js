@@ -191,7 +191,6 @@ io.sockets.on('connection', function (socket) {
         socket.on("disconnect", function () {
             socket.get("login", function (err, login) {
                 if (!err) {
-                    socket.broadcast.emit("-", login.id);
                     controller.killSnake(login.id);
                 }
             });
