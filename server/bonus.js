@@ -1,7 +1,8 @@
 /*jslint node: true*/
 
-function coordsbetween(coords, upper, lower){
-    var acc,
+function coordsbetween(coords, upper, lower) {
+    'use strict';
+    var acc = 0,
         k;
     for (k = 0; k < coords.length; k += 1) {
         if (((coords[k] >= Math.min(lower[k], upper[k])) && (coords[k] <= Math.max(lower[k], upper[k])))) {

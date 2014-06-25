@@ -152,8 +152,8 @@ function Controller(options) {
         }
         return cum;
     };
-    
-    function coordsequal(coords1, coords2){
+
+    function coordsequal(coords1, coords2) {
         return (coords1[0] === coords2[0]) && (coords1[1] === coords2[1]);
     }
 
