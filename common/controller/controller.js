@@ -152,6 +152,10 @@ function Controller(options) {
         }
         return cum;
     };
+    
+    function coordsequal(coords1, coords2){
+        return (coords1[0] === coords2[0]) && (coords1[1] === coords2[1]);
+    }
 
     function updatePosition(speedup) {
         var i, j;
@@ -177,7 +181,7 @@ function Controller(options) {
                         for (j = 0; j < snakes[i].coords[snakes[i].coords.length - 1].length; j += 1) {
                             snakes[i].coords[snakes[i].coords.length - 1][j] -= (snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]) / Math.max(1, Math.abs(snakes[i].coords[snakes[i].coords.length - 1][j] - snakes[i].coords[snakes[i].coords.length - 2][j]));
                         }
-                        if ((snakes[i].coords[snakes[i].coords.length - 1][0] === snakes[i].coords[snakes[i].coords.length - 2][0]) && (snakes[i].coords[snakes[i].coords.length - 1][1] === snakes[i].coords[snakes[i].coords.length - 2][1])) {
+                        if (coordsequal(snakes[i].coords[snakes[i].coords.length - 1], snakes[i].coords[snakes[i].coords.length - 2])) {
                             snakes[i].coords.pop();
                         }
                     }
