@@ -126,7 +126,7 @@ function genBonusCoords(snakes, bonus) {
     r = Math.ceil(Math.random() * sum);
 
     for (index = 0; index < probs.length; index += 1) {
-        ecc += probs[0][index];
+        ecc += probs[index][0];
         if (ecc >= r) {
             coord = [parseInt(probs[index][1], 10), parseInt(probs[index][2], 10)];
 
