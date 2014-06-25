@@ -36,6 +36,10 @@ function GameView(options) {
 
     context = canvas.getContext('2d');
 
+    function sign(a) {
+        return (a === 0) ? 0 : a / Math.abs(a);
+    }
+
     function getDistanceFromCenter(snake) {
         var sx = snake.coords[0][0],
             sy = snake.coords[0][1],
@@ -61,7 +65,7 @@ function GameView(options) {
 
     function getAngleFromCenter(snake) {
         var dists = getDistanceFromCenter(snake);
-        return -Math.sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
+        return -sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
     }
 
     function centerOnSnake(snake) {
@@ -118,7 +122,7 @@ function GameView(options) {
             context.strokeStyle = snake_palette[lvl];
 
             if (((speedup / dist) <= 1) && ((speedup / dist) > 0)) {
-                breakpoint = [coords[0][0] - (Math.sign(dists[0]) * speedup * sq_w), coords[0][1] - (Math.sign(dists[1]) * speedup * sq_w)];
+                breakpoint = [coords[0][0] - (sign(dists[0]) * speedup * sq_w), coords[0][1] - (sign(dists[1]) * speedup * sq_w)];
                 context.lineTo.apply(context, breakpoint);
                 context.stroke();
                 context.beginPath();
