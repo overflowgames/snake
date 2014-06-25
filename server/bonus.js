@@ -13,12 +13,12 @@ function coordsbetween(coords, upper, lower){
 
 function surunserpent(coord, snakes) {
     'use strict';
-    var i, j, k;
+    var i, j;
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             for (j = 0; j < snakes[i].coords.length; j += 1) {
                 if (snakes[i].coords[j + 1] !== undefined) {
-                    if (coordsbetween(coord, snakes[i].coords[j][k], snakes[i].coords[j + 1][k])) {
+                    if (coordsbetween(coord, snakes[i].coords[j], snakes[i].coords[j + 1])) {
                         return true;
                     }
                 }
