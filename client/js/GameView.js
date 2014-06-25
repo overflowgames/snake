@@ -12,8 +12,6 @@ function GameView(options) {
         position_y = options.position_y || -145,
         offset_x = options.offset_x || 0,
         offset_y = options.offset_y || 0,
-        height = options.height || 500,
-        width = options.width || 500,
         sq_w = options.sq_w || 10,
         zoom = options.zomm || 1,
         tctx;
@@ -84,48 +82,30 @@ function GameView(options) {
     }
 
     function centerOnSnake(snake) {
-        var cx = snake.coords[0][0],
-            cy = snake.coords[0][1],
-            px = cx * sq_w,
-            py = cy * sq_w;
-
-        position_x = px - width / 2;
-        position_y = py - height / 2;
+        position_x = snake.coords[0][0] * sq_w - canvas.width / 2;
+        position_y = snake.coords[0][1] * sq_w - canvas.height / 2;
     }
 
     function draw_grid() {
         var x,
             y;
 
-        for (x = (-position_x + offset_x) % sq_w; x <= width; x += sq_w) {
+        for (x = (-position_x + offset_x) % sq_w; x <= canvas.width; x += sq_w) {
             context.moveTo(x, 0);
-            context.lineTo(x, height);
+            context.lineTo(x, canvas.height);
         }
 
-        for (y = (-position_y + offset_y) % sq_w; y <= height; y += sq_w) {
+        for (y = (-position_y + offset_y) % sq_w; y <= canvas.height; y += sq_w) {
             context.moveTo(0, y);
-            context.lineTo(width, y);
+            context.lineTo(canvas.width, y);
         }
         context.stroke();
     }
 
     function update_dimensions() {
         var w = window,
-            d = document,
-            e = d.documentElement,
-            g = d.getElementsByTagName('body')[0],
-            win_x = w.innerWidth || e.clientWidth || g.clientWidth,
-            win_y = w.innerHeight || e.clientHeight || g.clientHeight;
-
-        win_x *= zoom;
-        win_y *= zoom;
-
-        if (height === win_y && width === win_x) {
-            return;
-        }
-
-        height = win_y;
-        width = win_x;
+            win_x = w.innerWidth * zoom, 
+            win_y = w.innerHeight * zoom;
 
         canvas.height = win_y;
         canvas.width = win_x;
@@ -325,22 +305,22 @@ function GameView(options) {
             cy = snake.coords[0][1],
             px = cx * sq_w,
             py = cy * sq_w,
-            paddingx = width / 5 - 20,
-            paddingy = height / 5 - 20;
+            paddingx = canvas.width / 5 - 20,
+            paddingy = canvas.height / 5 - 20;
 
         if (px < position_x) {
             centerOnSnake(snake);
             return;
         }
 
-        if (px > position_x + width) {
+        if (px > position_x + canvas.width) {
             centerOnSnake(snake);
             return;
         }
 
         if (px < position_x + paddingx) {
             position_x = position_x - sq_w;
-        } else if (px > position_x + width - paddingx) {
+        } else if (px > position_x + canvas.width - paddingx) {
             position_x = position_x + sq_w;
         }
 
@@ -349,14 +329,14 @@ function GameView(options) {
             return;
         }
 
-        if (py > position_y + height) {
+        if (py > position_y + canvas.height) {
             centerOnSnake(snake);
             return;
         }
 
         if (py < position_y + paddingy) {
             position_y = position_y - sq_w;
-        } else if (py > position_y + height - paddingy) {
+        } else if (py > position_y + canvas.height - paddingy) {
             position_y = position_y + sq_w;
         }
     };
