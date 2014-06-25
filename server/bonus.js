@@ -110,7 +110,6 @@ function genBonusCoords(snakes, bonus) {
 
     // Preparation du traitement des probabilites.
 
-
     for (x in probability_matrix) {
         if (probability_matrix.hasOwnProperty(x)) {
             for (y in probability_matrix[x]) {
@@ -129,7 +128,7 @@ function genBonusCoords(snakes, bonus) {
     for (index = 0; index < probs.length; index += 1) {
         ecc += probs[0][index];
         if (ecc >= r) {
-            coord = [parseInt(probs[1][index], 10), parseInt(probs[2][index], 10)];
+            coord = [parseInt(probs[index][1], 10), parseInt(probs[index][2], 10)];
 
             if (!surunserpent(coord, snakes) && !surunbonus(coord, bonus)) {
                 return coord;
