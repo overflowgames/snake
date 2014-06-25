@@ -1,18 +1,24 @@
 /*jslint node: true*/
 
+function coordsbetween(coords, upper, lower){
+    var acc,
+        k;
+    for (k = 0; k < coords.length; k += 1) {
+        if (((coords[k] >= Math.min(lower[k], upper[k])) && (coords[k] <= Math.max(lower[k], upper[k])))) {
+            acc += 1;
+        }
+    }
+    return acc === k;
+}
+
 function surunserpent(coord, snakes) {
     'use strict';
-    var i, j, k, acc = 0;
+    var i, j, k;
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             for (j = 0; j < snakes[i].coords.length; j += 1) {
                 if (snakes[i].coords[j + 1] !== undefined) {
-                    for (k = 0; k < snakes[i].coords[j].length; k += 1) {
-                        if (((coord[k] >= Math.min(snakes[i].coords[j][k], snakes[i].coords[j + 1][k])) && (coord[k] <= Math.max(snakes[i].coords[j][k], snakes[i].coords[j + 1][k])))) {
-                            acc += 1;
-                        }
-                    }
-                    if (acc === (snakes[i].coords[j].length - 1)) {
+                    if (coordsbetween(coord, snakes[i].coords[j][k], snakes[i].coords[j + 1][k])) {
                         return true;
                     }
                 }
