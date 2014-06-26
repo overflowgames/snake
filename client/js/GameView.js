@@ -110,9 +110,14 @@ function GameView(options) {
             win_x = w.innerWidth * zoom,
             win_y = w.innerHeight * zoom;
 
-        canvas.height = win_y;
-        canvas.width = win_x;
+        if ((win_x !== canvas.width) || (win_y !== canvas.height)) {
+            back.width = win_x;
+            back.height = win_y;
+            draw_grid();
 
+            canvas.height = win_y;
+            canvas.width = win_x;
+        }
     }
 
     function draw_hud(snakes, id) {
@@ -298,7 +303,6 @@ function GameView(options) {
         draw_bonuses(bonus);
 
         // #Draw the grid
-        //draw_grid();
 
         draw_names(snakes);
 
@@ -336,7 +340,4 @@ function GameView(options) {
         return [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
     };
 
-    back.width = window.innerWidth;
-    back.height = window.innerHeight;
-    draw_grid();
 }
