@@ -5,11 +5,11 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             dist: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/desktop.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/desktop.js'],
                 dest: 'client/dist.js'
             },
             dist_mobile: {
-                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/dist/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
+                src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
                 dest: 'client/mobile.dist.js'
             }
         },

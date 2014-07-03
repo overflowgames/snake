@@ -55,8 +55,6 @@ var server = http.createServer(function (request, response) {
 server.listen(parseInt(process.env.PORT || 1337, 10));
 
 var io = sio.listen(server);
-io.set('log level', 1);
-io.disable("browser client");
 
 var secrets = [],
     game = {},
@@ -144,37 +142,24 @@ io.sockets.on('connection', function (socket) {
                 snake_size = 20,
                 id = uuid.v4();
 
-            secrets[id] = data.secret;
+            socket.id = id;
+            data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5) * 80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5) * 80, 10)];
+            snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
 
-            socket.set("login", {"id": id, "secret" : data.secret}, function () {
-                data.pos[0] = [parseInt(data.pos[0][0], 10) + parseInt((Math.random() - 0.5) * 80, 10), parseInt(data.pos[0][1], 10) + parseInt((Math.random() - 0.5) * 80, 10)];
-                snake_coords = [[data.pos[0][0], data.pos[0][1]], [data.pos[0][0], data.pos[0][1]]];
-
-                if (controller.addSnake(id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_high_score, snake_speedup)) {
-                    ack(id);
-                } else {
-                    ack("ko");
-                }
-            });
+            if (controller.addSnake(id, snake_coords, snake_direction, snake_score, snake_size, data.name, snake_high_score, snake_speedup)) {
+                ack(id);
+            } else {
+                ack("ko");
+            }
         });
 
         socket.on("c", function (data, ack) {
-            if (data.direction === undefined || data.secret === undefined) {
+            if (data.direction === undefined || data.secret === undefined || data.id === undefined) {
                 return;
             }
-            socket.get("login", function (err, login) {
-                if (!err) {
-                    if (data.secret === login.secret) {
-                        if (controller.changeDirection(login.id, data.direction) && typeof ack === "function") {
-                            ack("ok");
-                        }
-                    } else {
-                        if (typeof ack === "function") {
-                            ack("ko");
-                        }
-                    }
-                }
-            });
+            if (controller.changeDirection(data.id, data.direction) && typeof ack === "function") {
+                ack("ok");
+            }
         });
 
         socket.on("confirm_death", function (data, ack) {
@@ -189,11 +174,7 @@ io.sockets.on('connection', function (socket) {
         });
 
         socket.on("disconnect", function () {
-            socket.get("login", function (err, login) {
-                if (!err) {
-                    controller.killSnake(login.id);
-                }
-            });
+            controller.killSnake(socket.id);
         });
     });
     socket.emit("up", {game: game});
