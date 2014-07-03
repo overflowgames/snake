@@ -87,7 +87,8 @@ function GameView(options) {
     function draw_grid() {
         var x,
             y;
-        grid_context.clearRect(0, 0, grid.width, grid.height);
+
+        grid.width = grid.width;
         grid_context.strokeStyle = "#ffffff";
 
         if (window.mobile) {
