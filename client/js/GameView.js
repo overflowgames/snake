@@ -129,6 +129,7 @@ function GameView(options) {
 
             back.height = win_y;
             back.width = win_x;
+            draw_back();
         }
     }
 
