@@ -4,6 +4,8 @@ function GameView(options) {
     'use strict';
     var context,
         canvas,
+        grid,
+        grid_context,
         back,
         back_context,
         triangle_canvas,
@@ -36,12 +38,18 @@ function GameView(options) {
     canvas.width = 500;
     canvas.height = 500;
 
+    grid = document.getElementById('grid');
+
+    grid.width = 500;
+    grid.height = 500;
+
     back = document.getElementById('background');
 
     back.width = 500;
     back.height = 500;
 
     context = canvas.getContext('2d');
+    grid_context = grid.getContext('2d');
     back_context = back.getContext('2d');
 
     function sign(a) {
@@ -76,33 +84,34 @@ function GameView(options) {
         return -sign(Math.asin(dists[1] / Math.hypot.apply(Math, dists))) * Math.acos(dists[0] / Math.hypot.apply(Math, dists));
     }
 
-    function centerOnSnake(snake) {
-        position_x = snake.coords[0][0] * sq_w - canvas.width / 2;
-        position_y = snake.coords[0][1] * sq_w - canvas.height / 2;
-    }
-
     function draw_grid() {
         var x,
             y;
-
-        back_context.strokeStyle = "#ffffff";
+        grid_context.clearRect(0, 0, grid.width, grid.height);
+        grid_context.strokeStyle = "#ffffff";
 
         if (window.mobile) {
-            back_context.lineWidth = 1;
+            grid_context.lineWidth = 1;
         } else {
-            back_context.lineWidth = 0.5;
+            grid_context.lineWidth = 0.5;
         }
 
-        for (x = (-position_x + offset_x) % sq_w; x <= back.width; x += sq_w) {
-            back_context.moveTo(x, 0);
-            back_context.lineTo(x, back.height);
+        for (x = (-position_x + offset_x) % sq_w; x <= grid.width; x += sq_w) {
+            grid_context.moveTo(x, 0);
+            grid_context.lineTo(x, grid.height);
         }
 
-        for (y = (-position_y + offset_y) % sq_w; y <= back.height; y += sq_w) {
-            back_context.moveTo(0, y);
-            back_context.lineTo(back.width, y);
+        for (y = (-position_y + offset_y) % sq_w; y <= grid.height; y += sq_w) {
+            grid_context.moveTo(0, y);
+            grid_context.lineTo(grid.width, y);
         }
-        back_context.stroke();
+        grid_context.stroke();
+    }
+
+    function centerOnSnake(snake) {
+        position_x = snake.coords[0][0] * sq_w - canvas.width / 2;
+        position_y = snake.coords[0][1] * sq_w - canvas.height / 2;
+        draw_grid();
     }
 
     function update_dimensions() {
@@ -111,12 +120,15 @@ function GameView(options) {
             win_y = w.innerHeight * zoom;
 
         if ((win_x !== canvas.width) || (win_y !== canvas.height)) {
-            back.width = win_x;
-            back.height = win_y;
+            grid.width = win_x;
+            grid.height = win_y;
             draw_grid();
 
             canvas.height = win_y;
             canvas.width = win_x;
+
+            back.height = win_y;
+            back.width = win_x;
         }
     }
 
@@ -283,21 +295,25 @@ function GameView(options) {
         }
     }
 
-    this.update_canvas = function (snakes, bonus, id) {
+    function draw_back() {
         var pattern_local = context.createPattern(pattern, "repeat"),
             offx = offset_x - position_x,
             offy = offset_y - position_y;
 
+        back_context.clearRect(0, 0, back.width, back.height);
+        back_context.beginPath();
+
+        back_context.fillStyle = pattern_local;
+
+        back_context.translate(offx, offy);
+        back_context.fillRect(-offx, -offy, back.width, back.height);
+        back_context.translate(-offx, -offy);
+    }
+
+    this.update_canvas = function (snakes, bonus, id) {
         update_dimensions();
 
-        context.beginPath();
-
-        context.fillStyle = pattern_local;
-
-        context.translate(offx, offy);
-        context.fillRect(-offx, -offy, canvas.width, canvas.height);
-        context.translate(-offx, -offy);
-
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
         draw_snakes(snakes);
         draw_bonuses(bonus);
@@ -320,19 +336,24 @@ function GameView(options) {
 
         if (px < position_x || px > position_x + canvas.width || py < position_y || py > position_y + canvas.height) {
             centerOnSnake(snake);
+            draw_back();
             return;
         }
 
         if (px < position_x + paddingx) {
             position_x -= sq_w;
+            draw_back();
         } else if (px > position_x + canvas.width - paddingx) {
             position_x += sq_w;
+            draw_back();
         }
 
         if (py < position_y + paddingy) {
             position_y -= sq_w;
+            draw_back();
         } else if (py > position_y + canvas.height - paddingy) {
             position_y += sq_w;
+            draw_back();
         }
     };
 
