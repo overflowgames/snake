@@ -9,8 +9,8 @@ function GameView(options) {
         back,
         back_context,
         triangle_canvas,
-        position_x = options.position_x || -145,
-        position_y = options.position_y || -145,
+        position_x = options.position_x || 0,
+        position_y = options.position_y || 0,
         offset_x = options.offset_x || 0,
         offset_y = options.offset_y || 0,
         sq_w = options.sq_w || 10,
@@ -88,7 +88,6 @@ function GameView(options) {
         var x,
             y;
 
-        grid.width = grid.width;
         grid_context.strokeStyle = "#ffffff";
 
         if (window.mobile) {
@@ -110,9 +109,24 @@ function GameView(options) {
     }
 
     function centerOnSnake(snake) {
-        position_x = snake.coords[0][0] * sq_w - canvas.width / 2;
-        position_y = snake.coords[0][1] * sq_w - canvas.height / 2;
+        position_x = Math.round(snake.coords[0][0] - canvas.width / (2 * sq_w)) * sq_w;
+        position_y = Math.round(snake.coords[0][1] - canvas.height / (2 * sq_w)) * sq_w;
         draw_grid();
+    }
+
+    function draw_back() {
+        var pattern_local = context.createPattern(pattern, "repeat"),
+            offx = offset_x - position_x,
+            offy = offset_y - position_y;
+
+        back_context.clearRect(0, 0, back.width, back.height);
+        back_context.beginPath();
+
+        back_context.fillStyle = pattern_local;
+
+        back_context.translate(offx, offy);
+        back_context.fillRect(-offx, -offy, back.width, back.height);
+        back_context.translate(-offx, -offy);
     }
 
     function update_dimensions() {
@@ -295,21 +309,6 @@ function GameView(options) {
                 }
             }
         }
-    }
-
-    function draw_back() {
-        var pattern_local = context.createPattern(pattern, "repeat"),
-            offx = offset_x - position_x,
-            offy = offset_y - position_y;
-
-        back_context.clearRect(0, 0, back.width, back.height);
-        back_context.beginPath();
-
-        back_context.fillStyle = pattern_local;
-
-        back_context.translate(offx, offy);
-        back_context.fillRect(-offx, -offy, back.width, back.height);
-        back_context.translate(-offx, -offy);
     }
 
     this.update_canvas = function (snakes, bonus, id) {
