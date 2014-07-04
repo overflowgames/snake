@@ -111,7 +111,6 @@ function GameView(options) {
     function centerOnSnake(snake) {
         position_x = Math.round(snake.coords[0][0] - canvas.width / (2 * sq_w)) * sq_w;
         position_y = Math.round(snake.coords[0][1] - canvas.height / (2 * sq_w)) * sq_w;
-        draw_grid();
     }
 
     function draw_back() {
