@@ -31,19 +31,6 @@ module.exports = function (grunt) {
                 dest: "client/mobile.dist.js"
             }
         },
-        asset_cachebuster: {
-            options: {
-                buster: Date.now(),
-                ignore: [],
-                htmlExtension: 'html'
-            },
-            build: {
-                files: {
-                    'client/index.html': ['client/html/index.html'],
-                    'client/mobile.html': ['client/html/mobile.html']
-                }
-            }
-        },
         htmlmin: {
             dist: {
                 options: {
@@ -83,8 +70,7 @@ module.exports = function (grunt) {
         },
         csslint : {
             options: {
-                "ids": false,
-                "known-properties": false
+                "ids": false
             },
             src: ["client/css/*.css"]
         },
