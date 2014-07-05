@@ -63,7 +63,11 @@ function spawn_snake(center) {
 document.addEventListener("DOMContentLoaded", function () {
     'use strict';
 
-    socket = window.io.connect("@@URL_SOCKETIO_SERVER");
+    socket = window.io("@@URL_SOCKETIO_SERVER");
+    socket.on("connect", function(data) {
+        document.getElementById("spawndiv").className = 'show';
+        document.getElementById("load").className = 'hidden';
+    });
 
     if (localStorage.getItem("pseudo") !== null && localStorage.getItem("pseudo") !== "") {
         document.getElementById('daniel').value = localStorage.getItem("pseudo");
@@ -90,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
         points_bonus: 10,
         update_rate: 10
     });
-    document.getElementById("spawndiv").className = 'show';
 
     socket.on("+", function (data) {
         controller.addSnake.apply(controller, data);
