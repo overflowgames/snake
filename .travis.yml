@@ -21,14 +21,3 @@ deploy:
       node: '0.10'
     api_key:
       secure: SHxmEuhY/kev3RbwhJjAu+N/ImIkvzH5NBbw5lVaOnmbS4PLPrinzN3OiCQ3CwOCLOrbia8LL/glDI/kNK+VNTAD9yEE4S5zw19u2dI35KzJcL0GL0/f4EqBSIjDbDhj43/OfE8/Tp0DCfkZBvcMbN8keodv7kFG7P0TsVrTvsA=
-  - provider: openshift
-    user: spam.00456@gmail.com
-    password:
-      secure: XJxRO+7GQKvFoq+ssvg1/cifWxZdkXk1bjcWXw5eUlwjW9qciY3cMRIBlj4lXBvzAbyqhfQeKlPtSah+Y1XAkIQNAsJzu2ejY3VgR3/2TzWUCLdDJmD7Sl352k4T0ynwM4L76KjHSB9hcrsA3iDXehjQ7SDPAFMpC+prFK++dsQ=
-    app: snake
-    domain: 'konfiot'
-    on:
-      repo: overflowgames/snake
-      branch: master
-      node: '0.10'
-
