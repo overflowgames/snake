@@ -4,13 +4,21 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
-            dist: {
+            js_desktop: {
                 src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/desktop.js'],
                 dest: 'client/dist.js'
             },
-            dist_mobile: {
+            js_mobile: {
                 src: ['node_modules/node-uuid/uuid.js', 'node_modules/socket.io-client/socket.io.js', 'common/controller/controller.js', 'client/js/GameView.js', 'client/js/main.js', 'client/js/tactile.js', 'client/js/mobile.main.js'],
                 dest: 'client/mobile.dist.js'
+            },
+            css_desktop: {
+                src: ['client/css/main.css', 'client/css/spinner.css'],
+                dest: 'client/main.css'
+            },
+            css_mobile: {
+                src: ['client/css/mobile.main.css', 'client/css/spinner.css'],
+                dest: 'client/mobile.main.css'
             }
         },
         uglify : {
@@ -50,11 +58,11 @@ module.exports = function (grunt) {
         },
         cssmin: {
             main: {
-                src: 'client/css/main.css',
+                src: 'client/main.css',
                 dest: 'client/main.css'
             },
             mobile: {
-                src: 'client/css/mobile.main.css',
+                src: 'client/mobile.main.css',
                 dest: 'client/mobile.main.css'
             }
         },

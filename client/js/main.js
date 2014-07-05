@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     'use strict';
 
     socket = window.io("@@URL_SOCKETIO_SERVER");
-    socket.on("connect", function(data) {
+    socket.on("connect", function () {
         document.getElementById("spawndiv").className = 'show';
         document.getElementById("load").className = 'hidden';
     });
