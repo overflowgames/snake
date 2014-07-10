@@ -10,7 +10,7 @@ body {
 }
 
 #button_lock, #button_locked {
-    z-index: 1000;
+    z-index: 1;
     position: absolute;
     bottom: 0;
     left: 10px;

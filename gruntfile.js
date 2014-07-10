@@ -54,18 +54,11 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            css: {
-                expand: true,
-                cwd: 'client/css',
-                src: '*.css',
-                dest: 'client/'
-            },
             html: {
                 expand: true,
                 cwd: 'client/html',
                 src: '*.html',
                 dest: 'client/'
-
             }
         },
         csslint : {
