@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('daniel').onkeyup = function (e) {
         if (e.keyCode === 13) {
-            spawn_snake(socket);
+            spawn_snake(view.getCenter());
         }
     };
     document.getElementById("spawn").onclick = function () {
