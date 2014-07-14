@@ -50,9 +50,12 @@ function spawn_snake(center) {
     }
 
     socket.emit("spawn", {"secret": secret, "name": pseudo, "pos": center}, function (data) {
+        console.log("cb");
         if (data === "ko") {
+            console.log("ko");
             spawned = false;
         } else {
+            console.log("ok");
             document.getElementById("spawndiv").className = 'hide';
             my_id = data;
         }
@@ -81,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 view.update_canvas(snakes, bonus, my_id);
             },
             killed_snake: function (id) {
-                socket.emit("confirm_death", {"id": my_id}, function (res) {
+                socket.emit("confirm_death", {"id": id}, function (res) {
                     if (res === false && id === my_id) {
                         spawned = false;
                         document.getElementById("spawndiv").className = 'show';

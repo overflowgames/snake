@@ -35,7 +35,7 @@ document.onkeydown = function (event) {
 
 };
 
-if (document.getElementById) {
+/*if (document.getElementById) {
     (function () {
         'use strict';
         var dragok = false,
@@ -97,4 +97,4 @@ if (document.getElementById) {
         document.onmouseup = up;
 
     }());
-} //End.
+}*///End.
