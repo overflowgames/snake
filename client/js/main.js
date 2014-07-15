@@ -50,12 +50,9 @@ function spawn_snake(center) {
     }
 
     socket.emit("spawn", {"secret": secret, "name": pseudo, "pos": center}, function (data) {
-        console.log("cb");
         if (data === "ko") {
-            console.log("ko");
             spawned = false;
         } else {
-            console.log("ok");
             document.getElementById("spawndiv").className = 'hide';
             my_id = data;
         }
