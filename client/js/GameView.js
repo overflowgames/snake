@@ -14,7 +14,7 @@ function GameView(options) {
         offset_x = options.offset_x || 0,
         offset_y = options.offset_y || 0,
         sq_w = options.sq_w || 10,
-        zoom = options.zomm || 1,
+        zoom = options.zoom || 1,
         pattern = options.pattern,
         tctx;
 
@@ -361,4 +361,11 @@ function GameView(options) {
         return [[Math.round((position_x + canvas.width / 2) / sq_w), Math.round((position_y + canvas.height / 2) / sq_w)]];
     };
 
+    this.setZoom = function (z) {
+        zoom = z;
+    };
+
+    this.getZoom = function () {
+        return zoom;
+    };
 }
