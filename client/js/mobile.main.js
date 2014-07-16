@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function zoomC(change) {
     'use strict';
-    console.log(Math.min(Math.max(view.getZoom() + change, 0.5), 1.5))
     view.setZoom(Math.min(Math.max(view.getZoom() + change, 0.5), 1.5));
     localStorage.setItem("mobile-zoom", window.zoom);
 }
