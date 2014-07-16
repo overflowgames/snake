@@ -362,7 +362,7 @@ function GameView(options) {
     };
 
     this.setZoom = function (z) {
-        zoom = z;
+        zoom = z || 1;
     };
 
     this.getZoom = function () {
