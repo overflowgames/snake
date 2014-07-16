@@ -9,7 +9,7 @@ canvas {
     height: 100%;
 }
 
-#button_lock, #button_locked {
+.lock {
     z-index: 1;
     position: absolute;
     bottom: 0;
