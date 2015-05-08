@@ -89,7 +89,7 @@ function genBonusCoords(snakes, bonus) {
     'use strict';
     var i,
         currentSnake,
-        probability_matrix,
+        probability_matrix_chevre,
         sum = 0, // Somme des probabilites
         probs = [], // Probabilite a l'index i
         x,
@@ -97,14 +97,32 @@ function genBonusCoords(snakes, bonus) {
         r,
         ecc = 0,
         index,
-        coord;
+        coord,
+        probability_matrix;
+
 
     // Generation du tableau des probabilites.
     for (i in snakes) {
         if (snakes.hasOwnProperty(i)) {
             currentSnake = snakes[i];
             if (currentSnake.coords !== undefined) {
-                probability_matrix = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], []);
+                probability_matrix_chevre = update_probs(currentSnake.coords[0][0], currentSnake.coords[0][1], []);
+                if (probability_matrix === undefined) {
+                    probability_matrix = probability_matrix_chevre;
+                } else {
+                    for (x in probability_matrix_chevre) {
+                        if (probability_matrix_chevre.hasOwnProperty(x)) {
+                            x = parseInt(x);
+                            for (y in probability_matrix_chevre[x]) {
+                                if (probability_matrix_chevre[x].hasOwnProperty(y)) {
+                                    y = parseInt(y);
+                                    probability_matrix[x][y] += probability_matrix_chevre[x][y];
+                                } 
+                            }
+                        }
+                    }
+                }
+                
             }
         }
     }
