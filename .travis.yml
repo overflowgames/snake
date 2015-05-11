@@ -1,17 +1,18 @@
 language: node_js
 node_js:
-  - '0.11'
-  - '0.10'
-env : 'SOCKETIO_SERVER=https://boundless-snake.herokuapp.com/'
+- '0.11'
+- '0.10'
+env: SOCKETIO_SERVER=https://boundless-snake.herokuapp.com/
 deploy:
+  matrix:
   - provider: heroku
-    api_key:
-      secure: VJIV3fBb/EAUsJMQVrUuOrpUv6H/42SekAUbLPTHfPvj9ATr5HP+4tPB0ayKSemzq+WwG/gusXw6ljpGHoT5BFlOC6Bhv9cssClOHSAEycxAG3qVB1fN4IoPmZ4UlqTJfa/60Txm/2PqOs4I9fMiz/u61GUJKXQtT2o28l2jTI8=
     app: boundless-snake
     on:
       repo: overflowgames/snake
       branch: master
       node: '0.10'
+    api_key:
+      secure: EzH+SLyspCcxP2DvOFwpqfJv6mu1bGRU2Xk8dQ4xz1ehHD8Bn10i2FXSmjwrLNusJKvAFnpstZrg9tlXGLiBLVENnKRGylbn8a16sZSbRp7L8Wdd4vrAdD42q4yh5XGp8HzpnUTI2lPQAjgxg/cEDhi/xJg4Z7epwk2FIYl1lHE=
     skip_cleanup: true
   - provider: divshot
     skip_cleanup: true
