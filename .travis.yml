@@ -4,7 +4,6 @@ node_js:
 - '0.10'
 env: SOCKETIO_SERVER=https://boundless-snake.herokuapp.com/
 deploy:
-  matrix:
   - provider: heroku
     app: boundless-snake
     on:
