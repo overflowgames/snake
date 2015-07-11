@@ -11,7 +11,7 @@ deploy:
       branch: master
       node: '0.10'
     api_key:
-      secure: EzH+SLyspCcxP2DvOFwpqfJv6mu1bGRU2Xk8dQ4xz1ehHD8Bn10i2FXSmjwrLNusJKvAFnpstZrg9tlXGLiBLVENnKRGylbn8a16sZSbRp7L8Wdd4vrAdD42q4yh5XGp8HzpnUTI2lPQAjgxg/cEDhi/xJg4Z7epwk2FIYl1lHE=
+      secure: LNZJyVLHlECBaZB6TUOmFwHMfFeYLseU1EYOcjhF1ZZChTlW5dtEOor+5k3xgZpZ6ORNjdQ2xJ8kXTBFF2V8HZx4KzkONQFpt15sXOTy1bay37++S95Z1qHPk1r/hKdNRvyBLgb5FAHxJ6yXtL1zZlrVLLF1AuEvR1cqW/pKymY=
     skip_cleanup: true
   - provider: divshot
     skip_cleanup: true
