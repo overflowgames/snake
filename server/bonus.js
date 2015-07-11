@@ -113,10 +113,18 @@ function genBonusCoords(snakes, bonus) {
                     for (x in probability_matrix_chevre) {
                         if (probability_matrix_chevre.hasOwnProperty(x)) {
                             x = parseInt(x, 10);
-                            for (y in probability_matrix_chevre[x]) {
-                                if (probability_matrix_chevre[x].hasOwnProperty(y)) {
-                                    y = parseInt(y, 10);
-                                    probability_matrix[x][y] += probability_matrix_chevre[x][y];
+                            if (probability_matrix[x] === undefined) {
+                                probability_matrix[x] = probability_matrix_chevre[x];
+                            } else {
+                                for (y in probability_matrix_chevre[x]) {
+                                    if (probability_matrix_chevre[x].hasOwnProperty(y)) {
+                                        y = parseInt(y, 10);
+                                        if (probability_matrix[x][y] === undefined) {
+                                            probability_matrix[x][y] = probability_matrix_chevre[x][y];
+                                        } else {
+                                            probability_matrix[x][y] += probability_matrix_chevre[x][y];
+                                        }
+                                    }
                                 }
                             }
                         }
